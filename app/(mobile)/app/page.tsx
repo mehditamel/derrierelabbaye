@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { UtensilsCrossed, CalendarHeart, MapPin } from "lucide-react";
+import { UtensilsCrossed, CalendarHeart, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { aPartagerFroid, cocktailVedette } from "@/data/menu";
 import { site } from "@/data/site";
@@ -50,6 +50,13 @@ export default function AppHome() {
           >
             <MapPin size={20} strokeWidth={1.5} />
             <span>Y aller</span>
+          </a>
+          <a
+            href={`tel:${site.telephone.replace(/\s/g, "")}`}
+            className={styles.action}
+          >
+            <Phone size={20} strokeWidth={1.5} />
+            <span>Appeler</span>
           </a>
         </div>
 
