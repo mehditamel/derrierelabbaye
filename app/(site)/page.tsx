@@ -3,6 +3,7 @@ import { Intro } from "@/components/site/Intro";
 import { CarteSection } from "@/components/site/CarteSection";
 import { CocktailsSection } from "@/components/site/CocktailsSection";
 import { ReservationSection } from "@/components/site/ReservationSection";
+import { NousTrouver } from "@/components/site/NousTrouver";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <CarteSection />
       <CocktailsSection />
       <ReservationSection />
+      <NousTrouver />
     </>
   );
 }

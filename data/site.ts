@@ -20,13 +20,20 @@ export const site = {
     geo: { lat: 43.290, lng: 5.366 },
     mapsUrl:
       "https://www.google.com/maps/search/?api=1&query=1+rue+de+l%27Abbaye+13007+Marseille",
+    // Ouvre Google Maps en mode itinéraire (l'app native sur mobile)
+    directionsUrl:
+      "https://www.google.com/maps/dir/?api=1&destination=1+rue+de+l%27Abbaye+13007+Marseille",
+    // Plan intégré (iframe) sans clé API — libellés en français.
+    // Pour migrer vers l'API officielle Maps Embed (clé requise), remplacer par :
+    // https://www.google.com/maps/embed/v1/place?key=CLE&q=...&language=fr
+    embedUrl:
+      "https://www.google.com/maps?q=1%20rue%20de%20l%27Abbaye%2013007%20Marseille&hl=fr&output=embed",
   },
 
   // ⚑ À CONFIRMER — téléphone réel de l'établissement
   telephone: "+33 4 00 00 00 00",
   telephoneAffichage: "04 00 00 00 00",
-  // ⚑ À CONFIRMER — adresse e-mail de contact
-  email: "contact@derrierelabbaye.fr",
+  email: "info@derrierelabbaye.fr",
 
   // ⚑ À CONFIRMER — horaires réels.
   // La maquette mobile évoque « Ouvert · ferme à 01h00 ».
@@ -75,6 +82,10 @@ export const copies = {
   reservationTitre: "Réserver une table",
   reservationTexte:
     "Indiquez la date, le nombre de couverts et l'heure souhaitée : nous vous confirmons votre table.",
+  nousTrouverSurtitre: "Nous trouver",
+  nousTrouverTitre: "Passez nous voir, on vous attend",
+  nousTrouverTexte:
+    "Juste derrière l'Abbaye Saint-Victor, à deux pas du Vieux-Port. Une envie de réserver, une question sur la carte, ou simplement l'envie de pousser la porte ? Appelez-nous, on décroche avec plaisir — ou venez directement vous installer au comptoir.",
 } as const;
 
 /** Statistiques / repères affichés en cartes sur la section « Le lieu ». */
