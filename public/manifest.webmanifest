@@ -4,6 +4,7 @@
   "description": "Apéro marseillais — bar à tapas & cocktails, Saint-Victor, Marseille. La carte, la réservation et la fidélité.",
   "lang": "fr",
   "dir": "ltr",
+  "id": "/app",
   "start_url": "/app",
   "scope": "/",
   "display": "standalone",
