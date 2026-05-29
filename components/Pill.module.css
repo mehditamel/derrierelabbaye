@@ -1,0 +1,44 @@
+.pill {
+  font-family: var(--font-sans);
+  font-weight: var(--w-regular);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.74rem;
+  padding: 9px 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline-strong);
+  background: transparent;
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: all var(--dur) var(--ease-soft);
+  white-space: nowrap;
+}
+
+.pill:hover {
+  border-color: var(--gold);
+  color: var(--gold-deep);
+}
+
+.active {
+  background: var(--noir);
+  color: var(--cream-90);
+  border-color: var(--noir);
+}
+.active:hover {
+  color: var(--gold-light);
+}
+
+/* Variante sur fond noir */
+.onDark {
+  border-color: var(--cream-40);
+  color: var(--cream-70);
+}
+.onDark:hover {
+  border-color: var(--gold-light);
+  color: var(--gold-light);
+}
+.onDark.active {
+  background: var(--gold);
+  color: var(--noir);
+  border-color: var(--gold);
+}

@@ -1,0 +1,73 @@
+.row {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.nom {
+  font-family: var(--font-serif);
+  font-weight: var(--w-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 1.12rem;
+  color: var(--ink-900);
+  line-height: 1.2;
+}
+
+.star {
+  color: var(--gold);
+  font-size: 0.7em;
+  margin-right: 0.5ch;
+  vertical-align: middle;
+}
+
+.leaders {
+  flex: 1;
+  align-self: flex-end;
+  height: 0;
+  margin-bottom: 5px;
+  border-bottom: 1px dotted var(--hairline-strong);
+  min-width: 18px;
+}
+
+.prix {
+  font-family: var(--font-serif);
+  font-weight: var(--w-medium);
+  font-size: 1.1rem;
+  color: var(--gold-deep);
+  white-space: nowrap;
+}
+
+.desc {
+  margin: 4px 0 0;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--ink-500);
+  max-width: 52ch;
+}
+
+/* Variante sur fond noir */
+.onDark {
+  border-bottom-color: var(--cream-16);
+}
+.onDark .nom {
+  color: var(--cream-90);
+}
+.onDark .prix {
+  color: var(--gold-light);
+}
+.onDark .desc {
+  color: var(--cream-70);
+}
+.onDark .leaders {
+  border-bottom-color: var(--cream-16);
+}

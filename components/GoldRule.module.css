@@ -1,0 +1,18 @@
+.rule {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: var(--hairline-gold);
+}
+
+.node {
+  font-size: 0.55rem;
+  line-height: 1;
+  color: var(--gold);
+}

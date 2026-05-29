@@ -1,0 +1,35 @@
+/* Coque de l'application mobile (PWA) — colonne centrée façon téléphone. */
+
+.app-root {
+  --app-maxw: 480px;
+  min-height: 100svh;
+  background: var(--noir);
+  color: var(--cream-90);
+  max-width: var(--app-maxw);
+  margin-inline: auto;
+  position: relative;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.5);
+}
+
+.app-screen {
+  min-height: 100svh;
+  padding-bottom: calc(78px + env(safe-area-inset-bottom));
+}
+
+.app-pad {
+  padding-inline: var(--space-4);
+}
+
+.app-section-label {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.72rem;
+  color: var(--gold-light);
+}
+
+.app-h {
+  font-family: var(--font-serif);
+  color: var(--cream);
+  line-height: 1.1;
+}

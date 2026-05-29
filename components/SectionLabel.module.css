@@ -1,0 +1,14 @@
+.label {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-weight: var(--w-regular);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.78rem;
+  color: var(--gold-deep);
+  margin: 0;
+}
+
+.onDark {
+  color: var(--gold-light);
+}

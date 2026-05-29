@@ -1,0 +1,14 @@
+.legal {
+  font-family: var(--font-sans);
+  font-weight: var(--w-thin);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.66rem;
+  color: var(--ink-500);
+  margin: 0;
+  text-align: center;
+}
+
+.onDark {
+  color: var(--cream-40);
+}

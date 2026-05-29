@@ -1,0 +1,38 @@
+.bar {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--app-maxw);
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(20, 17, 13, 0.78);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--cream-16);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+  color: var(--cream-40);
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.6rem;
+  transition: color var(--dur) var(--ease-soft);
+}
+
+.tab:hover {
+  color: var(--cream-70);
+}
+
+.active {
+  color: var(--gold-light);
+}

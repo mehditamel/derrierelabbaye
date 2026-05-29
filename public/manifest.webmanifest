@@ -1,0 +1,28 @@
+{
+  "name": "Derrière l'Abbaye",
+  "short_name": "Derrière l'Abbaye",
+  "description": "Apéro marseillais — bar à tapas & cocktails, Saint-Victor, Marseille. La carte, la réservation et la fidélité.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14110D",
+  "theme_color": "#14110D",
+  "categories": ["food", "lifestyle"],
+  "icons": [
+    {
+      "src": "/logo-cream.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-cream.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
