@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import { Logo } from "@/components/Logo";
 import { avantages, demoLoyalty, prochainAvantage } from "@/services/loyalty";
 import styles from "./fidelite.module.css";
+
+export const metadata: Metadata = {
+  title: { absolute: "Fidélité — Derrière l'Abbaye" },
+  description:
+    "Votre carte de membre Derrière l'Abbaye : points, paliers et avantages à débloquer.",
+  alternates: { canonical: "/app/fidelite" },
+};
 
 export default function AppFidelitePage() {
   const { points, membre } = demoLoyalty;
@@ -30,7 +38,18 @@ export default function AppFidelitePage() {
           </div>
           <p className={styles.member}>{membre}</p>
 
-          <div className={styles.progress}>
+          <div
+            className={styles.progress}
+            role="progressbar"
+            aria-valuenow={progression}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={
+              suivant
+                ? `Progression vers : ${suivant.titre.toLowerCase()}`
+                : "Tous les avantages sont débloqués"
+            }
+          >
             <div className={styles.progressBar} style={{ width: `${progression}%` }} />
           </div>
           {suivant ? (

@@ -2,8 +2,15 @@
    Stratégie : network-first pour la navigation (toujours frais si en ligne),
    cache-first pour les assets statiques. */
 
-const CACHE = "dla-shell-v1";
-const SHELL = ["/app", "/manifest.webmanifest", "/logo-cream.png"];
+const CACHE = "dla-shell-v2";
+const SHELL = [
+  "/",
+  "/app",
+  "/manifest.webmanifest",
+  "/logo-cream.png",
+  "/logo-noir.png",
+  "/enseigne.jpeg",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -26,10 +33,12 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
 
-  // Navigation : réseau d'abord, repli sur le cache de la coque.
+  // Navigation : réseau d'abord, repli sur la page visitée puis la coque /app.
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request).catch(() => caches.match("/app").then((r) => r || caches.match(request)))
+      fetch(request).catch(() =>
+        caches.match(request).then((r) => r || caches.match("/app"))
+      )
     );
     return;
   }

@@ -36,7 +36,12 @@ export function Button({
       );
     }
     return (
-      <a href={href} target={target} rel={rel} className={className}>
+      <a
+        href={href}
+        target={target ?? "_blank"}
+        rel={rel ?? "noopener noreferrer"}
+        className={className}
+      >
         {children}
       </a>
     );
