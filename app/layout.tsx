@@ -30,20 +30,13 @@ export const metadata: Metadata = {
     siteName: site.nom,
     title: "Derrière l'Abbaye — Bar à tapas & cocktails · Marseille",
     description: copies.heroAccroche,
-    images: [
-      {
-        url: "/enseigne.jpeg",
-        width: 1122,
-        height: 1402,
-        alt: "Devanture en acier corten de Derrière l'Abbaye, le soir",
-      },
-    ],
+    // og:image fourni automatiquement par app/opengraph-image.tsx (1200×630)
   },
   twitter: {
     card: "summary_large_image",
     title: "Derrière l'Abbaye — Bar à tapas & cocktails · Marseille",
     description: copies.heroAccroche,
-    images: ["/enseigne.jpeg"],
+    // twitter:image fourni automatiquement par app/twitter-image.tsx
   },
   icons: {
     icon: "/logo-noir.png",

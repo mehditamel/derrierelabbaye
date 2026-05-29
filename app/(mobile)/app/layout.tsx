@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description:
     "La carte, la réservation et la fidélité de Derrière l'Abbaye, dans la poche.",
   alternates: { canonical: "/app" },
+  // Coque PWA : duplique le contenu public → non indexée (les liens restent suivis).
+  robots: { index: false, follow: true },
 };
 
 export const viewport: Viewport = {
