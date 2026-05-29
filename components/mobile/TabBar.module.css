@@ -26,11 +26,16 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.6rem;
-  transition: color var(--dur) var(--ease-soft);
+  transition: color var(--dur) var(--ease-soft), transform 120ms var(--ease-soft);
 }
 
 .tab:hover {
   color: var(--cream-70);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tab:active {
+    transform: scale(var(--press));
+  }
 }
 
 .active {

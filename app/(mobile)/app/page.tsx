@@ -10,6 +10,9 @@ import styles from "./home.module.css";
 export default function AppHome() {
   return (
     <div>
+      <h1 className="u-visually-hidden">
+        Derrière l&apos;Abbaye — bar à tapas &amp; cocktails, Saint-Victor, Marseille
+      </h1>
       <header className={styles.hero}>
         <Image
           src={enseigne}

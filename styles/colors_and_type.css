@@ -85,6 +85,13 @@
   /* Transitions — lentes, jamais bondissantes */
   --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
   --dur: 380ms;
+
+  /* Interactions — couche tactile (survol / press) */
+  --wash-gold: rgba(168, 136, 76, 0.06); /* fond de survol discret (aligné sur .feature) */
+  --lift: -2px;                          /* élévation au survol (pointeur) */
+  --press: 0.97;                         /* échelle au tap (toucher) */
+  /* halo ambré atténué — survol des cartes sur fond sombre */
+  --shadow-glow-soft: 0 0 0 1px rgba(168, 136, 76, 0.28), 0 6px 28px rgba(233, 200, 146, 0.18);
 }
 
 /* =====================================================================
