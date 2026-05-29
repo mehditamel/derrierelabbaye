@@ -79,11 +79,17 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-size: 0.64rem;
-  transition: border-color var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft);
+  transition: border-color var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft),
+    transform 120ms var(--ease-soft);
 }
 .action:hover {
   border-color: var(--gold-light);
   color: var(--gold-light);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .action:active {
+    transform: scale(var(--press));
+  }
 }
 
 .feature {
@@ -98,6 +104,12 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
+  transition: transform var(--dur) var(--ease-soft);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .feature:hover {
+    transform: translateY(var(--lift));
+  }
 }
 
 .featureName {
@@ -164,6 +176,21 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  transition: border-color var(--dur) var(--ease-soft),
+    background var(--dur) var(--ease-soft), box-shadow var(--dur) var(--ease-soft),
+    transform var(--dur) var(--ease-soft);
+}
+@media (hover: hover) {
+  .tapas:hover {
+    border-color: var(--hairline-gold);
+    background: var(--wash-gold);
+    box-shadow: var(--shadow-glow-soft);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .tapas:hover {
+    transform: translateY(var(--lift));
+  }
 }
 
 .tapasTop {

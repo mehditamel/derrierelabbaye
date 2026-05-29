@@ -48,6 +48,19 @@
   border: 1px solid var(--hairline-gold);
   border-radius: var(--r-card);
   background: var(--cream);
+  transition: border-color var(--dur) var(--ease-soft),
+    box-shadow var(--dur) var(--ease-soft), transform var(--dur) var(--ease-soft);
+}
+@media (hover: hover) {
+  .stat:hover {
+    border-color: var(--gold);
+    box-shadow: var(--shadow-md);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .stat:hover {
+    transform: translateY(var(--lift));
+  }
 }
 
 .statValue {

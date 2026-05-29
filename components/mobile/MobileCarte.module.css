@@ -46,6 +46,11 @@
 .tab:hover {
   border-color: var(--gold-light);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .tab:active {
+    transform: scale(var(--press));
+  }
+}
 .tabActive {
   background: var(--gold);
   color: var(--noir);

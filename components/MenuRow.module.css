@@ -1,9 +1,21 @@
 .row {
-  padding: var(--space-3) 0;
+  padding: var(--space-3) var(--space-2);
+  margin-inline: calc(-1 * var(--space-2));
   border-bottom: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+  transition: background var(--dur) var(--ease-soft);
 }
 .row:last-child {
   border-bottom: 0;
+}
+/* Aide à la lecture au survol (pointeur uniquement, couleur seule) */
+@media (hover: hover) {
+  .row:hover {
+    background: var(--wash-gold);
+  }
+  .row:hover .prix {
+    color: var(--gold-light);
+  }
 }
 
 .head {
@@ -44,6 +56,7 @@
   font-size: 1.1rem;
   color: var(--gold-deep);
   white-space: nowrap;
+  transition: color var(--dur) var(--ease-soft);
 }
 
 .desc {

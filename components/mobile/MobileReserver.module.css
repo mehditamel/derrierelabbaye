@@ -45,6 +45,11 @@
 .dateChip:hover {
   border-color: var(--gold-light);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .dateChip:active {
+    transform: scale(var(--press));
+  }
+}
 .dateActive {
   background: var(--gold);
   color: var(--noir);
@@ -92,10 +97,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: border-color var(--dur) var(--ease-soft);
+  transition: border-color var(--dur) var(--ease-soft), transform 120ms var(--ease-soft);
 }
 .stepper button:hover {
   border-color: var(--gold-light);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .stepper button:active {
+    transform: scale(var(--press));
+  }
 }
 .stepper span {
   font-family: var(--font-serif);
@@ -126,6 +136,11 @@
 }
 .heure:hover {
   border-color: var(--gold-light);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .heure:active {
+    transform: scale(var(--press));
+  }
 }
 .heureActive {
   background: var(--gold);
@@ -176,11 +191,17 @@
   background: var(--gold);
   color: var(--noir);
   cursor: pointer;
-  transition: background var(--dur) var(--ease-soft), box-shadow var(--dur) var(--ease-soft);
+  transition: background var(--dur) var(--ease-soft), box-shadow var(--dur) var(--ease-soft),
+    transform 120ms var(--ease-soft);
 }
 .cta:hover:not(:disabled) {
   background: var(--gold-light);
   box-shadow: var(--shadow-glow);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cta:active:not(:disabled) {
+    transform: scale(var(--press));
+  }
 }
 .cta:disabled {
   opacity: 0.5;
@@ -224,4 +245,15 @@
   background: transparent;
   color: var(--cream-90);
   cursor: pointer;
+  transition: border-color var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft),
+    transform 120ms var(--ease-soft);
+}
+.ghost:hover {
+  border-color: var(--gold-light);
+  color: var(--gold-light);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ghost:active {
+    transform: scale(var(--press));
+  }
 }
