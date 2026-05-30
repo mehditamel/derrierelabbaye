@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Button } from "@/components/Button";
 import { Logo } from "@/components/Logo";
+import { HeroBackdrop } from "./HeroBackdrop";
 import { copies, site } from "@/data/site";
 import enseigne from "@/public/enseigne.jpeg";
 import styles from "./Hero.module.css";
@@ -8,14 +8,9 @@ import styles from "./Hero.module.css";
 export function Hero() {
   return (
     <section className={styles.hero}>
-      <Image
+      <HeroBackdrop
         src={enseigne}
         alt="Devanture en acier corten de Derrière l'Abbaye, illuminée le soir"
-        placeholder="blur"
-        priority
-        fill
-        sizes="100vw"
-        className={styles.photo}
       />
       <div className={styles.scrim} />
       <div className={styles.frame} aria-hidden="true" />
@@ -35,6 +30,10 @@ export function Hero() {
             Voir la carte
           </Button>
         </div>
+      </div>
+
+      <div className={styles.scrollHint} aria-hidden="true">
+        <span />
       </div>
     </section>
   );

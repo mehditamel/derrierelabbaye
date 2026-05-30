@@ -16,3 +16,16 @@
   line-height: 1;
   color: var(--gold);
 }
+
+/* Variante « tracée » : les filets se déploient depuis le centre. */
+@media (prefers-reduced-motion: no-preference) {
+  .draw .line {
+    animation: drawRule var(--dur-slow) var(--ease-out) both;
+  }
+  .draw .line:first-child {
+    transform-origin: right center;
+  }
+  .draw .line:last-child {
+    transform-origin: left center;
+  }
+}

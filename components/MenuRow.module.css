@@ -1,4 +1,5 @@
 .row {
+  position: relative;
   padding: var(--space-3) var(--space-2);
   margin-inline: calc(-1 * var(--space-2));
   border-bottom: 1px solid var(--hairline);
@@ -8,13 +9,36 @@
 .row:last-child {
   border-bottom: 0;
 }
-/* Aide à la lecture au survol (pointeur uniquement, couleur seule) */
+.row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  background: var(--gold);
+  border-radius: var(--r-pill);
+  transform: translateY(-50%);
+  transition: height var(--dur) var(--ease-out);
+}
+/* Aide à la lecture au survol (pointeur uniquement) */
 @media (hover: hover) {
   .row:hover {
     background: var(--wash-gold);
   }
   .row:hover .prix {
     color: var(--gold-light);
+  }
+  .row:hover::before {
+    height: 56%;
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .nom {
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .row:hover .nom {
+    transform: translateX(6px);
   }
 }
 

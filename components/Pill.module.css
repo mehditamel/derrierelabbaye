@@ -18,6 +18,11 @@
   border-color: var(--gold);
   color: var(--gold-deep);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .pill:active {
+    transform: scale(0.95);
+  }
+}
 
 .active {
   background: var(--noir);

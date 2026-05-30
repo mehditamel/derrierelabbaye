@@ -16,7 +16,7 @@ export function Intro() {
         </Reveal>
 
         <Reveal delay={80}>
-          <GoldRule className={styles.rule} />
+          <GoldRule className={styles.rule} draw />
         </Reveal>
 
         <Reveal delay={120}>

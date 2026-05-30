@@ -150,6 +150,32 @@
   margin: 0;
 }
 
+/* Apparition animée de la confirmation */
+@media (prefers-reduced-motion: no-preference) {
+  .successIcon {
+    animation: popIn 620ms var(--ease-out) both;
+  }
+  .successTitle {
+    animation: successFade 600ms var(--ease-out) both;
+    animation-delay: 180ms;
+  }
+  .successText {
+    animation: successFade 600ms var(--ease-out) both;
+    animation-delay: 280ms;
+  }
+}
+
+@keyframes successFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (max-width: 560px) {
   .grid {
     grid-template-columns: 1fr;

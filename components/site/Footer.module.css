@@ -54,9 +54,16 @@
   color: var(--cream-70);
   font-size: 0.98rem;
   line-height: 1.6;
+  background-image: linear-gradient(var(--gold-light), var(--gold-light));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: color var(--dur) var(--ease-soft),
+    background-size var(--dur) var(--ease-out);
 }
 .line:hover {
   color: var(--gold-light);
+  background-size: 100% 1px;
 }
 
 .hours {

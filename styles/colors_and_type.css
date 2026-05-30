@@ -84,7 +84,11 @@
 
   /* Transitions — lentes, jamais bondissantes */
   --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* entrées dynamiques, décélération franche */
+  --dur-fast: 200ms;
   --dur: 380ms;
+  --dur-slow: 700ms;
+  --dur-xslow: 1100ms;
 
   /* Interactions — couche tactile (survol / press) */
   --wash-gold: rgba(168, 136, 76, 0.06); /* fond de survol discret (aligné sur .feature) */
@@ -229,17 +233,144 @@ p {
   color: var(--gold);
 }
 
-/* Animation d'apparition (fade + montée douce) */
+/* =====================================================================
+   Mouvement — keyframes réutilisables
+   (les animations infinies sont coupées en prefers-reduced-motion)
+   ===================================================================== */
+
+/* Zoom + pan lent type Ken Burns (image hero) */
+@keyframes kenburns {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.1) translate3d(-1.5%, -2%, 0);
+  }
+}
+
+/* Halo ambré qui respire (section cocktails) */
+@keyframes breathe {
+  0% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.06);
+  }
+}
+
+/* Balayage doré (brillance bouton primaire) */
+@keyframes sweep {
+  from {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+/* Va-et-vient vertical (indicateur de défilement) */
+@keyframes bobDown {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+/* Tracé d'un filet doré */
+@keyframes drawRule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Anneau qui pulse (statut « ouvert ») */
+@keyframes pingRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(123, 191, 106, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(123, 191, 106, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(123, 191, 106, 0);
+  }
+}
+
+/* Apparition « pop » (cercle de confirmation) */
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Animation d'apparition (fade + montée douce) + variantes directionnelles */
 @media (prefers-reduced-motion: no-preference) {
   .u-reveal {
     opacity: 0;
-    transform: translateY(14px);
-    transition: opacity var(--dur) var(--ease-soft),
-      transform var(--dur) var(--ease-soft);
+    transform: translateY(20px);
+    transition: opacity var(--dur-slow) var(--ease-out),
+      transform var(--dur-slow) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .u-reveal--left {
+    transform: translateX(-26px);
+  }
+  .u-reveal--right {
+    transform: translateX(26px);
+  }
+  .u-reveal--scale {
+    transform: scale(0.94);
   }
   .u-reveal.is-in {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Utilitaire de balayage doré (boutons / cartes) */
+@media (prefers-reduced-motion: no-preference) {
+  .u-sweep {
+    position: relative;
+    overflow: hidden;
+  }
+  .u-sweep::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgba(248, 243, 233, 0.45),
+      transparent
+    );
+    transform: translateX(-150%) skewX(-18deg);
+    pointer-events: none;
+    opacity: 0;
+  }
+  .u-sweep:hover::after {
+    opacity: 1;
+    animation: sweep 720ms var(--ease-out);
   }
 }
 
