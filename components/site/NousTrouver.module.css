@@ -90,6 +90,11 @@
   background: #7bbf6a;
   box-shadow: 0 0 8px rgba(123, 191, 106, 0.8);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .dot {
+    animation: pingRing 2.4s var(--ease-soft) infinite;
+  }
+}
 
 .address {
   display: flex;

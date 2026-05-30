@@ -79,11 +79,12 @@ export function Header() {
       {open && (
         <div className={styles.drawer}>
           <nav className={styles.drawerNav} aria-label="Navigation mobile">
-            {liens.map((l) => (
+            {liens.map((l, i) => (
               <Link
                 key={l.href}
                 href={l.href}
                 className={styles.drawerLink}
+                style={{ animationDelay: `${i * 70}ms` }}
                 onClick={() => setOpen(false)}
               >
                 {l.label}

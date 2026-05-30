@@ -22,6 +22,11 @@
   pointer-events: none;
   z-index: 0;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .glow {
+    animation: breathe 7s var(--ease-soft) infinite alternate;
+  }
+}
 
 .section > :global(.u-container) {
   position: relative;

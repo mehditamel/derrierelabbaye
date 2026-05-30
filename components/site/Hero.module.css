@@ -8,10 +8,26 @@
   background: var(--noir);
 }
 
+.photoWrap {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  right: 0;
+  height: 120%;
+  z-index: 0;
+  will-change: transform;
+}
+
 .photo {
   object-fit: cover;
   object-position: center;
-  z-index: 0;
+  transform: scale(1.02);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .photo {
+    animation: kenburns 24s var(--ease-soft) infinite alternate;
+  }
 }
 
 .scrim {
@@ -43,17 +59,64 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
-  animation: heroIn 900ms var(--ease-soft) both;
 }
 
-@keyframes heroIn {
+/* Entrée échelonnée des éléments du hero */
+@media (prefers-reduced-motion: no-preference) {
+  .inner > * {
+    animation: heroItem 1000ms var(--ease-out) both;
+  }
+  .logo {
+    animation-delay: 80ms;
+  }
+  .accroche {
+    animation-delay: 260ms;
+  }
+  .address {
+    animation-delay: 440ms;
+  }
+  .cta {
+    animation-delay: 600ms;
+  }
+}
+
+@keyframes heroItem {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Indicateur de défilement */
+.scrollHint {
+  position: absolute;
+  bottom: var(--space-5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: 26px;
+  height: 42px;
+  border: 1px solid var(--cream-40);
+  border-radius: var(--r-pill);
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.scrollHint span {
+  width: 3px;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--cream-70);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scrollHint span {
+    animation: bobDown 1.8s var(--ease-soft) infinite;
   }
 }
 

@@ -27,6 +27,14 @@
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
+  transition: transform var(--dur) var(--ease-out),
+    filter var(--dur) var(--ease-soft);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .brand:hover {
+    transform: scale(1.04);
+    filter: drop-shadow(0 2px 14px rgba(233, 200, 146, 0.25));
+  }
 }
 
 .nav {
@@ -37,6 +45,7 @@
 }
 
 .link {
+  position: relative;
   font-family: var(--font-sans);
   text-transform: uppercase;
   letter-spacing: var(--track-label);
@@ -44,8 +53,23 @@
   color: var(--cream-70);
   transition: color var(--dur) var(--ease-soft);
 }
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 1px;
+  background: var(--gold-light);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur) var(--ease-out);
+}
 .link:hover {
   color: var(--gold-light);
+}
+.link:hover::after {
+  transform: scaleX(1);
 }
 
 .actions {
@@ -99,5 +123,23 @@
   }
   .drawerLink:hover {
     color: var(--gold-light);
+  }
+}
+
+/* Entrée en cascade des liens du drawer mobile */
+@media (max-width: 860px) and (prefers-reduced-motion: no-preference) {
+  .drawerLink {
+    animation: drawerIn 480ms var(--ease-out) both;
+  }
+}
+
+@keyframes drawerIn {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

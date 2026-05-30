@@ -1,6 +1,7 @@
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { JsonLd } from "@/components/JsonLd";
+import { ScrollProgress } from "@/components/ScrollProgress";
 
 export default function SiteLayout({
   children,
@@ -10,6 +11,7 @@ export default function SiteLayout({
   return (
     <>
       <JsonLd />
+      <ScrollProgress />
       <Header />
       <main>{children}</main>
       <Footer />

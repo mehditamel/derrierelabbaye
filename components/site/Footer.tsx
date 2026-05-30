@@ -2,6 +2,7 @@ import { MapPin, Clock, Phone } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { GoldRule } from "@/components/GoldRule";
 import { LegalLine } from "@/components/LegalLine";
+import { Reveal } from "@/components/Reveal";
 import { site } from "@/data/site";
 import styles from "./Footer.module.css";
 
@@ -9,6 +10,7 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <div className="u-container">
+        <Reveal>
         <div className={styles.top}>
           <div className={styles.brand}>
             <Logo tone="cream" width={220} />
@@ -63,8 +65,9 @@ export function Footer() {
             </div>
           </div>
         </div>
+        </Reveal>
 
-        <GoldRule className={styles.rule} />
+        <GoldRule className={styles.rule} draw />
 
         <div className={styles.bottom}>
           <LegalLine onDark />
