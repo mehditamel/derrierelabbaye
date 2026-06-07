@@ -39,8 +39,8 @@ for soul.
   - `CARTE DERRIERE L ABBAYE RECTO.jpg` — food menu (tapas / planches)
   - `CARTE DERRIERE L ABBAYE VERSO.jpg` — drinks menu (softs, vins, cocktails)
 - **GitHub:** [`mehditamel/derrierelabbaye`](https://github.com/mehditamel/derrierelabbaye)
-  — *currently a placeholder repo* (`"Site internet du bar DERRIERE L'ABBAYE"`),
-  no code yet. Explore it for future site source; this system can seed that build.
+  — le dépôt héberge désormais le **site + la PWA** (Next.js 14) qui appliquent ce
+  design system. Détails d'architecture et de mise en route : [`DEVELOPMENT.md`](DEVELOPMENT.md).
 - **Local codebase mount:** `DERRIERE L'ABBAYE/` (brand assets + admin PDFs).
 
 No Figma file or existing front-end code was provided, so the visual foundations below
