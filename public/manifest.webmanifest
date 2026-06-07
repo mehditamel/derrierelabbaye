@@ -12,6 +12,26 @@
   "background_color": "#14110D",
   "theme_color": "#14110D",
   "categories": ["food", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "La carte",
+      "short_name": "Carte",
+      "description": "Tapas, planches et cocktails",
+      "url": "/app/carte"
+    },
+    {
+      "name": "Réserver une table",
+      "short_name": "Réserver",
+      "description": "Choisir un créneau",
+      "url": "/app/reserver"
+    },
+    {
+      "name": "Fidélité",
+      "short_name": "Fidélité",
+      "description": "Votre carte de membre",
+      "url": "/app/fidelite"
+    }
+  ],
   "icons": [
     {
       "src": "/logo-cream.png",

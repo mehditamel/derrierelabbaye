@@ -385,3 +385,27 @@ p {
   white-space: nowrap;
   border: 0;
 }
+
+/* Lien d'évitement : masqué jusqu'au focus clavier, puis posé en haut à gauche. */
+.u-skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 1000;
+  transform: translateY(-150%);
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.74rem;
+  padding: 12px 18px;
+  background: var(--noir);
+  color: var(--cream);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-glow);
+  transition: transform var(--dur) var(--ease-soft);
+}
+.u-skip-link:focus {
+  transform: translateY(0);
+  color: var(--cream);
+}
+
