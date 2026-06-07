@@ -1,0 +1,48 @@
+.wrap {
+  min-height: 100svh;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-7) var(--space-4);
+}
+
+.logo {
+  margin-bottom: var(--space-2);
+}
+
+.code {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.74rem;
+  color: var(--gold-deep);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 7vw, 3rem);
+  color: var(--ink-900);
+}
+
+.rule {
+  margin: var(--space-3) auto;
+  max-width: 220px;
+}
+
+.text {
+  color: var(--ink-700);
+  max-width: 46ch;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+  margin-top: var(--space-4);
+}
