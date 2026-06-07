@@ -60,7 +60,27 @@ export function JsonLd() {
     currenciesAccepted: "EUR",
     paymentAccepted: "Cash, Credit Card",
     servesCuisine: ["Tapas", "Méditerranéenne", "Cocktails"],
-    acceptsReservations: `${site.url}/reserver`,
+    acceptsReservations: true,
+    potentialAction: {
+      "@type": "ReserveAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${site.url}/reserver`,
+        inLanguage: "fr-FR",
+        actionPlatform: [
+          "http://schema.org/DesktopWebPlatform",
+          "http://schema.org/MobileWebPlatform",
+        ],
+      },
+      result: { "@type": "Reservation", name: "Réservation de table" },
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "reservations",
+      email: site.email,
+      availableLanguage: ["fr"],
+      ...(telephone ? { telephone } : {}),
+    },
     areaServed: site.adresse.ville,
     hasMap: site.adresse.mapsUrl,
     address: {
@@ -105,9 +125,23 @@ export function JsonLd() {
     publisher: { "@id": `${site.url}/#bar` },
   };
 
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    "@id": `${site.url}/#breadcrumb`,
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: site.url },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Réserver",
+        item: `${site.url}/reserver`,
+      },
+    ],
+  };
+
   const data = {
     "@context": "https://schema.org",
-    "@graph": [bar, menu, website],
+    "@graph": [bar, menu, website, breadcrumb],
   };
 
   return (

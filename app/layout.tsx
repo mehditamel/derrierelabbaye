@@ -42,6 +42,13 @@ export const metadata: Metadata = {
     icon: "/logo-noir.png",
     apple: "/logo-cream.png",
   },
+  appleWebApp: {
+    capable: true,
+    title: site.nom,
+    statusBarStyle: "black-translucent",
+  },
+  // Évite l'auto-détection iOS des numéros dans le texte ; les liens tel: restent explicites.
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {

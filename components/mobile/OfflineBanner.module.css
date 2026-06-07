@@ -1,0 +1,36 @@
+.banner {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--app-maxw, 480px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: calc(env(safe-area-inset-top) + 8px) var(--space-4) 8px;
+  background: var(--corten);
+  color: var(--cream-90);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  letter-spacing: var(--track-tight);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .banner {
+    animation: dla-offline-in var(--dur) var(--ease-out) both;
+  }
+}
+
+@keyframes dla-offline-in {
+  from {
+    transform: translate(-50%, -100%);
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
+}

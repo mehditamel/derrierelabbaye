@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { TabBar } from "@/components/mobile/TabBar";
 import { PwaRegister } from "@/components/mobile/PwaRegister";
+import { OfflineBanner } from "@/components/mobile/OfflineBanner";
+import { InstallPrompt } from "@/components/mobile/InstallPrompt";
 import "./app-shell.css";
 
 export const metadata: Metadata = {
@@ -26,7 +28,9 @@ export default function MobileAppLayout({
   return (
     <div className="app-root">
       <PwaRegister />
+      <OfflineBanner />
       <div className="app-screen">{children}</div>
+      <InstallPrompt />
       <TabBar />
     </div>
   );
