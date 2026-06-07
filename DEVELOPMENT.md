@@ -27,33 +27,70 @@ npm run lint
 ```
 app/
   layout.tsx              # layout racine : <html>, polices (next/font), métadonnées globales
+  not-found.tsx           # page 404 de marque (fond ivoire)
+  error.tsx               # limite d'erreur client (« Réessayer »)
   (site)/                 # SITE VITRINE
-    layout.tsx            #   header + footer + JSON-LD
+    layout.tsx            #   skip-link + header + footer + JSON-LD
     page.tsx              #   /  → hero, le lieu, la carte, cocktails, réservation
     reserver/page.tsx     #   /reserver
   (mobile)/app/           # PWA MOBILE (barre d'onglets basse)
-    layout.tsx            #   coque app + service worker
-    page.tsx              #   /app           → accueil
-    carte/page.tsx        #   /app/carte
+    layout.tsx            #   coque app + SW + bannière offline + invite d'installation
+    page.tsx              #   /app           → accueil (+ partage natif)
+    carte/page.tsx        #   /app/carte      (+ retour en haut de page)
     reserver/page.tsx     #   /app/reserver
     fidelite/page.tsx     #   /app/fidelite
+    not-found.tsx         #   404 sombre dédiée à l'app
   sitemap.ts, robots.ts   # SEO
 components/               # composants partagés (Button, Pill, MenuRow, GoldRule, Logo…)
   site/                   # composants du site vitrine
-  mobile/                 # composants de la PWA
+  mobile/                 # composants de la PWA :
+                          #   PwaRegister (enregistrement SW + toast de mise à jour),
+                          #   OfflineBanner, InstallPrompt, UpdateToast, ShareButton,
+                          #   ScrollTop, LoyaltyCard, MobileCarte, MobileReserver, TabBar
+lib/
+  fonts.ts                # polices next/font
+  usePwa.ts               # useOnline / useInstallPrompt
+  useReservationForm.ts   # machine d'état + validation, partagée site/mobile
+  useLocalStorage.ts      # état persisté (sûr en SSR)
+  haptic.ts               # retour haptique discret (progressive enhancement)
 data/
   menu.ts                 # carte transcrite des cartes imprimées (plats, prix, ★)
   site.ts                 # infos établissement, copies, liens
 services/                 # réservation & fidélité (SIMULÉS, sans back-end)
 styles/colors_and_type.css# tokens de design (couleurs, typo, espacements, ombres)
-public/                   # logos, photo de devanture, cartes scannées, manifest, sw.js
+public/                   # logos optimisés, favicons & icônes PWA, photo, cartes, manifest, sw.js
 ```
+
+## PWA & finitions
+
+La PWA (`/app`) va au-delà de la simple coque hors-ligne :
+
+- **Installation** — `InstallPrompt` capte `beforeinstallprompt` et propose un
+  « Installer l'app » (rejet mémorisé). Le `manifest.webmanifest` déclare des
+  **raccourcis** (Carte, Réserver, Fidélité) pour l'appui long sur l'icône.
+- **Hors-ligne** — `OfflineBanner` signale la perte de réseau ; le `sw.js`
+  (cache `dla-shell-v3`) pré-cache la coque et les sous-pages de l'app.
+- **Mises à jour** — `PwaRegister` détecte un nouveau service worker et affiche
+  un `UpdateToast` (« Recharger » → `SKIP_WAITING`).
+- **Finitions** — partage natif (`ShareButton`, Web Share API + repli copie),
+  retour en haut de la carte (`ScrollTop`), retour haptique (`lib/haptic.ts`),
+  lien d'évitement clavier sur le site, pages 404 / erreur aux couleurs de la marque.
+- **Images** — logos recompressés (1254 px → 512 px) et jeu d'icônes/favicons
+  dédié et léger (cf. `public/icon-*.png`, `favicon-*.png`, `apple-touch-icon.png`).
 
 ## Réservation & fidélité
 
 Aucun back-end pour l'instant : `services/reservation.ts` et `services/loyalty.ts`
 **simulent** les appels (faux délai, état local). Pour brancher une vraie API (ou une
 base Supabase), remplacer le corps de `createReservation` — l'UI n'a pas à changer.
+
+- **Réservation** — la logique (machine d'état, validation du téléphone) est mutualisée
+  dans `lib/useReservationForm.ts`, consommée par le formulaire site et mobile. Les
+  coordonnées saisies dans l'app sont **mémorisées** (`lib/useLocalStorage.ts`) et
+  pré-remplies à la visite suivante.
+- **Fidélité** — `components/mobile/LoyaltyCard.tsx` rend la carte interactive : les
+  points sont **persistés localement**, « Simuler une visite » crédite des points
+  (aperçu du programme) et annonce les avantages débloqués.
 
 ## Déploiement (Vercel)
 
