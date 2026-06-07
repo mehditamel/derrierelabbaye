@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { haptic } from "@/lib/haptic";
 import { useLocalStorage } from "@/lib/useLocalStorage";
 import {
   avantages,
@@ -31,6 +32,7 @@ export function LoyaltyCard() {
     const apres = points + POINTS_PAR_VISITE;
     const franchi = avantageFranchi(points, apres);
     set(apres);
+    haptic(franchi ? [18, 50, 30] : 14);
     setAnnonce(
       franchi
         ? `Avantage débloqué : ${franchi.titre.toLowerCase()} !`

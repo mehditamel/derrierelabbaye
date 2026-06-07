@@ -5,6 +5,7 @@ import { Check, Minus, Plus } from "lucide-react";
 import { useReservationForm } from "@/lib/useReservationForm";
 import { useOnline } from "@/lib/usePwa";
 import { useLocalStorage } from "@/lib/useLocalStorage";
+import { haptic } from "@/lib/haptic";
 import styles from "./MobileReserver.module.css";
 
 type Contact = { nom: string; tel: string; email: string };
@@ -43,7 +44,10 @@ export function MobileReserver() {
   const successRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    if (status === "done") successRef.current?.focus();
+    if (status === "done") {
+      haptic([18, 50, 30]);
+      successRef.current?.focus();
+    }
   }, [status]);
 
   function valider() {
