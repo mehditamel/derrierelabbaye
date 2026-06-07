@@ -10,10 +10,13 @@ export default function SiteLayout({
 }) {
   return (
     <>
+      <a href="#contenu" className="u-skip-link">
+        Aller au contenu
+      </a>
       <JsonLd />
       <ScrollProgress />
       <Header />
-      <main>{children}</main>
+      <main id="contenu">{children}</main>
       <Footer />
     </>
   );

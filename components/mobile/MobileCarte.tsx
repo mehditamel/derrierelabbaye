@@ -2,6 +2,7 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import { MenuRow } from "@/components/MenuRow";
+import { ScrollTop } from "@/components/mobile/ScrollTop";
 import { site } from "@/data/site";
 import {
   aPartagerFroid,
@@ -102,6 +103,8 @@ export function MobileCarte() {
         ))}
         <p className={styles.legal}>{site.legal}</p>
       </div>
+
+      <ScrollTop />
     </div>
   );
 }

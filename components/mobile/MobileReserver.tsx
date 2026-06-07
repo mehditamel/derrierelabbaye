@@ -1,9 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Minus, Plus } from "lucide-react";
-import { createReservation } from "@/services/reservation";
+import { useReservationForm } from "@/lib/useReservationForm";
+import { useOnline } from "@/lib/usePwa";
+import { useLocalStorage } from "@/lib/useLocalStorage";
+import { haptic } from "@/lib/haptic";
 import styles from "./MobileReserver.module.css";
+
+type Contact = { nom: string; tel: string; email: string };
 
 const heures = ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00"];
 
@@ -30,32 +35,39 @@ export function MobileReserver() {
   const [date, setDate] = useState(jours[0].iso);
   const [heure, setHeure] = useState("20:00");
   const [couverts, setCouverts] = useState(2);
-  const [nom, setNom] = useState("");
-  const [tel, setTel] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
-  const [reference, setReference] = useState("");
-  const [erreur, setErreur] = useState("");
+  const { value: contact, set: setContact } = useLocalStorage<Contact>(
+    "dla-reservation-contact",
+    { nom: "", tel: "", email: "" }
+  );
+  const { status, reference, erreur, submit, reset } = useReservationForm();
+  const online = useOnline();
+  const successRef = useRef<HTMLHeadingElement>(null);
 
-  async function valider() {
-    setStatus("loading");
-    setErreur("");
-    try {
-      const res = await createReservation({ date, heure, couverts, nom, telephone: tel });
-      setReference(res.reference);
-      setStatus("done");
-    } catch (err) {
-      setErreur(err instanceof Error ? err.message : "Erreur");
-      setStatus("error");
+  useEffect(() => {
+    if (status === "done") {
+      haptic([18, 50, 30]);
+      successRef.current?.focus();
     }
+  }, [status]);
+
+  function valider() {
+    submit({
+      date,
+      heure,
+      couverts,
+      nom: contact.nom,
+      telephone: contact.tel,
+      email: contact.email,
+    });
   }
 
   if (status === "done") {
     return (
-      <div className={styles.success}>
+      <div className={styles.success} role="status">
         <span className={styles.successIcon}>
           <Check size={28} strokeWidth={1.5} />
         </span>
-        <h1 className="app-h" style={{ fontSize: "2rem" }}>
+        <h1 ref={successRef} tabIndex={-1} className="app-h" style={{ fontSize: "2rem" }}>
           C'est noté !
         </h1>
         <p className={styles.successText}>
@@ -65,7 +77,7 @@ export function MobileReserver() {
           <br />
           Référence <strong>{reference}</strong>.
         </p>
-        <button className={styles.ghost} onClick={() => setStatus("idle")}>
+        <button className={styles.ghost} onClick={reset}>
           Nouvelle demande
         </button>
       </div>
@@ -104,7 +116,7 @@ export function MobileReserver() {
             <button aria-label="Retirer" onClick={() => setCouverts((c) => Math.max(1, c - 1))}>
               <Minus size={18} strokeWidth={1.5} />
             </button>
-            <span>{couverts}</span>
+            <span aria-live="polite">{couverts}</span>
             <button aria-label="Ajouter" onClick={() => setCouverts((c) => Math.min(20, c + 1))}>
               <Plus size={18} strokeWidth={1.5} />
             </button>
@@ -129,29 +141,46 @@ export function MobileReserver() {
         <input
           className={styles.input}
           placeholder="Nom"
-          value={nom}
-          onChange={(e) => setNom(e.target.value)}
+          value={contact.nom}
+          onChange={(e) => setContact((c) => ({ ...c, nom: e.target.value }))}
           autoComplete="name"
         />
         <input
           className={styles.input}
           placeholder="Téléphone"
-          value={tel}
-          onChange={(e) => setTel(e.target.value)}
+          value={contact.tel}
+          onChange={(e) => setContact((c) => ({ ...c, tel: e.target.value }))}
           type="tel"
           autoComplete="tel"
         />
+        <input
+          className={styles.input}
+          placeholder="E-mail (facultatif)"
+          value={contact.email}
+          onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
+          type="email"
+          autoComplete="email"
+        />
 
-        {status === "error" && <p className={styles.error}>{erreur}</p>}
+        {status === "error" && (
+          <p className={styles.error} role="alert">
+            {erreur}
+          </p>
+        )}
       </div>
 
       <div className={styles.sticky}>
         <button
           className={styles.cta}
           onClick={valider}
-          disabled={status === "loading" || !nom}
+          disabled={status === "loading" || !contact.nom || !online}
+          aria-busy={status === "loading"}
         >
-          {status === "loading" ? "Envoi…" : "Demander cette table"}
+          {!online
+            ? "Hors connexion"
+            : status === "loading"
+            ? "Envoi…"
+            : "Demander cette table"}
         </button>
       </div>
     </div>

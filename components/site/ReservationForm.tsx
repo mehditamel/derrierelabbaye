@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/Button";
-import { createReservation } from "@/services/reservation";
+import { useReservationForm } from "@/lib/useReservationForm";
 import styles from "./ReservationForm.module.css";
 
 const heures = [
@@ -16,32 +16,26 @@ function aujourdHui(): string {
 }
 
 export function ReservationForm() {
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
-  const [reference, setReference] = useState("");
   const [heure, setHeure] = useState("20:00");
   const [couverts, setCouverts] = useState(2);
-  const [erreur, setErreur] = useState("");
+  const { status, reference, erreur, submit, reset } = useReservationForm();
+  const successRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (status === "done") successRef.current?.focus();
+  }, [status]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("loading");
-    setErreur("");
     const form = new FormData(e.currentTarget);
-    try {
-      const res = await createReservation({
-        date: String(form.get("date") || ""),
-        heure,
-        couverts,
-        nom: String(form.get("nom") || ""),
-        telephone: String(form.get("telephone") || ""),
-        message: String(form.get("message") || ""),
-      });
-      setReference(res.reference);
-      setStatus("done");
-    } catch (err) {
-      setErreur(err instanceof Error ? err.message : "Une erreur est survenue.");
-      setStatus("error");
-    }
+    await submit({
+      date: String(form.get("date") || ""),
+      heure,
+      couverts,
+      nom: String(form.get("nom") || ""),
+      telephone: String(form.get("telephone") || ""),
+      message: String(form.get("message") || ""),
+    });
   }
 
   if (status === "done") {
@@ -50,13 +44,15 @@ export function ReservationForm() {
         <span className={styles.successIcon}>
           <Check size={26} strokeWidth={1.5} />
         </span>
-        <h3 className={styles.successTitle}>Demande envoyée</h3>
+        <h3 ref={successRef} tabIndex={-1} className={styles.successTitle}>
+          Demande envoyée
+        </h3>
         <p className={styles.successText}>
           Merci. Votre demande de réservation a bien été prise en compte.
           Votre référence : <strong>{reference}</strong>.
           Nous revenons vers vous pour la confirmer.
         </p>
-        <Button variant="ghost" onClick={() => setStatus("idle")}>
+        <Button variant="ghost" onClick={reset}>
           Nouvelle demande
         </Button>
       </div>
@@ -133,10 +129,19 @@ export function ReservationForm() {
         <textarea name="message" rows={3} className={styles.input} />
       </label>
 
-      {status === "error" && <p className={styles.error}>{erreur}</p>}
+      {status === "error" && (
+        <p className={styles.error} role="alert">
+          {erreur}
+        </p>
+      )}
 
       <div className={styles.actions}>
-        <Button type="submit" variant="primary" disabled={status === "loading"}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={status === "loading"}
+          aria-busy={status === "loading"}
+        >
           {status === "loading" ? "Envoi…" : "Envoyer la demande"}
         </Button>
       </div>

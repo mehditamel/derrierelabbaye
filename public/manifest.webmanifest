@@ -12,21 +12,41 @@
   "background_color": "#14110D",
   "theme_color": "#14110D",
   "categories": ["food", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "La carte",
+      "short_name": "Carte",
+      "description": "Tapas, planches et cocktails",
+      "url": "/app/carte"
+    },
+    {
+      "name": "Réserver une table",
+      "short_name": "Réserver",
+      "description": "Choisir un créneau",
+      "url": "/app/reserver"
+    },
+    {
+      "name": "Fidélité",
+      "short_name": "Fidélité",
+      "description": "Votre carte de membre",
+      "url": "/app/fidelite"
+    }
+  ],
   "icons": [
     {
-      "src": "/logo-cream.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo-cream.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo-cream.png",
+      "src": "/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

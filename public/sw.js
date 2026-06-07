@@ -2,10 +2,13 @@
    Stratégie : network-first pour la navigation (toujours frais si en ligne),
    cache-first pour les assets statiques. */
 
-const CACHE = "dla-shell-v2";
+const CACHE = "dla-shell-v3";
 const SHELL = [
   "/",
   "/app",
+  "/app/carte",
+  "/app/reserver",
+  "/app/fidelite",
   "/manifest.webmanifest",
   "/logo-cream.png",
   "/logo-noir.png",
@@ -13,9 +16,18 @@ const SHELL = [
 ];
 
 self.addEventListener("install", (event) => {
+  // On pré-cache la coque sans forcer l'activation : la mise à jour attend
+  // un geste explicite de l'utilisateur (message SKIP_WAITING).
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE).then((cache) => cache.addAll(SHELL))
   );
+});
+
+// Activation immédiate du nouveau worker sur demande (toast « Recharger »).
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("activate", (event) => {

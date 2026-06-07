@@ -27,7 +27,15 @@ export const demoLoyalty: LoyaltyState = {
   palier: 120,
 };
 
+/** Points crédités par visite (aperçu du programme). */
+export const POINTS_PAR_VISITE = 20;
+
 /** Avantage suivant à débloquer selon les points. */
 export function prochainAvantage(points: number): Avantage | null {
   return avantages.find((a) => a.seuil > points) ?? null;
+}
+
+/** Avantage tout juste franchi entre deux totaux de points (ou null). */
+export function avantageFranchi(avant: number, apres: number): Avantage | null {
+  return avantages.find((a) => a.seuil > avant && a.seuil <= apres) ?? null;
 }

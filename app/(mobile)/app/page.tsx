@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { UtensilsCrossed, CalendarHeart, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { ShareButton } from "@/components/mobile/ShareButton";
 import { aPartagerFroid, cocktailVedette } from "@/data/menu";
 import { site } from "@/data/site";
 import enseigne from "@/public/enseigne.jpeg";
@@ -24,6 +25,11 @@ export default function AppHome() {
           className={styles.heroPhoto}
         />
         <div className={styles.heroScrim} />
+        <ShareButton
+          url={site.url}
+          title={site.nom}
+          text="Apéro marseillais — bar à tapas & cocktails, juste derrière l'Abbaye Saint-Victor."
+        />
         <div className={styles.heroInner}>
           <Logo tone="cream" width={210} priority />
           <span className={styles.status}>
