@@ -148,6 +148,22 @@
   border-color: var(--gold);
 }
 
+/* Créneau déjà passé aujourd'hui */
+.heureOff {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: default;
+}
+.heureOff:hover {
+  border-color: var(--cream-16);
+}
+
+.aide {
+  font-size: 0.85rem;
+  color: var(--cream-70);
+  margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+}
+
 .input {
   width: 100%;
   font-family: var(--font-body);

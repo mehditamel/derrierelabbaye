@@ -108,6 +108,24 @@
   background: var(--noir);
   color: var(--cream-90);
   border-color: var(--noir);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Créneau déjà passé aujourd'hui */
+.heureOff {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: default;
+}
+.heureOff:hover {
+  border-color: var(--hairline-strong);
+  color: var(--ink-700);
+}
+
+.aide {
+  font-size: 0.85rem;
+  color: var(--ink-500);
+  margin: 0;
 }
 
 .actions {

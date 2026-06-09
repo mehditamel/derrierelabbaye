@@ -4,6 +4,11 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/Button";
 import { useReservationForm } from "@/lib/useReservationForm";
+import {
+  creneauPasse,
+  isoLocal,
+  premierCreneauDisponible,
+} from "@/lib/creneaux";
 import styles from "./ReservationForm.module.css";
 
 const heures = [
@@ -11,15 +16,35 @@ const heures = [
   "20:30", "21:00", "21:30", "22:00", "22:30",
 ];
 
-function aujourdHui(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
 export function ReservationForm() {
+  const [date, setDate] = useState("");
+  const [maintenant, setMaintenant] = useState<Date | null>(null);
   const [heure, setHeure] = useState("20:00");
   const [couverts, setCouverts] = useState(2);
   const { status, reference, erreur, submit, reset } = useReservationForm();
   const successRef = useRef<HTMLHeadingElement>(null);
+
+  // La date du jour est posée au montage : le HTML pré-rendu ne fige ainsi
+  // ni la date de build, ni le fuseau du serveur (UTC ≠ heure de Marseille).
+  useEffect(() => {
+    const d = new Date();
+    setMaintenant(d);
+    setDate((prev) => prev || isoLocal(d));
+  }, []);
+
+  // Si l'heure choisie est passée (changement de date, retour sur l'onglet…),
+  // on avance au premier créneau encore ouvert.
+  useEffect(() => {
+    if (!maintenant || !date) return;
+    if (creneauPasse(date, heure, maintenant)) {
+      const libre = premierCreneauDisponible(date, heures, maintenant);
+      if (libre) setHeure(libre);
+    }
+  }, [maintenant, date, heure]);
+
+  const soireePassee = Boolean(
+    maintenant && date && !premierCreneauDisponible(date, heures, maintenant)
+  );
 
   useEffect(() => {
     if (status === "done") successRef.current?.focus();
@@ -68,8 +93,9 @@ export function ReservationForm() {
             type="date"
             name="date"
             required
-            min={aujourdHui()}
-            defaultValue={aujourdHui()}
+            min={maintenant ? isoLocal(maintenant) : undefined}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
             className={styles.input}
           />
         </label>
@@ -99,18 +125,31 @@ export function ReservationForm() {
       <fieldset className={styles.fieldset}>
         <legend className={styles.label}>Heure</legend>
         <div className={styles.heures}>
-          {heures.map((h) => (
-            <button
-              type="button"
-              key={h}
-              className={`${styles.heure} ${heure === h ? styles.heureActive : ""}`}
-              aria-pressed={heure === h}
-              onClick={() => setHeure(h)}
-            >
-              {h}
-            </button>
-          ))}
+          {heures.map((h) => {
+            const passe = Boolean(
+              maintenant && date && creneauPasse(date, h, maintenant)
+            );
+            return (
+              <button
+                type="button"
+                key={h}
+                disabled={passe}
+                className={`${styles.heure} ${heure === h ? styles.heureActive : ""} ${
+                  passe ? styles.heureOff : ""
+                }`}
+                aria-pressed={heure === h}
+                onClick={() => setHeure(h)}
+              >
+                {h}
+              </button>
+            );
+          })}
         </div>
+        {soireePassee && (
+          <p className={styles.aide}>
+            Plus de créneaux ce soir — choisissez un autre jour.
+          </p>
+        )}
       </fieldset>
 
       <div className={styles.grid}>
