@@ -34,6 +34,11 @@
   line-height: 1.1;
 }
 
+/* Titre d'écran : taille unique pour tous les en-têtes de l'app */
+.app-h1 {
+  font-size: 1.9rem;
+}
+
 /* Transition entre les écrans (montée douce, voir template.tsx) */
 @media (prefers-reduced-motion: no-preference) {
   .app-screen-in {

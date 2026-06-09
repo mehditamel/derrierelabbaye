@@ -118,9 +118,7 @@ export function MobileReserver() {
   return (
     <div className={styles.wrap}>
       <div className={styles.header}>
-        <h1 className="app-h" style={{ fontSize: "1.9rem" }}>
-          Réserver
-        </h1>
+        <h1 className="app-h app-h1">Réserver</h1>
         <p className={styles.sub}>Choisissez votre créneau</p>
       </div>
 

@@ -46,9 +46,7 @@ export function MobileCarte() {
   return (
     <div>
       <div className={styles.header}>
-        <h1 className="app-h" style={{ fontSize: "1.9rem" }}>
-          La carte
-        </h1>
+        <h1 className="app-h app-h1">La carte</h1>
         <p className={styles.sub}>Bar à tapas & cocktails</p>
       </div>
 

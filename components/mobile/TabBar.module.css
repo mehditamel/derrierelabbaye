@@ -20,17 +20,19 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 4px 0;
-  color: var(--cream-40);
+  padding: 6px 0;
+  color: var(--cream-70);
   font-family: var(--font-sans);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  font-size: 0.66rem;
+  white-space: nowrap;
+  border-radius: var(--r-card);
   transition: color var(--dur) var(--ease-soft), transform 120ms var(--ease-soft);
 }
 
 .tab:hover {
-  color: var(--cream-70);
+  color: var(--cream-90);
 }
 @media (prefers-reduced-motion: no-preference) {
   .tab:active {
@@ -40,4 +42,6 @@
 
 .active {
   color: var(--gold-light);
+  /* Filet or au ras du bord supérieur : repère immédiat de l'onglet actif */
+  box-shadow: inset 0 2px 0 var(--gold);
 }

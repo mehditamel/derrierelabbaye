@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -18,6 +18,7 @@ const liens = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const burgerRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   // Le header transparent n'est lisible que sur le hero de l'accueil.
   // Ailleurs (fond ivoire), on le force en version pleine.
@@ -39,6 +40,25 @@ export function Header() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  // Échap ferme le drawer et rend le focus au bouton burger.
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: globalThis.KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        burgerRef.current?.focus();
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  // Toute navigation ferme le drawer (couvre le CTA « Réserver une table »,
+  // dont le lien ne transmet pas de onClick).
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <header
@@ -67,9 +87,11 @@ export function Header() {
 
         <button
           type="button"
+          ref={burgerRef}
           className={styles.burger}
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={open}
+          aria-controls="menu-mobile"
           onClick={() => setOpen((v) => !v)}
         >
           {open ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
@@ -77,7 +99,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className={styles.drawer}>
+        <div id="menu-mobile" className={styles.drawer}>
           <nav className={styles.drawerNav} aria-label="Navigation mobile">
             {liens.map((l, i) => (
               <Link
