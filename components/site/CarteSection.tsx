@@ -65,6 +65,9 @@ export function CarteSection() {
         <p className={styles.note}>
           À accompagner d'un verre, d'une bouteille… ou des deux.
         </p>
+        <p className={styles.legende}>
+          <span aria-hidden="true">★</span> nos spécialités maison
+        </p>
       </div>
     </section>
   );

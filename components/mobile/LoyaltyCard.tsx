@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Plus } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { haptic } from "@/lib/haptic";
@@ -16,24 +16,33 @@ import styles from "../../app/(mobile)/app/fidelite/fidelite.module.css";
 
 /** Carte de fidélité interactive : points persistés localement (aperçu du programme). */
 export function LoyaltyCard() {
-  const { value: points, set, remove } = useLocalStorage(
+  const { value: points, set, remove, ready } = useLocalStorage(
     "dla-loyalty-points",
     demoLoyalty.points
   );
   const [annonce, setAnnonce] = useState("");
   const [vientDeValider, setVientDeValider] = useState(false);
+  const annonceTimer = useRef<number>();
+
+  useEffect(() => () => window.clearTimeout(annonceTimer.current), []);
 
   const suivant = prochainAvantage(points);
   const progression = suivant
     ? Math.min(100, Math.round((points / suivant.seuil) * 100))
     : 100;
 
+  function annoncer(message: string) {
+    setAnnonce(message);
+    window.clearTimeout(annonceTimer.current);
+    annonceTimer.current = window.setTimeout(() => setAnnonce(""), 2600);
+  }
+
   function validerVisite() {
     const apres = points + POINTS_PAR_VISITE;
     const franchi = avantageFranchi(points, apres);
     set(apres);
     haptic(franchi ? [18, 50, 30] : 14);
-    setAnnonce(
+    annoncer(
       franchi
         ? `Avantage débloqué : ${franchi.titre.toLowerCase()} !`
         : `Visite enregistrée — +${POINTS_PAR_VISITE} points.`
@@ -44,6 +53,7 @@ export function LoyaltyCard() {
 
   function reinitialiser() {
     remove();
+    window.clearTimeout(annonceTimer.current);
     setAnnonce("");
   }
 
@@ -55,13 +65,18 @@ export function LoyaltyCard() {
           <span className={styles.chip}>Membre</span>
         </div>
         <div className={styles.points}>
-          <span className={styles.pointsValue}>{points}</span>
+          {/* Skeleton tant que localStorage n'est pas lu : évite le flash de la valeur démo */}
+          <span
+            className={`${styles.pointsValue} ${!ready ? styles.skeleton : ""}`}
+          >
+            {points}
+          </span>
           <span className={styles.pointsLabel}>points</span>
         </div>
         <p className={styles.member}>{demoLoyalty.membre}</p>
 
         <div
-          className={styles.progress}
+          className={`${styles.progress} ${!ready ? styles.skeleton : ""}`}
           role="progressbar"
           aria-valuenow={progression}
           aria-valuemin={0}
@@ -72,7 +87,10 @@ export function LoyaltyCard() {
               : "Tous les avantages sont débloqués"
           }
         >
-          <div className={styles.progressBar} style={{ width: `${progression}%` }} />
+          <div
+            className={styles.progressBar}
+            style={{ width: ready ? `${progression}%` : 0 }}
+          />
         </div>
         {suivant ? (
           <p className={styles.next}>
@@ -98,7 +116,12 @@ export function LoyaltyCard() {
           Réinitialiser l'aperçu
         </button>
       </div>
-      <p className={styles.annonce} role="status" aria-live="polite">
+      {/* Toujours monté (aria-live) : seul le texte change, l'annonce SR reste fiable */}
+      <p
+        className={`${styles.annonce} ${annonce ? styles.annonceVisible : ""}`}
+        role="status"
+        aria-live="polite"
+      >
         {annonce}
       </p>
 

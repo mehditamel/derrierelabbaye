@@ -82,7 +82,9 @@
   border: 0;
   color: var(--cream-90);
   cursor: pointer;
-  padding: 6px;
+  /* 22px d'icône + 2 × 11px = cible tactile de 44px */
+  padding: 11px;
+  margin-right: -11px;
 }
 
 .drawer {
@@ -121,7 +123,8 @@
     padding: var(--space-2) 0;
     border-bottom: 1px solid var(--cream-16);
   }
-  .drawerLink:hover {
+  .drawerLink:hover,
+  .drawerLink:active {
     color: var(--gold-light);
   }
 }

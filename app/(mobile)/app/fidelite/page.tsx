@@ -13,9 +13,7 @@ export default function AppFidelitePage() {
   return (
     <div>
       <div className={styles.header}>
-        <h1 className="app-h" style={{ fontSize: "1.9rem" }}>
-          Fidélité
-        </h1>
+        <h1 className="app-h app-h1">Fidélité</h1>
         <p className={styles.sub}>Votre carte de membre</p>
       </div>
 

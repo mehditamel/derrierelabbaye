@@ -87,8 +87,8 @@
   gap: var(--space-2);
 }
 .stepper button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--cream-16);
   border-radius: var(--r-pill);
   background: transparent;
@@ -99,11 +99,15 @@
   justify-content: center;
   transition: border-color var(--dur) var(--ease-soft), transform 120ms var(--ease-soft);
 }
-.stepper button:hover {
+.stepper button:hover:not(:disabled) {
   border-color: var(--gold-light);
 }
+.stepper button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
 @media (prefers-reduced-motion: no-preference) {
-  .stepper button:active {
+  .stepper button:active:not(:disabled) {
     transform: scale(var(--press));
   }
 }
@@ -117,7 +121,7 @@
 
 .heures {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-2);
   margin: var(--space-2) 0 var(--space-5);
 }
@@ -125,8 +129,9 @@
 .heure {
   font-family: var(--font-sans);
   letter-spacing: 0.04em;
-  font-size: 0.9rem;
-  padding: 12px 4px;
+  font-size: 0.85rem;
+  min-height: 44px;
+  padding: 12px 2px;
   border: 1px solid var(--cream-16);
   border-radius: var(--r-pill);
   background: transparent;
@@ -148,6 +153,22 @@
   border-color: var(--gold);
 }
 
+/* Créneau déjà passé aujourd'hui */
+.heureOff {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: default;
+}
+.heureOff:hover {
+  border-color: var(--cream-16);
+}
+
+.aide {
+  font-size: 0.85rem;
+  color: var(--cream-70);
+  margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+}
+
 .input {
   width: 100%;
   font-family: var(--font-body);
@@ -167,9 +188,33 @@
   border-color: var(--gold-light);
 }
 
+/* Champ signalé en erreur après validation au blur */
+.inputError {
+  border-color: var(--ambre);
+}
+
+.fieldError {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--ambre);
+  margin: calc(-1 * var(--space-1)) 0 var(--space-2);
+}
+
+/* Boîte d'erreur globale : saillante sans crier */
 .error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-left: 2px solid var(--ambre);
+  border-radius: var(--r-card);
+  background: rgba(233, 200, 146, 0.08);
   color: var(--ambre);
   font-size: 0.9rem;
+}
+.error svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .sticky {
@@ -206,6 +251,37 @@
 .cta:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.ctaHint {
+  margin: var(--space-2) 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--cream-70);
+}
+
+/* Visible uniquement quand le mouvement est permis (sinon, texte « Envoi… » seul) */
+.spinner {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: var(--space-2);
+    vertical-align: -2px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: var(--r-pill);
+    animation: spin 700ms linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .success {

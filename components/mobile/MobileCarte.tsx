@@ -3,6 +3,7 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { MenuRow } from "@/components/MenuRow";
 import { ScrollTop } from "@/components/mobile/ScrollTop";
+import { haptic } from "@/lib/haptic";
 import { site } from "@/data/site";
 import {
   aPartagerFroid,
@@ -45,9 +46,7 @@ export function MobileCarte() {
   return (
     <div>
       <div className={styles.header}>
-        <h1 className="app-h" style={{ fontSize: "1.9rem" }}>
-          La carte
-        </h1>
+        <h1 className="app-h app-h1">La carte</h1>
         <p className={styles.sub}>Bar à tapas & cocktails</p>
       </div>
 
@@ -71,7 +70,10 @@ export function MobileCarte() {
               aria-controls={PANEL_ID}
               tabIndex={selected ? 0 : -1}
               className={`${styles.tab} ${selected ? styles.tabActive : ""}`}
-              onClick={() => setActif(o.id)}
+              onClick={() => {
+                haptic(8);
+                setActif(o.id);
+              }}
             >
               {o.label}
             </button>
@@ -79,8 +81,10 @@ export function MobileCarte() {
         })}
       </div>
 
+      {/* key={actif} : remonte le panneau → ré-anime le contenu au changement d'onglet */}
       <div
-        className="app-pad"
+        key={actif}
+        className={`app-pad ${styles.panel}`}
         id={PANEL_ID}
         role="tabpanel"
         aria-labelledby={`tab-${actif}`}
@@ -101,6 +105,9 @@ export function MobileCarte() {
             </div>
           </section>
         ))}
+        <p className={styles.legende}>
+          <span aria-hidden="true">★</span> nos spécialités maison
+        </p>
         <p className={styles.legal}>{site.legal}</p>
       </div>
 
