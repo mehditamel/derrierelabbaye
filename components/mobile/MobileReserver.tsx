@@ -257,11 +257,16 @@ export function MobileReserver() {
           disabled={status === "loading" || !contact.nom.trim() || !online || soireePassee}
           aria-busy={status === "loading"}
         >
-          {!online
-            ? "Hors connexion"
-            : status === "loading"
-            ? "Envoi…"
-            : "Demander cette table"}
+          {!online ? (
+            "Hors connexion"
+          ) : status === "loading" ? (
+            <>
+              <span className={styles.spinner} aria-hidden="true" />
+              Envoi…
+            </>
+          ) : (
+            "Demander cette table"
+          )}
         </button>
         {!contact.nom.trim() && (
           <p className={styles.ctaHint}>

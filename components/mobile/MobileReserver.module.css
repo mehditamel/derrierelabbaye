@@ -259,6 +259,30 @@
   color: var(--cream-70);
 }
 
+/* Visible uniquement quand le mouvement est permis (sinon, texte « Envoi… » seul) */
+.spinner {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: var(--space-2);
+    vertical-align: -2px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: var(--r-pill);
+    animation: spin 700ms linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .success {
   min-height: 100svh;
   display: flex;

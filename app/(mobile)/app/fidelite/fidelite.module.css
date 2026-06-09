@@ -152,12 +152,68 @@
   color: var(--cream-70);
 }
 
+/* Toast au-dessus de la tab bar (même gabarit que UpdateToast) */
 .annonce {
-  min-height: 1.2em;
-  margin: var(--space-2) 0 0;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(78px + env(safe-area-inset-bottom) + var(--space-2));
+  width: calc(100% - 2 * var(--space-3));
+  max-width: calc(var(--app-maxw, 480px) - 2 * var(--space-3));
+  z-index: 45;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
   text-align: center;
   font-size: 0.84rem;
   color: var(--gold-light);
+  background: rgba(20, 17, 13, 0.92);
+  border: 1px solid var(--hairline-gold);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease-soft);
+}
+.annonceVisible {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .annonceVisible {
+    animation: annonceIn var(--dur) var(--ease-out) both;
+  }
+}
+
+@keyframes annonceIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Espace réservé tant que localStorage n'est pas lu */
+.skeleton {
+  color: transparent;
+  background: var(--cream-16);
+  border-radius: var(--r-card);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton {
+    animation: skeletonPulse 1.2s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes skeletonPulse {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 0.9;
+  }
 }
 
 .advantages {

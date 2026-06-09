@@ -3,6 +3,7 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { MenuRow } from "@/components/MenuRow";
 import { ScrollTop } from "@/components/mobile/ScrollTop";
+import { haptic } from "@/lib/haptic";
 import { site } from "@/data/site";
 import {
   aPartagerFroid,
@@ -71,7 +72,10 @@ export function MobileCarte() {
               aria-controls={PANEL_ID}
               tabIndex={selected ? 0 : -1}
               className={`${styles.tab} ${selected ? styles.tabActive : ""}`}
-              onClick={() => setActif(o.id)}
+              onClick={() => {
+                haptic(8);
+                setActif(o.id);
+              }}
             >
               {o.label}
             </button>
@@ -79,8 +83,10 @@ export function MobileCarte() {
         })}
       </div>
 
+      {/* key={actif} : remonte le panneau → ré-anime le contenu au changement d'onglet */}
       <div
-        className="app-pad"
+        key={actif}
+        className={`app-pad ${styles.panel}`}
         id={PANEL_ID}
         role="tabpanel"
         aria-labelledby={`tab-${actif}`}

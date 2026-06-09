@@ -5,6 +5,17 @@
   text-align: left;
 }
 
+/* Conteneur des champs : verrouillé d'un bloc pendant l'envoi */
+.fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -127,9 +138,14 @@
   cursor: pointer;
   transition: all var(--dur) var(--ease-soft);
 }
-.heure:hover {
+.heure:hover:not(:disabled) {
   border-color: var(--gold);
   color: var(--gold-deep);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .heure:active:not(:disabled) {
+    transform: scale(var(--press));
+  }
 }
 .heureActive {
   background: var(--noir);
@@ -185,6 +201,30 @@
 .error svg {
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+/* Visible uniquement quand le mouvement est permis (sinon, texte « Envoi… » seul) */
+.spinner {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: var(--space-2);
+    vertical-align: -2px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: var(--r-pill);
+    animation: spin 700ms linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .success {

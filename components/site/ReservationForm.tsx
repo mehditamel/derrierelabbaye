@@ -123,6 +123,8 @@ export function ReservationForm() {
 
   return (
     <form className={styles.form} onSubmit={onSubmit}>
+      {/* Verrouille tous les champs pendant l'envoi */}
+      <fieldset className={styles.fields} disabled={status === "loading"}>
       <div className={styles.grid}>
         <label className={styles.field}>
           <span className={styles.label}>
@@ -276,6 +278,7 @@ export function ReservationForm() {
           className={styles.input}
         />
       </label>
+      </fieldset>
 
       {status === "error" && (
         <p className={styles.error} role="alert">
@@ -294,7 +297,14 @@ export function ReservationForm() {
           disabled={status === "loading"}
           aria-busy={status === "loading"}
         >
-          {status === "loading" ? "Envoi…" : "Envoyer la demande"}
+          {status === "loading" ? (
+            <>
+              <span className={styles.spinner} aria-hidden="true" />
+              Envoi…
+            </>
+          ) : (
+            "Envoyer la demande"
+          )}
         </Button>
       </div>
     </form>

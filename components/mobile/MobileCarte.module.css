@@ -57,6 +57,23 @@
   border-color: var(--gold);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .panel {
+    animation: panelIn var(--dur) var(--ease-out) both;
+  }
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .block {
   margin-top: var(--space-5);
 }
