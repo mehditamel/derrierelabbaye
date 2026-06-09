@@ -85,12 +85,25 @@
   color: var(--gold-light);
 }
 
-.legal {
+.legende {
   margin: var(--space-7) 0 0;
   text-align: center;
   font-family: var(--font-sans);
   text-transform: uppercase;
   letter-spacing: var(--track-label);
-  font-size: 0.6rem;
-  color: var(--cream-40);
+  font-size: 0.66rem;
+  color: var(--cream-70);
+}
+.legende span {
+  color: var(--gold-light);
+}
+
+.legal {
+  margin: var(--space-2) 0 0;
+  text-align: center;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.66rem;
+  color: var(--cream-70);
 }

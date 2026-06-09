@@ -3,6 +3,10 @@
    Transcrites fidèlement depuis les cartes imprimées
    (public/carte-recto.jpg = cuisine, public/carte-verso.jpg = boissons).
    ★ = spécialité maison (signature).
+
+   Convention typographique des prix : espace fine insécable (U+202F)
+   avant le symbole €, décimales à la virgule uniquement si nécessaires
+   (« 7 € », « 3,50 € », fourchettes « 12 – 15 € »).
    ===================================================================== */
 
 export type MenuItem = {
@@ -28,34 +32,34 @@ export const aPartagerFroid: MenuSection = {
     {
       nom: "Houmous maison",
       description: "huile d'olive & paprika fumé, pain grillé",
-      prix: "7€",
+      prix: "7 €",
     },
     {
       nom: "Aubergines rôties",
       description: "yaourt citronné & zaatar",
-      prix: "8€",
+      prix: "8 €",
     },
     {
       nom: "Burrata crémeuse",
       description: "tomates confites & pesto, focaccia grillée",
-      prix: "12€",
+      prix: "12 €",
     },
     {
       nom: "Poulpe mariné",
       description: "citron confit & herbes fraîches",
-      prix: "14€",
+      prix: "14 €",
       signature: true,
     },
     {
       nom: "Vitello tonnato",
       description: "câpres & pickles d'oignon rouge",
-      prix: "13€",
+      prix: "13 €",
       signature: true,
     },
     {
       nom: "Anchois marinés",
       description: "huile d'olive & zestes de citron",
-      prix: "10€",
+      prix: "10 €",
     },
   ],
 };
@@ -67,28 +71,28 @@ export const aPartagerChaud: MenuSection = {
     {
       nom: "Croque-monsieur",
       description: "jambon & comté, croustillant, coupé en tapas",
-      prix: "9€",
+      prix: "9 €",
     },
     {
       nom: "Poivrons del piquillo farcis",
       description: "préparation du moment, inspiration du chef",
-      prix: "9€",
+      prix: "9 €",
     },
     {
       nom: "Focaccia toastée",
       description: "mortadelle & stracciatella",
-      prix: "10€",
+      prix: "10 €",
     },
     {
       nom: "Moules gratinées",
       description: "beurre persillé & chapelure croustillante",
-      prix: "14€",
+      prix: "14 €",
       signature: true,
     },
     {
       nom: "Couteaux en persillade",
       description: "ail, persil & citron",
-      prix: "13€",
+      prix: "13 €",
     },
   ],
 };
@@ -100,17 +104,17 @@ export const planches: MenuSection = {
     {
       nom: "Planche de charcuterie",
       description: "sélection de jambons & saisons",
-      prix: "18€",
+      prix: "18 €",
     },
     {
       nom: "Planche de fromages",
       description: "affinés & de caractère",
-      prix: "18€",
+      prix: "18 €",
     },
     {
       nom: "Planche mixte",
       description: "charcuterie & fromages",
-      prix: "24€",
+      prix: "24 €",
     },
   ],
 };
@@ -122,7 +126,7 @@ export const cuisine: MenuSection[] = [aPartagerFroid, aPartagerChaud, planches]
 export const cocktailsClassiques: MenuSection = {
   id: "cocktails",
   titre: "Cocktails classiques",
-  surtitre: "12€",
+  surtitre: "12 €",
   items: [
     { nom: "Mojito" },
     { nom: "Aperol Spritz" },
@@ -135,7 +139,7 @@ export const cocktailsClassiques: MenuSection = {
 export const cocktailsCreations: MenuSection = {
   id: "creations",
   titre: "Cocktails créations",
-  surtitre: "12€ – 15€",
+  surtitre: "12 – 15 €",
   // PLACEHOLDER : la carte imprimée laisse cette liste « à compléter ».
   // Renseigner les créations maison ici.
   items: [
@@ -146,21 +150,21 @@ export const cocktailsCreations: MenuSection = {
 export const longDrinks: MenuSection = {
   id: "long-drinks",
   titre: "Long drinks",
-  surtitre: "10€",
+  surtitre: "10 €",
   items: [{ nom: "Whisky Coca" }, { nom: "Gin Tonic" }, { nom: "Vodka Red Bull" }],
 };
 
 export const shooters: MenuSection = {
   id: "shooters",
   titre: "Shooters",
-  surtitre: "5€",
+  surtitre: "5 €",
   items: [{ nom: "Sélection de shooters" }],
 };
 
 export const softs: MenuSection = {
   id: "softs",
   titre: "Softs",
-  surtitre: "5€",
+  surtitre: "5 €",
   items: [
     { nom: "Coca-Cola" },
     { nom: "Coca-Cola Zéro" },
@@ -174,14 +178,14 @@ export const softs: MenuSection = {
 export const jusDeFruits: MenuSection = {
   id: "jus",
   titre: "Jus de fruits",
-  surtitre: "5€",
+  surtitre: "5 €",
   items: [{ nom: "Orange, Ananas, Pomme, Tomate, Abricot, ACE…" }],
 };
 
 export const sirops: MenuSection = {
   id: "sirops",
   titre: "Sirops",
-  surtitre: "3€",
+  surtitre: "3 €",
   items: [
     {
       nom: "Grenadine, Menthe, Fraise, Citron, Pêche, Orgeat, Violette, Vanille, Caramel, Cerise, Banane, Kiwi",
@@ -193,8 +197,8 @@ export const eauxMinerales: MenuSection = {
   id: "eaux",
   titre: "Eaux minérales",
   items: [
-    { nom: "Grande bouteille", prix: "5€" },
-    { nom: "Demi bouteille", prix: "3,50€" },
+    { nom: "Grande bouteille", prix: "5 €" },
+    { nom: "Demi bouteille", prix: "3,50 €" },
   ],
 };
 
@@ -202,8 +206,8 @@ export const vins: MenuSection = {
   id: "vins",
   titre: "Sélection de vins",
   items: [
-    { nom: "Verre de vin", prix: "5€" },
-    { nom: "Verre de vin supérieur", prix: "7€" },
+    { nom: "Verre de vin", prix: "5 €" },
+    { nom: "Verre de vin supérieur", prix: "7 €" },
     // PLACEHOLDER : la carte laisse les références blancs / rouges / rosés
     // « à compléter ». Renseigner les bouteilles ici.
     { nom: "Vins blancs", description: "sélection à découvrir sur place" },
@@ -233,6 +237,6 @@ export const boissonsDouces: MenuSection[] = [
 export const cocktailVedette: MenuItem = {
   nom: "Aperol Spritz",
   description: "l'apéro marseillais par excellence — amer, vif, ensoleillé",
-  prix: "12€",
+  prix: "12 €",
   signature: true,
 };

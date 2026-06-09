@@ -70,6 +70,19 @@
   font-size: 1.05rem;
 }
 
+.legende {
+  text-align: center;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.68rem;
+  color: var(--ink-500);
+  margin: var(--space-3) 0 0;
+}
+.legende span {
+  color: var(--gold);
+}
+
 @media (max-width: 760px) {
   .grid {
     grid-template-columns: 1fr;

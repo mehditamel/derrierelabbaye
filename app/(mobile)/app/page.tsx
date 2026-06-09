@@ -84,7 +84,12 @@ export default function AppHome() {
             {aPartagerFroid.items.map((item) => (
               <div key={item.nom} className={styles.tapas}>
                 <div className={styles.tapasTop}>
-                  {item.signature && <span className={styles.tapasStar}>★</span>}
+                  {item.signature && (
+                    <span className={styles.tapasStar}>
+                      <span aria-hidden="true">★</span>
+                      <span className="u-visually-hidden">Spécialité maison</span>
+                    </span>
+                  )}
                   <span className={styles.tapasPrice}>{item.prix}</span>
                 </div>
                 <h3 className={styles.tapasName}>{item.nom}</h3>

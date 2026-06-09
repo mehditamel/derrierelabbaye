@@ -13,9 +13,13 @@ export function MenuRow({ item, onDark = false }: Props) {
       <div className={styles.head}>
         <h3 className={styles.nom}>
           {item.signature && (
-            <span className={styles.star} aria-label="Spécialité maison" title="Spécialité maison">
-              ★
-            </span>
+            <>
+              {/* aria-label sur un <span> nu est peu fiable : texte masqué dédié aux lecteurs d'écran */}
+              <span className={styles.star} aria-hidden="true" title="Spécialité maison">
+                ★
+              </span>
+              <span className="u-visually-hidden">Spécialité maison — </span>
+            </>
           )}
           {item.nom}
         </h3>

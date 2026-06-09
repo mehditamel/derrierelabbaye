@@ -101,6 +101,9 @@ export function MobileCarte() {
             </div>
           </section>
         ))}
+        <p className={styles.legende}>
+          <span aria-hidden="true">★</span> nos spécialités maison
+        </p>
         <p className={styles.legal}>{site.legal}</p>
       </div>
 
