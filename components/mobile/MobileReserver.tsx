@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, Minus, Plus } from "lucide-react";
-import { useReservationForm } from "@/lib/useReservationForm";
+import { AlertCircle, Check, Minus, Plus } from "lucide-react";
+import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
 import { useOnline } from "@/lib/usePwa";
 import { useLocalStorage } from "@/lib/useLocalStorage";
 import { haptic } from "@/lib/haptic";
 import {
   creneauPasse,
+  dateLongueFr,
   isoLocal,
   premierCreneauDisponible,
 } from "@/lib/creneaux";
@@ -60,6 +61,7 @@ export function MobileReserver() {
     "dla-reservation-contact",
     { nom: "", tel: "", email: "" }
   );
+  const [telErreur, setTelErreur] = useState("");
   const { status, reference, erreur, submit, reset } = useReservationForm();
   const online = useOnline();
   const successRef = useRef<HTMLHeadingElement>(null);
@@ -76,6 +78,10 @@ export function MobileReserver() {
   }, [status]);
 
   function valider() {
+    if (!telephoneValide(contact.tel)) {
+      setTelErreur("Ce numéro semble incomplet — format 06 12 34 56 78.");
+      return;
+    }
     submit({
       date,
       heure,
@@ -97,7 +103,7 @@ export function MobileReserver() {
         </h1>
         <p className={styles.successText}>
           Votre demande pour <strong>{couverts}</strong> couvert
-          {couverts > 1 ? "s" : ""} le <strong>{date}</strong> à{" "}
+          {couverts > 1 ? "s" : ""} le <strong>{dateLongueFr(date)}</strong> à{" "}
           <strong>{heure}</strong> est enregistrée.
           <br />
           Référence <strong>{reference}</strong>.
@@ -138,11 +144,28 @@ export function MobileReserver() {
         <div className={styles.coupleRow}>
           <span className="app-section-label">Couverts</span>
           <div className={styles.stepper}>
-            <button aria-label="Retirer" onClick={() => setCouverts((c) => Math.max(1, c - 1))}>
+            <button
+              aria-label="Retirer un couvert"
+              disabled={couverts <= 1}
+              onClick={() => {
+                haptic(8);
+                setCouverts((c) => Math.max(1, c - 1));
+              }}
+            >
               <Minus size={18} strokeWidth={1.5} />
             </button>
-            <span aria-live="polite">{couverts}</span>
-            <button aria-label="Ajouter" onClick={() => setCouverts((c) => Math.min(20, c + 1))}>
+            <span aria-live="polite">
+              {couverts}
+              <span className="u-visually-hidden"> couverts</span>
+            </span>
+            <button
+              aria-label="Ajouter un couvert"
+              disabled={couverts >= 20}
+              onClick={() => {
+                haptic(8);
+                setCouverts((c) => Math.min(20, c + 1));
+              }}
+            >
               <Plus size={18} strokeWidth={1.5} />
             </button>
           </div>
@@ -176,21 +199,42 @@ export function MobileReserver() {
         <span className="app-section-label">Vos coordonnées</span>
         <input
           className={styles.input}
-          placeholder="Nom"
+          aria-label="Nom"
+          placeholder="Votre nom *"
           value={contact.nom}
           onChange={(e) => setContact((c) => ({ ...c, nom: e.target.value }))}
           autoComplete="name"
         />
         <input
-          className={styles.input}
-          placeholder="Téléphone"
+          className={`${styles.input} ${telErreur ? styles.inputError : ""}`}
+          aria-label="Téléphone"
+          placeholder="06 12 34 56 78"
           value={contact.tel}
-          onChange={(e) => setContact((c) => ({ ...c, tel: e.target.value }))}
+          onChange={(e) => {
+            setTelErreur("");
+            setContact((c) => ({ ...c, tel: e.target.value }));
+          }}
+          onBlur={(e) =>
+            setTelErreur(
+              telephoneValide(e.target.value)
+                ? ""
+                : "Ce numéro semble incomplet — format 06 12 34 56 78."
+            )
+          }
+          aria-invalid={telErreur ? true : undefined}
+          aria-describedby={telErreur ? "m-tel-err" : undefined}
           type="tel"
+          inputMode="tel"
           autoComplete="tel"
         />
+        {telErreur && (
+          <span id="m-tel-err" role="alert" className={styles.fieldError}>
+            {telErreur}
+          </span>
+        )}
         <input
           className={styles.input}
+          aria-label="E-mail"
           placeholder="E-mail (facultatif)"
           value={contact.email}
           onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
@@ -200,7 +244,8 @@ export function MobileReserver() {
 
         {status === "error" && (
           <p className={styles.error} role="alert">
-            {erreur}
+            <AlertCircle size={18} strokeWidth={1.5} aria-hidden="true" />
+            <span>{erreur}</span>
           </p>
         )}
       </div>
@@ -218,6 +263,11 @@ export function MobileReserver() {
             ? "Envoi…"
             : "Demander cette table"}
         </button>
+        {!contact.nom.trim() && (
+          <p className={styles.ctaHint}>
+            Indiquez votre nom pour envoyer la demande.
+          </p>
+        )}
       </div>
     </div>
   );

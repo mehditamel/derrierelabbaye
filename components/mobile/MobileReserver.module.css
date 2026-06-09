@@ -87,8 +87,8 @@
   gap: var(--space-2);
 }
 .stepper button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--cream-16);
   border-radius: var(--r-pill);
   background: transparent;
@@ -99,11 +99,15 @@
   justify-content: center;
   transition: border-color var(--dur) var(--ease-soft), transform 120ms var(--ease-soft);
 }
-.stepper button:hover {
+.stepper button:hover:not(:disabled) {
   border-color: var(--gold-light);
 }
+.stepper button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
 @media (prefers-reduced-motion: no-preference) {
-  .stepper button:active {
+  .stepper button:active:not(:disabled) {
     transform: scale(var(--press));
   }
 }
@@ -183,9 +187,33 @@
   border-color: var(--gold-light);
 }
 
+/* Champ signalé en erreur après validation au blur */
+.inputError {
+  border-color: var(--ambre);
+}
+
+.fieldError {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--ambre);
+  margin: calc(-1 * var(--space-1)) 0 var(--space-2);
+}
+
+/* Boîte d'erreur globale : saillante sans crier */
 .error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-left: 2px solid var(--ambre);
+  border-radius: var(--r-card);
+  background: rgba(233, 200, 146, 0.08);
   color: var(--ambre);
   font-size: 0.9rem;
+}
+.error svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .sticky {
@@ -222,6 +250,13 @@
 .cta:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.ctaHint {
+  margin: var(--space-2) 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--cream-70);
 }
 
 .success {
