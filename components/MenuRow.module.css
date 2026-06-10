@@ -65,6 +65,13 @@
   vertical-align: middle;
 }
 
+.vege {
+  color: var(--gold);
+  margin-left: 0.5ch;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
 .leaders {
   flex: 1;
   align-self: flex-end;
@@ -107,4 +114,7 @@
 }
 .onDark .leaders {
   border-bottom-color: var(--cream-16);
+}
+.onDark .vege {
+  color: var(--gold-light);
 }

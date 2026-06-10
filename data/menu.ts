@@ -14,6 +14,10 @@ export type MenuItem = {
   description?: string;
   prix?: string;
   signature?: boolean;
+  /* ⚑ Badge « végé » : déduit des descriptions (aucune mention sur les
+     cartes imprimées) — à faire confirmer par l'établissement.
+     Dans le doute, ne pas tagger. */
+  vege?: boolean;
 };
 
 export type MenuSection = {
@@ -33,16 +37,19 @@ export const aPartagerFroid: MenuSection = {
       nom: "Houmous maison",
       description: "huile d'olive & paprika fumé, pain grillé",
       prix: "7 €",
+      vege: true,
     },
     {
       nom: "Aubergines rôties",
       description: "yaourt citronné & zaatar",
       prix: "8 €",
+      vege: true,
     },
     {
       nom: "Burrata crémeuse",
       description: "tomates confites & pesto, focaccia grillée",
       prix: "12 €",
+      vege: true,
     },
     {
       nom: "Poulpe mariné",
@@ -110,6 +117,7 @@ export const planches: MenuSection = {
       nom: "Planche de fromages",
       description: "affinés & de caractère",
       prix: "18 €",
+      vege: true,
     },
     {
       nom: "Planche mixte",

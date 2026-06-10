@@ -1,3 +1,4 @@
+import { Leaf } from "lucide-react";
 import type { MenuItem } from "@/data/menu";
 import styles from "./MenuRow.module.css";
 
@@ -22,6 +23,14 @@ export function MenuRow({ item, onDark = false }: Props) {
             </>
           )}
           {item.nom}
+          {item.vege && (
+            <>
+              <span className={styles.vege} aria-hidden="true" title="Végétarien">
+                <Leaf size={12} strokeWidth={2} />
+              </span>
+              <span className="u-visually-hidden"> — végétarien</span>
+            </>
+          )}
         </h3>
         <span className={styles.leaders} aria-hidden="true" />
         {item.prix && <span className={styles.prix}>{item.prix}</span>}
