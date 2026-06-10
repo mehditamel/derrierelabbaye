@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Leaf, Search, X } from "lucide-react";
 import { MenuRow } from "@/components/MenuRow";
 import { ScrollTop } from "@/components/mobile/ScrollTop";
@@ -32,6 +32,34 @@ export function MobileCarte() {
   const [requete, setRequete] = useState("");
   const courant = onglets.find((o) => o.id === actif) ?? onglets[0];
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // L'onglet et la recherche vivent aussi dans l'URL (?onglet=…&q=…) :
+  // une vue de la carte se partage et se rouvre telle quelle.
+  // window.location plutôt que useSearchParams : la page reste statique.
+  const premierRendu = useRef(true);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const onglet = params.get("onglet");
+    const q = params.get("q");
+    if (onglet && onglets.some((o) => o.id === onglet)) setActif(onglet);
+    if (q) setRequete(q);
+  }, []);
+  useEffect(() => {
+    // Premier rendu : on ne réécrit pas l'URL avant d'avoir lu ses paramètres.
+    if (premierRendu.current) {
+      premierRendu.current = false;
+      return;
+    }
+    const params = new URLSearchParams();
+    if (actif !== onglets[0].id) params.set("onglet", actif);
+    if (requete.trim()) params.set("q", requete);
+    const qs = params.toString();
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname + (qs ? `?${qs}` : "")
+    );
+  }, [actif, requete]);
 
   // En recherche, on parcourt toute la carte (cuisine + cocktails + boissons),
   // pas seulement l'onglet actif.

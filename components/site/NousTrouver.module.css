@@ -96,6 +96,17 @@
   }
 }
 
+.dotFerme {
+  background: var(--corten);
+  box-shadow: 0 0 8px rgba(121, 78, 53, 0.7);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dotFerme {
+    /* Fermé : pas de pulsation « vivante » */
+    animation: none;
+  }
+}
+
 .address {
   display: flex;
   gap: var(--space-2);

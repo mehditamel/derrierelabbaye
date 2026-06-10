@@ -59,6 +59,11 @@
   box-shadow: 0 0 8px rgba(123, 191, 106, 0.8);
 }
 
+.dotFerme {
+  background: var(--corten);
+  box-shadow: 0 0 8px rgba(121, 78, 53, 0.7);
+}
+
 .actions {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
