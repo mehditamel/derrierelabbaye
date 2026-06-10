@@ -57,6 +57,15 @@ export const site = {
     { nom: "Facebook", url: "https://www.facebook.com/" },
   ],
 
+  // ⚑ À CONFIRMER — informations légales de l'établissement
+  legales: {
+    raisonSociale: "À CONFIRMER",
+    formeJuridique: "À CONFIRMER",
+    siret: "À CONFIRMER",
+    directeurPublication: "À CONFIRMER",
+    hebergeur: { nom: "À CONFIRMER", adresse: "À CONFIRMER" },
+  },
+
   legal:
     "L'abus d'alcool est dangereux pour la santé, à consommer avec modération.",
 

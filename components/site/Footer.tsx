@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MapPin, Clock, Phone } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { GoldRule } from "@/components/GoldRule";
@@ -71,6 +72,11 @@ export function Footer() {
 
         <div className={styles.bottom}>
           <LegalLine onDark />
+          <nav className={styles.legalNav} aria-label="Informations légales">
+            <Link href="/mentions-legales">Mentions légales</Link>
+            <span aria-hidden="true">·</span>
+            <Link href="/confidentialite">Confidentialité</Link>
+          </nav>
           <p className={styles.copy}>
             © {new Date().getFullYear()} {site.nom} — {site.adresse.ville}
           </p>
