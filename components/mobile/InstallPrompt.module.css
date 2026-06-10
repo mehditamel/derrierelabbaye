@@ -51,6 +51,15 @@
   color: var(--cream-70);
 }
 
+.steps {
+  font-size: 0.78rem;
+  color: var(--cream-70);
+}
+.steps svg {
+  color: var(--gold-light);
+  vertical-align: -2px;
+}
+
 .install {
   flex: 0 0 auto;
   display: inline-flex;
@@ -75,8 +84,9 @@
 
 .close {
   flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
+  margin: -6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;

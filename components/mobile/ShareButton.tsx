@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, Share2 } from "lucide-react";
 import { haptic } from "@/lib/haptic";
+import { partagerOuCopier } from "@/lib/partage";
 import styles from "./ShareButton.module.css";
 
 type Props = {
@@ -19,20 +20,10 @@ export function ShareButton({ url, title, text }: Props) {
   async function partager() {
     haptic();
     const cible = url ?? (typeof window !== "undefined" ? window.location.href : "");
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title, text, url: cible });
-      } catch {
-        /* partage annulé : on n'affiche rien */
-      }
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(cible);
+    const resultat = await partagerOuCopier({ title, text, url: cible });
+    if (resultat === "copie") {
       setCopie(true);
       window.setTimeout(() => setCopie(false), 1800);
-    } catch {
-      /* presse-papiers indisponible */
     }
   }
 

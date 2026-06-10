@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { AlertCircle, Check } from "lucide-react";
+import { AlertCircle, CalendarPlus, Check, Share2 } from "lucide-react";
 import { Button } from "@/components/Button";
 import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
+import { telechargerIcs } from "@/lib/ics";
+import { partagerOuCopier } from "@/lib/partage";
 import {
   creneauPasse,
   dateLongueFr,
@@ -33,6 +35,25 @@ export function ReservationForm() {
   } | null>(null);
   const { status, reference, erreur, submit, reset } = useReservationForm();
   const successRef = useRef<HTMLHeadingElement>(null);
+  const [copie, setCopie] = useState(false);
+  const timerCopie = useRef<number>();
+
+  useEffect(() => () => window.clearTimeout(timerCopie.current), []);
+
+  async function partagerRecap() {
+    if (!recap) return;
+    const resultat = await partagerOuCopier({
+      title: "Réservation — Derrière l'Abbaye",
+      text: `Réservation chez Derrière l'Abbaye — ${dateLongueFr(recap.date)} à ${
+        recap.heure
+      }, ${recap.couverts} couvert${recap.couverts > 1 ? "s" : ""}. Référence ${reference}.`,
+    });
+    if (resultat === "copie") {
+      setCopie(true);
+      window.clearTimeout(timerCopie.current);
+      timerCopie.current = window.setTimeout(() => setCopie(false), 1800);
+    }
+  }
 
   const erreurNom = (nom: string) =>
     nom.trim() ? undefined : "Indiquez un nom pour la réservation.";
@@ -114,9 +135,46 @@ export function ReservationForm() {
           Votre référence : <strong>{reference}</strong>. Nous revenons vers
           vous pour la confirmer.
         </p>
-        <Button variant="ghost" onClick={reset}>
-          Nouvelle demande
-        </Button>
+        <div className={styles.successActions}>
+          {recap && (
+            <Button
+              variant="ghost"
+              onClick={() =>
+                telechargerIcs({
+                  dateIso: recap.date,
+                  heure: recap.heure,
+                  couverts: recap.couverts,
+                  reference,
+                })
+              }
+            >
+              <CalendarPlus size={16} aria-hidden="true" />
+              Ajouter au calendrier
+            </Button>
+          )}
+          {recap && (
+            <Button variant="ghost" onClick={partagerRecap}>
+              {copie ? (
+                <Check size={16} aria-hidden="true" />
+              ) : (
+                <Share2 size={16} aria-hidden="true" />
+              )}
+              {copie ? "Récapitulatif copié" : "Partager"}
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setCopie(false);
+              reset();
+            }}
+          >
+            Nouvelle demande
+          </Button>
+        </div>
+        <p className="u-visually-hidden" role="status">
+          {copie ? "Récapitulatif copié dans le presse-papiers." : ""}
+        </p>
       </div>
     );
   }

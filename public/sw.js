@@ -2,13 +2,14 @@
    Stratégie : network-first pour la navigation (toujours frais si en ligne),
    cache-first pour les assets statiques. */
 
-const CACHE = "dla-shell-v3";
+const CACHE = "dla-shell-v4";
 const SHELL = [
   "/",
   "/app",
   "/app/carte",
   "/app/reserver",
   "/app/fidelite",
+  "/offline.html",
   "/manifest.webmanifest",
   "/logo-cream.png",
   "/logo-noir.png",
@@ -45,11 +46,15 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
 
-  // Navigation : réseau d'abord, repli sur la page visitée puis la coque /app.
+  // Navigation : réseau d'abord, repli sur la page visitée puis la page
+  // hors-ligne autoporteuse (servir /app sans ses assets rendrait une coque
+  // cassée : les /_next/static/* ne sont pas pré-cachés).
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(() =>
-        caches.match(request).then((r) => r || caches.match("/app"))
+        caches
+          .match(request, { ignoreSearch: true })
+          .then((r) => r || caches.match("/offline.html"))
       )
     );
     return;

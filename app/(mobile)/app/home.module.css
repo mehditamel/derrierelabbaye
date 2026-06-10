@@ -200,11 +200,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 6px;
 }
 
 .tapasStar {
   color: var(--gold);
   font-size: 0.8rem;
+}
+
+.tapasVege {
+  display: inline-flex;
+  align-items: center;
+  color: var(--gold);
 }
 
 .tapasPrice {

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { UtensilsCrossed, CalendarHeart, MapPin, Phone } from "lucide-react";
+import { UtensilsCrossed, CalendarHeart, Leaf, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ShareButton } from "@/components/mobile/ShareButton";
 import { aPartagerFroid, cocktailVedette } from "@/data/menu";
@@ -88,6 +88,12 @@ export default function AppHome() {
                     <span className={styles.tapasStar}>
                       <span aria-hidden="true">★</span>
                       <span className="u-visually-hidden">Spécialité maison</span>
+                    </span>
+                  )}
+                  {item.vege && (
+                    <span className={styles.tapasVege}>
+                      <Leaf size={12} aria-hidden="true" />
+                      <span className="u-visually-hidden">Végétarien</span>
                     </span>
                   )}
                   <span className={styles.tapasPrice}>{item.prix}</span>

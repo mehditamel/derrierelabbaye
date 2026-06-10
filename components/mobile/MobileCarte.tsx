@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState, type KeyboardEvent } from "react";
+import { Leaf, Search, X } from "lucide-react";
 import { MenuRow } from "@/components/MenuRow";
 import { ScrollTop } from "@/components/mobile/ScrollTop";
 import { haptic } from "@/lib/haptic";
 import { site } from "@/data/site";
+import { filtrerSections } from "@/lib/recherche";
 import {
   aPartagerFroid,
   aPartagerChaud,
@@ -27,8 +29,18 @@ const PANEL_ID = "carte-panel";
 
 export function MobileCarte() {
   const [actif, setActif] = useState("froid");
+  const [requete, setRequete] = useState("");
   const courant = onglets.find((o) => o.id === actif) ?? onglets[0];
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // En recherche, on parcourt toute la carte (cuisine + cocktails + boissons),
+  // pas seulement l'onglet actif.
+  const recherche = requete.trim() !== "";
+  const sections = filtrerSections(
+    recherche ? onglets.flatMap((o) => o.sections) : courant.sections,
+    requete
+  );
+  const nbResultats = sections.reduce((n, s) => n + s.items.length, 0);
 
   function onTabsKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     const index = onglets.findIndex((o) => o.id === actif);
@@ -49,6 +61,31 @@ export function MobileCarte() {
         <h1 className="app-h app-h1">La carte</h1>
         <p className={styles.sub}>Bar à tapas & cocktails</p>
       </div>
+
+      <div className={styles.search} role="search">
+        <Search size={16} strokeWidth={1.5} aria-hidden="true" />
+        <input
+          type="search"
+          value={requete}
+          onChange={(e) => setRequete(e.target.value)}
+          className={styles.searchInput}
+          placeholder="Rechercher un plat, un cocktail…"
+          aria-label="Rechercher dans la carte"
+        />
+        {requete && (
+          <button
+            type="button"
+            className={styles.searchClear}
+            onClick={() => setRequete("")}
+            aria-label="Effacer la recherche"
+          >
+            <X size={16} aria-hidden="true" />
+          </button>
+        )}
+      </div>
+      <p className="u-visually-hidden" role="status" aria-live="polite">
+        {recherche ? `${nbResultats} résultat${nbResultats > 1 ? "s" : ""}` : ""}
+      </p>
 
       <div
         className={styles.tabs}
@@ -72,6 +109,7 @@ export function MobileCarte() {
               className={`${styles.tab} ${selected ? styles.tabActive : ""}`}
               onClick={() => {
                 haptic(8);
+                setRequete("");
                 setActif(o.id);
               }}
             >
@@ -87,26 +125,49 @@ export function MobileCarte() {
         className={`app-pad ${styles.panel}`}
         id={PANEL_ID}
         role="tabpanel"
-        aria-labelledby={`tab-${actif}`}
+        aria-labelledby={recherche ? undefined : `tab-${actif}`}
+        aria-label={recherche ? "Résultats de la recherche" : undefined}
         tabIndex={0}
       >
-        {courant.sections.map((section) => (
-          <section key={section.id} className={styles.block}>
-            <div className={styles.blockHead}>
-              <h2 className={styles.blockTitle}>{section.titre}</h2>
-              {section.surtitre && (
-                <span className={styles.blockPrice}>{section.surtitre}</span>
-              )}
-            </div>
-            <div>
-              {section.items.map((item) => (
-                <MenuRow key={item.nom} item={item} onDark />
-              ))}
-            </div>
-          </section>
-        ))}
+        {recherche && sections.length === 0 ? (
+          <div className={styles.empty} role="status">
+            <p className={styles.emptyTitle}>Rien à ce nom sur la carte</p>
+            <p className={styles.emptyText}>
+              Essayez « burrata », « poulpe » ou « mojito » — ou demandez à
+              l'équipe, on a toujours une idée.
+            </p>
+            <button
+              type="button"
+              className={styles.emptyClear}
+              onClick={() => {
+                haptic(8);
+                setRequete("");
+              }}
+            >
+              Effacer la recherche
+            </button>
+          </div>
+        ) : (
+          sections.map((section) => (
+            <section key={section.id} className={styles.block}>
+              <div className={styles.blockHead}>
+                <h2 className={styles.blockTitle}>{section.titre}</h2>
+                {section.surtitre && (
+                  <span className={styles.blockPrice}>{section.surtitre}</span>
+                )}
+              </div>
+              <div>
+                {section.items.map((item) => (
+                  <MenuRow key={item.nom} item={item} onDark />
+                ))}
+              </div>
+            </section>
+          ))
+        )}
         <p className={styles.legende}>
-          <span aria-hidden="true">★</span> nos spécialités maison
+          <span aria-hidden="true">★</span> nos spécialités maison ·{" "}
+          <Leaf size={11} aria-hidden="true" className={styles.legendeLeaf} />{" "}
+          végétarien
         </p>
         <p className={styles.legal}>{site.legal}</p>
       </div>

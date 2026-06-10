@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, Check, Minus, Plus } from "lucide-react";
+import { AlertCircle, CalendarPlus, Check, Minus, Plus, Share2 } from "lucide-react";
 import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
 import { useOnline } from "@/lib/usePwa";
 import { useLocalStorage } from "@/lib/useLocalStorage";
 import { haptic } from "@/lib/haptic";
+import { telechargerIcs } from "@/lib/ics";
+import { partagerOuCopier } from "@/lib/partage";
 import {
   creneauPasse,
   dateLongueFr,
@@ -77,6 +79,25 @@ export function MobileReserver() {
     }
   }, [status]);
 
+  const [copie, setCopie] = useState(false);
+  const timerCopie = useRef<number>();
+  useEffect(() => () => window.clearTimeout(timerCopie.current), []);
+
+  async function partagerRecap() {
+    haptic();
+    const resultat = await partagerOuCopier({
+      title: "Réservation — Derrière l'Abbaye",
+      text: `Réservation chez Derrière l'Abbaye — ${dateLongueFr(date)} à ${heure}, ${couverts} couvert${
+        couverts > 1 ? "s" : ""
+      }. Référence ${reference}.`,
+    });
+    if (resultat === "copie") {
+      setCopie(true);
+      window.clearTimeout(timerCopie.current);
+      timerCopie.current = window.setTimeout(() => setCopie(false), 1800);
+    }
+  }
+
   function valider() {
     if (!telephoneValide(contact.tel)) {
       setTelErreur("Ce numéro semble incomplet — format 06 12 34 56 78.");
@@ -108,9 +129,38 @@ export function MobileReserver() {
           <br />
           Référence <strong>{reference}</strong>.
         </p>
-        <button className={styles.ghost} onClick={reset}>
-          Nouvelle demande
-        </button>
+        <div className={styles.successActions}>
+          <button
+            className={styles.successAction}
+            onClick={() => {
+              haptic();
+              telechargerIcs({ dateIso: date, heure, couverts, reference });
+            }}
+          >
+            <CalendarPlus size={16} aria-hidden="true" />
+            Ajouter au calendrier
+          </button>
+          <button className={styles.successAction} onClick={partagerRecap}>
+            {copie ? (
+              <Check size={16} aria-hidden="true" />
+            ) : (
+              <Share2 size={16} aria-hidden="true" />
+            )}
+            {copie ? "Récapitulatif copié" : "Partager"}
+          </button>
+          <button
+            className={styles.ghost}
+            onClick={() => {
+              setCopie(false);
+              reset();
+            }}
+          >
+            Nouvelle demande
+          </button>
+        </div>
+        <p className="u-visually-hidden" role="status">
+          {copie ? "Récapitulatif copié dans le presse-papiers." : ""}
+        </p>
       </div>
     );
   }

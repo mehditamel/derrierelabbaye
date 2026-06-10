@@ -1,0 +1,72 @@
+/* Styles partagés des pages légales (mentions légales, confidentialité). */
+
+.page {
+  background: var(--paper);
+  padding: calc(76px + var(--space-7)) 0 var(--space-8);
+  min-height: 100svh;
+}
+
+.head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  color: var(--ink-900);
+}
+
+.rule {
+  margin: var(--space-4) auto;
+  max-width: 240px;
+}
+
+.updated {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.72rem;
+  color: var(--ink-500);
+  margin: 0;
+}
+
+.prose h2 {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.82rem;
+  color: var(--gold-deep);
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+.prose p,
+.prose li {
+  color: var(--ink-700);
+  max-width: 62ch;
+  line-height: 1.7;
+}
+
+.prose p {
+  margin: 0 0 var(--space-3);
+}
+
+.prose ul {
+  margin: 0 0 var(--space-3);
+  padding-left: 1.2em;
+}
+
+.prose a {
+  color: var(--gold-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Valeur en attente de confirmation par l'établissement */
+.aConfirmer {
+  color: var(--corten);
+  font-style: italic;
+}

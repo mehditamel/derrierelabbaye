@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#14110d" />
+<title>Hors connexion — Derrière l'Abbaye</title>
+<!-- Page autoporteuse : aucune sous-ressource hormis le logo (pré-caché).
+     Valeurs reprises de styles/colors_and_type.css (un HTML statique ne
+     peut pas importer les tokens). -->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #14110d; /* --noir */
+    color: rgba(248, 243, 233, 0.92); /* --cream-90 */
+    font-family: Georgia, "Times New Roman", serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px env(safe-area-inset-right) calc(24px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  }
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 420px;
+  }
+  img { max-width: 180px; height: auto; }
+  .label {
+    font-family: system-ui, -apple-system, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.7rem;
+    color: #c7a86a; /* --gold-light */
+    margin-top: 8px;
+  }
+  p {
+    font-style: italic;
+    color: rgba(248, 243, 233, 0.72); /* --cream-70 */
+    line-height: 1.6;
+  }
+  .actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    width: 100%;
+  }
+  button, a.lien {
+    font-family: system-ui, -apple-system, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.74rem;
+    min-height: 48px;
+    width: 100%;
+    max-width: 300px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  button {
+    background: #a8884c; /* --gold */
+    color: #14110d;
+    border: 0;
+  }
+  a.lien {
+    background: transparent;
+    color: rgba(248, 243, 233, 0.92);
+    border: 1px solid rgba(248, 243, 233, 0.4); /* --cream-40 */
+  }
+  a.tel {
+    color: #c7a86a;
+    text-decoration: none;
+    font-style: normal;
+  }
+</style>
+</head>
+<body>
+<main>
+  <img src="/logo-cream.png" alt="Derrière l'Abbaye" width="180" />
+  <span class="label">Hors connexion</span>
+  <p>
+    Pas de réseau par ici. Le comptoir, lui, est toujours ouvert.
+    <br />
+    <!-- ⚑ À CONFIRMER — synchroniser avec data/site.ts -->
+    Une table ? <a class="tel" href="tel:+33400000000">04 00 00 00 00</a>
+  </p>
+  <div class="actions">
+    <button onclick="location.reload()">Réessayer</button>
+    <a class="lien" href="/app/carte">Voir la carte (version enregistrée)</a>
+  </div>
+</main>
+</body>
+</html>
