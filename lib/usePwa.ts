@@ -33,17 +33,39 @@ type BeforeInstallPromptEvent = Event & {
 
 const DISMISS_KEY = "dla-install-dismissed";
 
+/** iOS / iPadOS (Safari n'émet jamais `beforeinstallprompt`). */
+function estIos(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    // iPadOS 13+ se présente comme macOS, mais avec un écran tactile
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
+
+/** Déjà lancé depuis l'écran d'accueil ? */
+function estStandalone(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (navigator as { standalone?: boolean }).standalone === true
+  );
+}
+
 /**
  * Capture l'invite d'installation native (`beforeinstallprompt`) pour proposer
  * un « Ajouter à l'écran d'accueil » maison. Mémorise un rejet pour ne pas harceler.
+ * Sur iOS (pas d'événement natif), expose `iosHint` pour des instructions manuelles.
  */
 export function useInstallPrompt() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [dismissed, setDismissed] = useState(true);
+  const [ios, setIos] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     setDismissed(localStorage.getItem(DISMISS_KEY) === "1");
+    setIos(estIos() && !estStandalone());
 
     const onPrompt = (e: Event) => {
       e.preventDefault();
@@ -71,5 +93,11 @@ export function useInstallPrompt() {
     setDismissed(true);
   }, []);
 
-  return { canInstall: deferred !== null && !dismissed, promptInstall, dismiss };
+  return {
+    canInstall: deferred !== null && !dismissed,
+    // iOS sans invite native : on guide vers « Partager → Sur l'écran d'accueil »
+    iosHint: ios && !dismissed && deferred === null,
+    promptInstall,
+    dismiss,
+  };
 }

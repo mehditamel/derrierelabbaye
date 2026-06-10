@@ -20,6 +20,16 @@
   box-shadow: var(--shadow-md);
 }
 
+.lien {
+  color: var(--cream-90);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  /* Cible tactile élargie sans épaissir le bandeau */
+  padding: var(--space-2);
+  margin: calc(-1 * var(--space-2));
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .banner {
     animation: dla-offline-in var(--dur) var(--ease-out) both;
