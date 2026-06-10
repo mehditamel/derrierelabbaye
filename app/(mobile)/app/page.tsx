@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { UtensilsCrossed, CalendarHeart, Leaf, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { StatutOuverture } from "@/components/StatutOuverture";
 import { ShareButton } from "@/components/mobile/ShareButton";
 import { aPartagerFroid, cocktailVedette } from "@/data/menu";
 import { site } from "@/data/site";
@@ -32,9 +33,11 @@ export default function AppHome() {
         />
         <div className={styles.heroInner}>
           <Logo tone="cream" width={210} priority />
-          <span className={styles.status}>
-            <span className={styles.dot} /> Ouvert · {site.fermeture}
-          </span>
+          <StatutOuverture
+            className={styles.status}
+            dotClassName={styles.dot}
+            dotFermeClassName={styles.dotFerme}
+          />
         </div>
       </header>
 

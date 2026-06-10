@@ -3,6 +3,7 @@ import { SectionLabel } from "@/components/SectionLabel";
 import { GoldRule } from "@/components/GoldRule";
 import { Button } from "@/components/Button";
 import { Reveal } from "@/components/Reveal";
+import { StatutOuverture } from "@/components/StatutOuverture";
 import { copies, site } from "@/data/site";
 import styles from "./NousTrouver.module.css";
 
@@ -36,9 +37,11 @@ export function NousTrouver() {
           </div>
 
           <div className={styles.info}>
-            <span className={styles.status}>
-              <span className={styles.dot} /> Ouvert · {site.fermeture}
-            </span>
+            <StatutOuverture
+              className={styles.status}
+              dotClassName={styles.dot}
+              dotFermeClassName={styles.dotFerme}
+            />
 
             <address className={styles.address}>
               <MapPin size={18} strokeWidth={1.5} />
