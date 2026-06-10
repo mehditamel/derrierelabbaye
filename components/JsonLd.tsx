@@ -29,6 +29,9 @@ function menuSectionToSchema(section: MenuSection) {
         "@type": "MenuItem",
         name: item.nom,
         ...(item.description ? { description: item.description } : {}),
+        ...(item.vege
+          ? { suitableForDiet: "https://schema.org/VegetarianDiet" }
+          : {}),
         ...(price
           ? { offers: { "@type": "Offer", price, priceCurrency: "EUR" } }
           : {}),
