@@ -94,6 +94,10 @@
 .searchClear:hover {
   color: var(--ink-900);
 }
+.searchClear:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
 
 .empty {
   text-align: center;

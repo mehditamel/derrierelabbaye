@@ -30,7 +30,8 @@ export const metadata: Metadata = {
     siteName: site.nom,
     title: "Derrière l'Abbaye — Bar à tapas & cocktails · Marseille",
     description: copies.heroAccroche,
-    // og:image fourni automatiquement par app/opengraph-image.tsx (1200×630)
+    // og:image (+ width/height/alt) fourni automatiquement par
+    // app/opengraph-image.tsx via son export `size` (1200×630).
   },
   twitter: {
     card: "summary_large_image",

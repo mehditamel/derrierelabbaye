@@ -1,0 +1,21 @@
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+
+/* Harnais de tests — Vitest + Testing Library.
+   L'alias « @/ » reproduit celui de tsconfig.json (paths). */
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./", import.meta.url)),
+    },
+  },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./vitest.setup.ts"],
+    include: ["**/*.test.{ts,tsx}"],
+    exclude: ["node_modules", ".next"],
+  },
+});

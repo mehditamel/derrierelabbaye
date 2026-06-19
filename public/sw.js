@@ -1,8 +1,10 @@
 /* Service worker minimal — coque hors-ligne pour la PWA Derrière l'Abbaye.
    Stratégie : network-first pour la navigation (toujours frais si en ligne),
-   cache-first pour les assets statiques. */
+   stale-while-revalidate pour les assets (immédiat depuis le cache, rafraîchi
+   en arrière-plan). Pré-cacher les chunks /_next/static au runtime rend la
+   carte réellement consultable hors-ligne (au lieu de retomber sur offline.html). */
 
-const CACHE = "dla-shell-v4";
+const CACHE = "dla-shell-v5";
 const SHELL = [
   "/",
   "/app",
@@ -47,8 +49,8 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
 
   // Navigation : réseau d'abord, repli sur la page visitée puis la page
-  // hors-ligne autoporteuse (servir /app sans ses assets rendrait une coque
-  // cassée : les /_next/static/* ne sont pas pré-cachés).
+  // hors-ligne autoporteuse. Les chunks /_next/static étant mis en cache au
+  // fil de l'eau (ci-dessous), une page déjà visitée se rouvre hors-ligne.
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(() =>
@@ -60,16 +62,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Assets : cache d'abord, sinon réseau (et on met en cache).
+  // Assets : stale-while-revalidate. On sert immédiatement la version en cache
+  // et on rafraîchit en arrière-plan ; sinon on va au réseau et on met en cache.
+  // Évite de servir indéfiniment de vieux assets (l'ancien cache-first figé).
   event.respondWith(
-    caches.match(request).then(
-      (cached) =>
-        cached ||
-        fetch(request).then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+    caches.match(request).then((cached) => {
+      const reseau = fetch(request)
+        .then((response) => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+          }
           return response;
         })
-    )
+        .catch(() => cached);
+      return cached || reseau;
+    })
   );
 });
