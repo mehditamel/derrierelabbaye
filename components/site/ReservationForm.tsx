@@ -203,8 +203,14 @@ export function ReservationForm() {
           />
         </label>
 
-        <label className={styles.field}>
-          <span className={styles.label}>Couverts</span>
+        <div
+          className={styles.field}
+          role="group"
+          aria-labelledby="couverts-label"
+        >
+          <span className={styles.label} id="couverts-label">
+            Couverts
+          </span>
           <div className={styles.stepper}>
             <button
               type="button"
@@ -227,7 +233,7 @@ export function ReservationForm() {
               +
             </button>
           </div>
-        </label>
+        </div>
       </div>
 
       <fieldset className={styles.fieldset}>

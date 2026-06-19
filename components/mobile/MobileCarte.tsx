@@ -115,6 +115,10 @@ export function MobileCarte() {
         {recherche ? `${nbResultats} résultat${nbResultats > 1 ? "s" : ""}` : ""}
       </p>
 
+      {/* Roving tabindex (ARIA APG) : le focus vit sur les <button role="tab">,
+          le onKeyDown du tablist gère les flèches via la remontée d'événement.
+          Le conteneur n'a donc pas à être focusable. */}
+      {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus */}
       <div
         className={styles.tabs}
         role="tablist"
