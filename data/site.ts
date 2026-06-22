@@ -30,9 +30,9 @@ export const site = {
       "https://www.google.com/maps?q=1%20rue%20de%20l%27Abbaye%2013007%20Marseille&hl=fr&output=embed",
   },
 
-  // ⚑ À CONFIRMER — téléphone réel de l'établissement
-  telephone: "+33 4 00 00 00 00",
-  telephoneAffichage: "04 00 00 00 00",
+  // Téléphone de l'établissement (source de vérité — voir public/offline.html à synchroniser)
+  telephone: "+33 4 91 92 18 62",
+  telephoneAffichage: "04 91 92 18 62",
   email: "info@derrierelabbaye.fr",
 
   // ⚑ À CONFIRMER — horaires réels.
