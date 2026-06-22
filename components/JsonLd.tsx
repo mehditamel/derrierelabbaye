@@ -42,8 +42,10 @@ function menuSectionToSchema(section: MenuSection) {
 
 /** Données structurées schema.org (@graph) pour le SEO local + rich results. */
 export function JsonLd() {
+  // Cast en `string` : `site` est `as const`, donc le littéral et la sentinelle
+  // n'ont pas de type commun — le garde-fou reste utile si on revenait au placeholder.
   const telephone =
-    site.telephone === PLACEHOLDER_TEL ? undefined : site.telephone;
+    (site.telephone as string) === PLACEHOLDER_TEL ? undefined : site.telephone;
   const sameAs = site.reseaux
     .map((r) => r.url)
     .filter((u) => !PLACEHOLDER_SOCIALS.has(u));
