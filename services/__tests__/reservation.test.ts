@@ -18,12 +18,12 @@ afterEach(() => vi.mocked(getSupabase).mockReset());
 
 describe("createReservation", () => {
   it("rejette un payload incomplet", async () => {
-    vi.mocked(getSupabase).mockReturnValue(null);
+    vi.mocked(getSupabase).mockResolvedValue(null);
     await expect(createReservation({ ...payload, nom: "" })).rejects.toThrow(/incomplètes/i);
   });
 
   it("simule l'enregistrement quand Supabase n'est pas configuré", async () => {
-    vi.mocked(getSupabase).mockReturnValue(null);
+    vi.mocked(getSupabase).mockResolvedValue(null);
     const res = await createReservation(payload);
     expect(res.ok).toBe(true);
     expect(res.reference).toMatch(/^DLA-[A-Z0-9]{4}$/);
@@ -32,7 +32,7 @@ describe("createReservation", () => {
   it("insère dans Supabase quand il est configuré", async () => {
     const insert = vi.fn().mockResolvedValue({ error: null });
     const from = vi.fn().mockReturnValue({ insert });
-    vi.mocked(getSupabase).mockReturnValue({ from } as never);
+    vi.mocked(getSupabase).mockResolvedValue({ from } as never);
 
     const res = await createReservation(payload);
 
@@ -51,7 +51,7 @@ describe("createReservation", () => {
   it("remonte une erreur si l'insertion échoue", async () => {
     const insert = vi.fn().mockResolvedValue({ error: { message: "boom" } });
     const from = vi.fn().mockReturnValue({ insert });
-    vi.mocked(getSupabase).mockReturnValue({ from } as never);
+    vi.mocked(getSupabase).mockResolvedValue({ from } as never);
 
     await expect(createReservation(payload)).rejects.toThrow(/n'a pas pu/i);
   });
