@@ -1,7 +1,10 @@
 /* =====================================================================
-   Service de réservation — SIMULÉ (aucun back-end).
-   Isolé ici pour brancher une vraie API plus tard sans toucher l'UI.
+   Service de réservation.
+   Persiste dans Supabase si l'app est configurée (variables d'env présentes) ;
+   sinon retombe sur une simulation locale (faux délai). L'UI ne change pas.
    ===================================================================== */
+
+import { getSupabase } from "@/lib/supabase";
 
 export type ReservationPayload = {
   date: string; // ISO yyyy-mm-dd
@@ -30,14 +33,43 @@ function genererReference(): string {
   return `DLA-${suffixe}`;
 }
 
-/**
- * Simule l'enregistrement d'une réservation (faux délai réseau).
- * Remplacer le corps par un appel API réel le moment venu.
- */
-export async function createReservation(payload: ReservationPayload): Promise<ReservationResult> {
-  await delay(900);
+/** Valide le payload côté service (garde commune aux deux modes). */
+function validerPayload(payload: ReservationPayload): void {
   if (!payload.date || !payload.heure || !payload.nom || payload.couverts < 1) {
     throw new Error("Informations de réservation incomplètes.");
   }
-  return { ok: true, reference: genererReference() };
+}
+
+/**
+ * Enregistre une demande de réservation.
+ * - Si Supabase est configuré : insère la ligne dans `reservations`.
+ * - Sinon : simule l'enregistrement (faux délai réseau) — utile en démo,
+ *   en preview sans secrets ou en local.
+ */
+export async function createReservation(payload: ReservationPayload): Promise<ReservationResult> {
+  validerPayload(payload);
+  const reference = genererReference();
+  const supabase = getSupabase();
+
+  // Repli simulé : aucune configuration back-end.
+  if (!supabase) {
+    await delay(900);
+    return { ok: true, reference };
+  }
+
+  const { error } = await supabase.from("reservations").insert({
+    reference,
+    date: payload.date,
+    heure: payload.heure,
+    couverts: payload.couverts,
+    nom: payload.nom,
+    telephone: payload.telephone ?? null,
+    email: payload.email ?? null,
+    message: payload.message ?? null,
+  });
+
+  if (error) {
+    throw new Error("La réservation n'a pas pu être enregistrée. Réessayez.");
+  }
+  return { ok: true, reference };
 }

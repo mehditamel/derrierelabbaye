@@ -31,10 +31,14 @@ export default function ConfidentialitePage() {
 
           <h2>Demande de réservation</h2>
           <p>
-            Le site est une démonstration : le formulaire de réservation est simulé dans votre
-            navigateur. Les informations saisies (nom, téléphone, message) ne sont ni transmises ni
-            conservées côté serveur. Dans l'application, vos coordonnées peuvent être mémorisées sur
-            votre appareil uniquement, pour pré-remplir le formulaire la fois suivante.
+            Lorsque la réservation en ligne est active, les informations saisies (date, heure,
+            nombre de couverts, nom et, si vous les indiquez, téléphone, e-mail et message) sont
+            transmises à notre prestataire d'hébergement de données afin de traiter votre demande ;
+            elles ne servent qu'à cela et ne sont pas utilisées à des fins publicitaires. Si la
+            réservation en ligne n'est pas configurée, le formulaire fonctionne en démonstration et
+            rien n'est transmis. Dans l'application, vos coordonnées peuvent en outre être
+            mémorisées sur votre appareil uniquement, pour pré-remplir le formulaire la fois
+            suivante.
           </p>
 
           <h2>Programme de fidélité</h2>
