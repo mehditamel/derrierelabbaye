@@ -6,17 +6,20 @@ import { Button } from "@/components/Button";
 import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
 import { telechargerIcs } from "@/lib/ics";
 import { partagerOuCopier } from "@/lib/partage";
-import {
-  creneauPasse,
-  dateLongueFr,
-  isoLocal,
-  premierCreneauDisponible,
-} from "@/lib/creneaux";
+import { creneauPasse, dateLongueFr, isoLocal, premierCreneauDisponible } from "@/lib/creneaux";
 import styles from "./ReservationForm.module.css";
 
 const heures = [
-  "18:00", "18:30", "19:00", "19:30", "20:00",
-  "20:30", "21:00", "21:30", "22:00", "22:30",
+  "18:00",
+  "18:30",
+  "19:00",
+  "19:30",
+  "20:00",
+  "20:30",
+  "21:00",
+  "21:30",
+  "22:00",
+  "22:30",
 ];
 
 export function ReservationForm() {
@@ -33,7 +36,7 @@ export function ReservationForm() {
     heure: string;
     couverts: number;
   } | null>(null);
-  const { status, reference, erreur, submit, reset } = useReservationForm();
+  const { status, reference, erreur, submit, reset, statusLabel } = useReservationForm();
   const successRef = useRef<HTMLHeadingElement>(null);
   const [copie, setCopie] = useState(false);
   const timerCopie = useRef<number>();
@@ -58,9 +61,7 @@ export function ReservationForm() {
   const erreurNom = (nom: string) =>
     nom.trim() ? undefined : "Indiquez un nom pour la réservation.";
   const erreurTelephone = (tel: string) =>
-    telephoneValide(tel)
-      ? undefined
-      : "Ce numéro semble incomplet — format 06 12 34 56 78.";
+    telephoneValide(tel) ? undefined : "Ce numéro semble incomplet — format 06 12 34 56 78.";
 
   // La date du jour est posée au montage : le HTML pré-rendu ne fige ainsi
   // ni la date de build, ni le fuseau du serveur (UTC ≠ heure de Marseille).
@@ -124,16 +125,14 @@ export function ReservationForm() {
         <p className={styles.successText}>
           {recap ? (
             <>
-              Merci. Votre demande pour <strong>{recap.couverts}</strong>{" "}
-              couvert{recap.couverts > 1 ? "s" : ""} le{" "}
-              <strong>{dateLongueFr(recap.date)}</strong> à{" "}
+              Merci. Votre demande pour <strong>{recap.couverts}</strong> couvert
+              {recap.couverts > 1 ? "s" : ""} le <strong>{dateLongueFr(recap.date)}</strong> à{" "}
               <strong>{recap.heure}</strong> a bien été prise en compte.
             </>
           ) : (
             <>Merci. Votre demande de réservation a bien été prise en compte.</>
           )}{" "}
-          Votre référence : <strong>{reference}</strong>. Nous revenons vers
-          vous pour la confirmer.
+          Votre référence : <strong>{reference}</strong>. Nous revenons vers vous pour la confirmer.
         </p>
         <div className={styles.successActions}>
           {recap && (
@@ -183,165 +182,149 @@ export function ReservationForm() {
     <form className={styles.form} onSubmit={onSubmit}>
       {/* Verrouille tous les champs pendant l'envoi */}
       <fieldset className={styles.fields} disabled={status === "loading"}>
-      <div className={styles.grid}>
-        <label className={styles.field}>
-          <span className={styles.label}>
-            Date
-            <span className={styles.req} aria-hidden="true">
-              {" "}
-              *
+        <div className={styles.grid}>
+          <label className={styles.field}>
+            <span className={styles.label}>
+              Date
+              <span className={styles.req} aria-hidden="true">
+                {" "}
+                *
+              </span>
             </span>
-          </span>
-          <input
-            type="date"
-            name="date"
-            required
-            min={maintenant ? isoLocal(maintenant) : undefined}
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            <input
+              type="date"
+              name="date"
+              required
+              min={maintenant ? isoLocal(maintenant) : undefined}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className={styles.input}
+            />
+          </label>
+
+          <div className={styles.field} role="group" aria-labelledby="couverts-label">
+            <span className={styles.label} id="couverts-label">
+              Couverts
+            </span>
+            <div className={styles.stepper}>
+              <button
+                type="button"
+                aria-label="Retirer un couvert"
+                disabled={couverts <= 1}
+                onClick={() => setCouverts((c) => Math.max(1, c - 1))}
+              >
+                −
+              </button>
+              <span aria-live="polite">
+                {couverts}
+                <span className="u-visually-hidden"> couverts</span>
+              </span>
+              <button
+                type="button"
+                aria-label="Ajouter un couvert"
+                disabled={couverts >= 20}
+                onClick={() => setCouverts((c) => Math.min(20, c + 1))}
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <fieldset className={styles.fieldset}>
+          <legend className={styles.label}>Heure</legend>
+          <div className={styles.heures}>
+            {heures.map((h) => {
+              const passe = Boolean(maintenant && date && creneauPasse(date, h, maintenant));
+              return (
+                <button
+                  type="button"
+                  key={h}
+                  disabled={passe}
+                  className={`${styles.heure} ${heure === h ? styles.heureActive : ""} ${
+                    passe ? styles.heureOff : ""
+                  }`}
+                  aria-pressed={heure === h}
+                  onClick={() => setHeure(h)}
+                >
+                  {h}
+                </button>
+              );
+            })}
+          </div>
+          {soireePassee && (
+            <p className={styles.aide}>Plus de créneaux ce soir — choisissez un autre jour.</p>
+          )}
+        </fieldset>
+
+        <div className={styles.grid}>
+          <label className={styles.field}>
+            <span className={styles.label}>
+              Nom
+              <span className={styles.req} aria-hidden="true">
+                {" "}
+                *
+              </span>
+            </span>
+            <input
+              type="text"
+              name="nom"
+              required
+              autoComplete="name"
+              placeholder="Votre nom"
+              className={`${styles.input} ${fieldErrors.nom ? styles.inputError : ""}`}
+              aria-invalid={fieldErrors.nom ? true : undefined}
+              aria-describedby={fieldErrors.nom ? "nom-err" : undefined}
+              onBlur={(e) => setFieldErrors((f) => ({ ...f, nom: erreurNom(e.target.value) }))}
+              onChange={() => setFieldErrors((f) => (f.nom ? { ...f, nom: undefined } : f))}
+            />
+            {fieldErrors.nom && (
+              <span id="nom-err" role="alert" className={styles.fieldError}>
+                {fieldErrors.nom}
+              </span>
+            )}
+          </label>
+          <label className={styles.field}>
+            <span className={styles.label}>Téléphone (facultatif)</span>
+            <input
+              type="tel"
+              name="telephone"
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder="06 12 34 56 78"
+              className={`${styles.input} ${fieldErrors.telephone ? styles.inputError : ""}`}
+              aria-invalid={fieldErrors.telephone ? true : undefined}
+              aria-describedby={`tel-aide${fieldErrors.telephone ? " tel-err" : ""}`}
+              onBlur={(e) =>
+                setFieldErrors((f) => ({
+                  ...f,
+                  telephone: erreurTelephone(e.target.value),
+                }))
+              }
+              onChange={() =>
+                setFieldErrors((f) => (f.telephone ? { ...f, telephone: undefined } : f))
+              }
+            />
+            {fieldErrors.telephone && (
+              <span id="tel-err" role="alert" className={styles.fieldError}>
+                {fieldErrors.telephone}
+              </span>
+            )}
+            <span id="tel-aide" className={styles.aide}>
+              Pour confirmer la table de vive voix.
+            </span>
+          </label>
+        </div>
+
+        <label className={styles.field}>
+          <span className={styles.label}>Message (facultatif)</span>
+          <textarea
+            name="message"
+            rows={3}
+            placeholder="Allergies, grande tablée, occasion à fêter…"
             className={styles.input}
           />
         </label>
-
-        <div
-          className={styles.field}
-          role="group"
-          aria-labelledby="couverts-label"
-        >
-          <span className={styles.label} id="couverts-label">
-            Couverts
-          </span>
-          <div className={styles.stepper}>
-            <button
-              type="button"
-              aria-label="Retirer un couvert"
-              disabled={couverts <= 1}
-              onClick={() => setCouverts((c) => Math.max(1, c - 1))}
-            >
-              −
-            </button>
-            <span aria-live="polite">
-              {couverts}
-              <span className="u-visually-hidden"> couverts</span>
-            </span>
-            <button
-              type="button"
-              aria-label="Ajouter un couvert"
-              disabled={couverts >= 20}
-              onClick={() => setCouverts((c) => Math.min(20, c + 1))}
-            >
-              +
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <fieldset className={styles.fieldset}>
-        <legend className={styles.label}>Heure</legend>
-        <div className={styles.heures}>
-          {heures.map((h) => {
-            const passe = Boolean(
-              maintenant && date && creneauPasse(date, h, maintenant)
-            );
-            return (
-              <button
-                type="button"
-                key={h}
-                disabled={passe}
-                className={`${styles.heure} ${heure === h ? styles.heureActive : ""} ${
-                  passe ? styles.heureOff : ""
-                }`}
-                aria-pressed={heure === h}
-                onClick={() => setHeure(h)}
-              >
-                {h}
-              </button>
-            );
-          })}
-        </div>
-        {soireePassee && (
-          <p className={styles.aide}>
-            Plus de créneaux ce soir — choisissez un autre jour.
-          </p>
-        )}
-      </fieldset>
-
-      <div className={styles.grid}>
-        <label className={styles.field}>
-          <span className={styles.label}>
-            Nom
-            <span className={styles.req} aria-hidden="true">
-              {" "}
-              *
-            </span>
-          </span>
-          <input
-            type="text"
-            name="nom"
-            required
-            autoComplete="name"
-            placeholder="Votre nom"
-            className={`${styles.input} ${fieldErrors.nom ? styles.inputError : ""}`}
-            aria-invalid={fieldErrors.nom ? true : undefined}
-            aria-describedby={fieldErrors.nom ? "nom-err" : undefined}
-            onBlur={(e) =>
-              setFieldErrors((f) => ({ ...f, nom: erreurNom(e.target.value) }))
-            }
-            onChange={() =>
-              setFieldErrors((f) => (f.nom ? { ...f, nom: undefined } : f))
-            }
-          />
-          {fieldErrors.nom && (
-            <span id="nom-err" role="alert" className={styles.fieldError}>
-              {fieldErrors.nom}
-            </span>
-          )}
-        </label>
-        <label className={styles.field}>
-          <span className={styles.label}>Téléphone (facultatif)</span>
-          <input
-            type="tel"
-            name="telephone"
-            autoComplete="tel"
-            inputMode="tel"
-            placeholder="06 12 34 56 78"
-            className={`${styles.input} ${
-              fieldErrors.telephone ? styles.inputError : ""
-            }`}
-            aria-invalid={fieldErrors.telephone ? true : undefined}
-            aria-describedby={`tel-aide${fieldErrors.telephone ? " tel-err" : ""}`}
-            onBlur={(e) =>
-              setFieldErrors((f) => ({
-                ...f,
-                telephone: erreurTelephone(e.target.value),
-              }))
-            }
-            onChange={() =>
-              setFieldErrors((f) =>
-                f.telephone ? { ...f, telephone: undefined } : f
-              )
-            }
-          />
-          {fieldErrors.telephone && (
-            <span id="tel-err" role="alert" className={styles.fieldError}>
-              {fieldErrors.telephone}
-            </span>
-          )}
-          <span id="tel-aide" className={styles.aide}>
-            Pour confirmer la table de vive voix.
-          </span>
-        </label>
-      </div>
-
-      <label className={styles.field}>
-        <span className={styles.label}>Message (facultatif)</span>
-        <textarea
-          name="message"
-          rows={3}
-          placeholder="Allergies, grande tablée, occasion à fêter…"
-          className={styles.input}
-        />
-      </label>
       </fieldset>
 
       {status === "error" && (
@@ -351,10 +334,13 @@ export function ReservationForm() {
         </p>
       )}
 
+      {/* Annonce polie de l'état d'envoi pour les lecteurs d'écran. */}
+      <p className="u-visually-hidden" role="status" aria-live="polite">
+        {statusLabel}
+      </p>
+
       <div className={styles.actions}>
-        <p className={styles.mention}>
-          * champ requis · demande sous réserve de confirmation
-        </p>
+        <p className={styles.mention}>* champ requis · demande sous réserve de confirmation</p>
         <Button
           type="submit"
           variant="primary"

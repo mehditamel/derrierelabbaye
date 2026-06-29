@@ -80,9 +80,28 @@ La PWA (`/app`) va au-delà de la simple coque hors-ligne :
 
 ## Réservation & fidélité
 
-Aucun back-end pour l'instant : `services/reservation.ts` et `services/loyalty.ts`
-**simulent** les appels (faux délai, état local). Pour brancher une vraie API (ou une
-base Supabase), remplacer le corps de `createReservation` — l'UI n'a pas à changer.
+`services/reservation.ts` enregistre les demandes dans **Supabase** si l'app est
+configurée, sinon **simule** l'appel (faux délai). `services/loyalty.ts` reste simulé
+(état local). L'UI ne change pas selon le mode.
+
+### Brancher Supabase (réservations)
+
+Sans variables d'environnement, le formulaire fonctionne en démonstration. Pour
+activer l'enregistrement réel :
+
+1. Créer un projet Supabase (région Paris `eu-west-3` recommandée).
+2. Appliquer la migration `supabase/migrations/0001_reservations.sql` (CLI
+   `supabase db push`, ou éditeur SQL du tableau de bord). Elle crée la table
+   `reservations` avec **RLS** : le rôle `anon` ne peut qu'**insérer** une demande.
+3. Copier `.env.example` → `.env.local` et renseigner :
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Sur Vercel, ajouter ces deux variables (Project Settings → Environment Variables)
+   puis redéployer.
+
+`lib/supabase.ts` n'initialise le client que si les deux variables sont présentes
+(`getSupabase()` renvoie `null` sinon → repli simulé). `.env*.local` et `.env` sont
+déjà ignorés par git.
 
 - **Réservation** — la logique (machine d'état, validation du téléphone) est mutualisée
   dans `lib/useReservationForm.ts`, consommée par le formulaire site et mobile. Les

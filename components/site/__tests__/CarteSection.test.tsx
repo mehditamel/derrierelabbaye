@@ -9,9 +9,7 @@ import { CarteSection } from "@/components/site/CarteSection";
 describe("CarteSection", () => {
   it("affiche le titre de la carte", () => {
     render(<CarteSection />);
-    expect(
-      screen.getByRole("heading", { level: 2, name: /à partager/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: /à partager/i })).toBeInTheDocument();
   });
 
   it("filtre la carte selon la recherche", async () => {
@@ -21,9 +19,7 @@ describe("CarteSection", () => {
       name: /rechercher dans la carte/i,
     });
     await user.type(champ, "houmous");
-    expect(
-      screen.getByRole("heading", { name: /houmous maison/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /houmous maison/i })).toBeInTheDocument();
   });
 
   it("affiche l'état vide quand rien ne correspond", async () => {

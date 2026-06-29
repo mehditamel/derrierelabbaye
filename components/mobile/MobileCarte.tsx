@@ -54,11 +54,7 @@ export function MobileCarte() {
     if (actif !== onglets[0].id) params.set("onglet", actif);
     if (requete.trim()) params.set("q", requete);
     const qs = params.toString();
-    window.history.replaceState(
-      null,
-      "",
-      window.location.pathname + (qs ? `?${qs}` : "")
-    );
+    window.history.replaceState(null, "", window.location.pathname + (qs ? `?${qs}` : ""));
   }, [actif, requete]);
 
   // En recherche, on parcourt toute la carte (cuisine + cocktails + boissons),
@@ -165,8 +161,8 @@ export function MobileCarte() {
           <div className={styles.empty} role="status">
             <p className={styles.emptyTitle}>Rien à ce nom sur la carte</p>
             <p className={styles.emptyText}>
-              Essayez « burrata », « poulpe » ou « mojito » — ou demandez à
-              l'équipe, on a toujours une idée.
+              Essayez « burrata », « poulpe » ou « mojito » — ou demandez à l'équipe, on a toujours
+              une idée.
             </p>
             <button
               type="button"
@@ -184,9 +180,7 @@ export function MobileCarte() {
             <section key={section.id} className={styles.block}>
               <div className={styles.blockHead}>
                 <h2 className={styles.blockTitle}>{section.titre}</h2>
-                {section.surtitre && (
-                  <span className={styles.blockPrice}>{section.surtitre}</span>
-                )}
+                {section.surtitre && <span className={styles.blockPrice}>{section.surtitre}</span>}
               </div>
               <div>
                 {section.items.map((item) => (
@@ -198,8 +192,7 @@ export function MobileCarte() {
         )}
         <p className={styles.legende}>
           <span aria-hidden="true">★</span> nos spécialités maison ·{" "}
-          <Leaf size={11} aria-hidden="true" className={styles.legendeLeaf} />{" "}
-          végétarien
+          <Leaf size={11} aria-hidden="true" className={styles.legendeLeaf} /> végétarien
         </p>
         <p className={styles.legal}>{site.legal}</p>
       </div>

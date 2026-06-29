@@ -15,11 +15,7 @@ type Props = {
  * calculée en heure de Paris et rafraîchie chaque minute.
  * Les classes viennent du parent : la pastille s'habille selon son contexte.
  */
-export function StatutOuverture({
-  className,
-  dotClassName,
-  dotFermeClassName,
-}: Props) {
+export function StatutOuverture({ className, dotClassName, dotFermeClassName }: Props) {
   const [etat, setEtat] = useState<EtatOuverture | null>(null);
 
   useEffect(() => {
@@ -32,13 +28,8 @@ export function StatutOuverture({
   // Avant montage : même gabarit mais masqué — ni mensonge pré-rendu,
   // ni saut de mise en page à l'hydratation.
   return (
-    <span
-      className={className}
-      style={etat ? undefined : { visibility: "hidden" }}
-    >
-      <span
-        className={`${dotClassName} ${etat && !etat.ouvert ? dotFermeClassName : ""}`}
-      />{" "}
+    <span className={className} style={etat ? undefined : { visibility: "hidden" }}>
+      <span className={`${dotClassName} ${etat && !etat.ouvert ? dotFermeClassName : ""}`} />{" "}
       {etat ? etat.libelle : `Ouvert · ${site.fermeture}`}
     </span>
   );

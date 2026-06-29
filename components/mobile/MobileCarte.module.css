@@ -215,7 +215,9 @@
   background: transparent;
   color: var(--cream-90);
   cursor: pointer;
-  transition: border-color var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft);
+  transition:
+    border-color var(--dur) var(--ease-soft),
+    color var(--dur) var(--ease-soft);
 }
 .emptyClear:hover {
   border-color: var(--gold-light);

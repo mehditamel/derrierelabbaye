@@ -42,7 +42,9 @@
   border-radius: var(--r-pill);
   background: var(--gold);
   color: var(--noir);
-  transition: background var(--dur) var(--ease-soft), box-shadow var(--dur) var(--ease-soft);
+  transition:
+    background var(--dur) var(--ease-soft),
+    box-shadow var(--dur) var(--ease-soft);
 }
 .cta:hover {
   background: var(--gold-light);

@@ -76,9 +76,7 @@ export function CarteSection() {
             )}
           </div>
           <p className="u-visually-hidden" role="status" aria-live="polite">
-            {enRecherche
-              ? `${nbResultats} résultat${nbResultats > 1 ? "s" : ""}`
-              : ""}
+            {enRecherche ? `${nbResultats} résultat${nbResultats > 1 ? "s" : ""}` : ""}
           </p>
         </Reveal>
 
@@ -86,8 +84,8 @@ export function CarteSection() {
           <div className={styles.empty} role="status">
             <p className={styles.emptyTitle}>Rien à ce nom sur la carte</p>
             <p className={styles.emptyText}>
-              Essayez « burrata », « poulpe » ou « planche » — ou demandez à
-              l'équipe, on a toujours une idée.
+              Essayez « burrata », « poulpe » ou « planche » — ou demandez à l'équipe, on a toujours
+              une idée.
             </p>
             <Button variant="ghost" onClick={() => setRequete("")}>
               Effacer la recherche
@@ -111,13 +109,10 @@ export function CarteSection() {
           </div>
         )}
 
-        <p className={styles.note}>
-          À accompagner d'un verre, d'une bouteille… ou des deux.
-        </p>
+        <p className={styles.note}>À accompagner d'un verre, d'une bouteille… ou des deux.</p>
         <p className={styles.legende}>
           <span aria-hidden="true">★</span> nos spécialités maison ·{" "}
-          <Leaf size={11} aria-hidden="true" className={styles.legendeLeaf} />{" "}
-          végétarien
+          <Leaf size={11} aria-hidden="true" className={styles.legendeLeaf} /> végétarien
         </p>
       </div>
     </section>

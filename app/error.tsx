@@ -25,8 +25,8 @@ export default function Error({
       <h1 className={styles.title}>Un petit contretemps</h1>
       <GoldRule className={styles.rule} />
       <p className={styles.text}>
-        Quelque chose n'a pas fonctionné de notre côté. Réessayez dans un instant —
-        ou revenez à l'accueil, on vous y attend.
+        Quelque chose n'a pas fonctionné de notre côté. Réessayez dans un instant — ou revenez à
+        l'accueil, on vous y attend.
       </p>
       <div className={styles.actions}>
         <Button variant="primary" onClick={reset}>

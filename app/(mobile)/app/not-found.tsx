@@ -8,9 +8,7 @@ export default function AppNotFound() {
       <Logo tone="cream" width={150} />
       <span className={styles.code}>Erreur 404</span>
       <h1 className={styles.title}>Page introuvable</h1>
-      <p className={styles.text}>
-        Cette page n'existe pas ou a changé d'adresse.
-      </p>
+      <p className={styles.text}>Cette page n'existe pas ou a changé d'adresse.</p>
       <Link href="/app" className={styles.cta}>
         Retour à l'accueil
       </Link>

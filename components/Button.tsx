@@ -9,8 +9,7 @@ type BaseProps = {
   children: ReactNode;
 };
 
-type ButtonAsButton = BaseProps &
-  ComponentPropsWithoutRef<"button"> & { href?: undefined };
+type ButtonAsButton = BaseProps & ComponentPropsWithoutRef<"button"> & { href?: undefined };
 
 type ButtonAsLink = BaseProps & {
   href: string;
@@ -18,11 +17,7 @@ type ButtonAsLink = BaseProps & {
   rel?: string;
 };
 
-export function Button({
-  variant = "primary",
-  children,
-  ...props
-}: ButtonAsButton | ButtonAsLink) {
+export function Button({ variant = "primary", children, ...props }: ButtonAsButton | ButtonAsLink) {
   const className = `${styles.btn} ${styles[variant]}`;
 
   if ("href" in props && props.href) {

@@ -20,10 +20,7 @@ describe("site — téléphone", () => {
   });
 
   it("reste synchronisé avec public/offline.html", () => {
-    const html = readFileSync(
-      join(process.cwd(), "public", "offline.html"),
-      "utf-8"
-    );
+    const html = readFileSync(join(process.cwd(), "public", "offline.html"), "utf-8");
     const telCompact = site.telephone.replace(/\s/g, "");
     expect(html).toContain(site.telephoneAffichage);
     expect(html).toContain(`tel:${telCompact}`);

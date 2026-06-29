@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  normaliser,
-  correspondItem,
-  filtrerSections,
-} from "@/lib/recherche";
+import { normaliser, correspondItem, filtrerSections } from "@/lib/recherche";
 import type { MenuItem, MenuSection } from "@/data/menu";
 
 describe("normaliser", () => {

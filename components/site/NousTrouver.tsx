@@ -17,8 +17,8 @@ export function NousTrouver() {
           <SectionLabel>{copies.nousTrouverSurtitre}</SectionLabel>
           <h2 className={styles.title}>{copies.nousTrouverTitre}</h2>
           <Reveal delay={60}>
-          <GoldRule className={styles.rule} draw />
-        </Reveal>
+            <GoldRule className={styles.rule} draw />
+          </Reveal>
           <p className={styles.text}>{copies.nousTrouverTexte}</p>
         </div>
 

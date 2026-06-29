@@ -27,11 +27,36 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Format (Prettier)
+        run: npm run format:check
+
       - name: Type-check
         run: npm run type-check
 
-      - name: Tests
-        run: npm test
+      - name: Tests (avec couverture)
+        run: npm run test:coverage
 
       - name: Build
         run: npm run build
+
+  # Audit Lighthouse — informatif (non bloquant) pour suivre perf/a11y/SEO.
+  lighthouse:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Lighthouse CI
+        run: npx @lhci/cli@0.14.x autorun
+        continue-on-error: true

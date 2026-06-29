@@ -51,19 +51,11 @@ export default function AppHome() {
             <CalendarHeart size={20} strokeWidth={1.5} />
             <span>Réserver</span>
           </Link>
-          <a
-            href={site.adresse.mapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className={styles.action}
-          >
+          <a href={site.adresse.mapsUrl} target="_blank" rel="noreferrer" className={styles.action}>
             <MapPin size={20} strokeWidth={1.5} />
             <span>Y aller</span>
           </a>
-          <a
-            href={`tel:${site.telephone.replace(/\s/g, "")}`}
-            className={styles.action}
-          >
+          <a href={`tel:${site.telephone.replace(/\s/g, "")}`} className={styles.action}>
             <Phone size={20} strokeWidth={1.5} />
             <span>Appeler</span>
           </a>

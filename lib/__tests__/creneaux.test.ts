@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  isoLocal,
-  creneauPasse,
-  premierCreneauDisponible,
-  dateLongueFr,
-} from "@/lib/creneaux";
+import { isoLocal, creneauPasse, premierCreneauDisponible, dateLongueFr } from "@/lib/creneaux";
 
 describe("isoLocal", () => {
   it("formate une date en yyyy-mm-dd local", () => {
@@ -41,16 +36,12 @@ describe("premierCreneauDisponible", () => {
 
   it("renvoie le premier créneau encore ouvert", () => {
     const maintenant = new Date("2026-06-09T20:15:00");
-    expect(premierCreneauDisponible("2026-06-09", heures, maintenant)).toBe(
-      "21:00"
-    );
+    expect(premierCreneauDisponible("2026-06-09", heures, maintenant)).toBe("21:00");
   });
 
   it("renvoie undefined si la soirée est passée", () => {
     const maintenant = new Date("2026-06-09T23:30:00");
-    expect(
-      premierCreneauDisponible("2026-06-09", heures, maintenant)
-    ).toBeUndefined();
+    expect(premierCreneauDisponible("2026-06-09", heures, maintenant)).toBeUndefined();
   });
 });
 

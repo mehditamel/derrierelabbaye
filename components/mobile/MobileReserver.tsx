@@ -8,12 +8,7 @@ import { useLocalStorage } from "@/lib/useLocalStorage";
 import { haptic } from "@/lib/haptic";
 import { telechargerIcs } from "@/lib/ics";
 import { partagerOuCopier } from "@/lib/partage";
-import {
-  creneauPasse,
-  dateLongueFr,
-  isoLocal,
-  premierCreneauDisponible,
-} from "@/lib/creneaux";
+import { creneauPasse, dateLongueFr, isoLocal, premierCreneauDisponible } from "@/lib/creneaux";
 import styles from "./MobileReserver.module.css";
 
 type Contact = { nom: string; tel: string; email: string };
@@ -59,18 +54,17 @@ export function MobileReserver() {
       if (libre) setHeure(libre);
     }
   }, [maintenant, date, heure]);
-  const { value: contact, set: setContact } = useLocalStorage<Contact>(
-    "dla-reservation-contact",
-    { nom: "", tel: "", email: "" }
-  );
+  const { value: contact, set: setContact } = useLocalStorage<Contact>("dla-reservation-contact", {
+    nom: "",
+    tel: "",
+    email: "",
+  });
   const [telErreur, setTelErreur] = useState("");
-  const { status, reference, erreur, submit, reset } = useReservationForm();
+  const { status, reference, erreur, submit, reset, statusLabel } = useReservationForm();
   const online = useOnline();
   const successRef = useRef<HTMLHeadingElement>(null);
 
-  const soireePassee = Boolean(
-    maintenant && !premierCreneauDisponible(date, heures, maintenant)
-  );
+  const soireePassee = Boolean(maintenant && !premierCreneauDisponible(date, heures, maintenant));
 
   useEffect(() => {
     if (status === "done") {
@@ -239,9 +233,7 @@ export function MobileReserver() {
           })}
         </div>
         {soireePassee && (
-          <p className={styles.aide}>
-            Plus de créneaux ce soir — choisissez un autre jour.
-          </p>
+          <p className={styles.aide}>Plus de créneaux ce soir — choisissez un autre jour.</p>
         )}
 
         <span className="app-section-label">Vos coordonnées</span>
@@ -296,6 +288,11 @@ export function MobileReserver() {
             <span>{erreur}</span>
           </p>
         )}
+
+        {/* Annonce polie de l'état d'envoi pour les lecteurs d'écran. */}
+        <p className="u-visually-hidden" role="status" aria-live="polite">
+          {statusLabel}
+        </p>
       </div>
 
       <div className={styles.sticky}>
@@ -317,9 +314,7 @@ export function MobileReserver() {
           )}
         </button>
         {!contact.nom.trim() && (
-          <p className={styles.ctaHint}>
-            Indiquez votre nom pour envoyer la demande.
-          </p>
+          <p className={styles.ctaHint}>Indiquez votre nom pour envoyer la demande.</p>
         )}
       </div>
     </div>

@@ -7,8 +7,7 @@ import "./app-shell.css";
 
 export const metadata: Metadata = {
   title: { absolute: "L'app — Derrière l'Abbaye" },
-  description:
-    "La carte, la réservation et la fidélité de Derrière l'Abbaye, dans la poche.",
+  description: "La carte, la réservation et la fidélité de Derrière l'Abbaye, dans la poche.",
   alternates: { canonical: "/app" },
   // Coque PWA : duplique le contenu public → non indexée (les liens restent suivis).
   robots: { index: false, follow: true },
@@ -20,11 +19,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function MobileAppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MobileAppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-root">
       <PwaRegister />

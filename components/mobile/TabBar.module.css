@@ -28,7 +28,9 @@
   font-size: 0.66rem;
   white-space: nowrap;
   border-radius: var(--r-card);
-  transition: color var(--dur) var(--ease-soft), transform 120ms var(--ease-soft);
+  transition:
+    color var(--dur) var(--ease-soft),
+    transform 120ms var(--ease-soft);
 }
 
 .tab:hover {

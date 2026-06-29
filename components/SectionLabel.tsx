@@ -8,17 +8,10 @@ type Props = {
   className?: string;
 };
 
-export function SectionLabel({
-  children,
-  onDark = false,
-  as = "span",
-  className,
-}: Props) {
+export function SectionLabel({ children, onDark = false, as = "span", className }: Props) {
   const Tag = as;
   return (
-    <Tag
-      className={`${styles.label} ${onDark ? styles.onDark : ""} ${className ?? ""}`}
-    >
+    <Tag className={`${styles.label} ${onDark ? styles.onDark : ""} ${className ?? ""}`}>
       {children}
     </Tag>
   );

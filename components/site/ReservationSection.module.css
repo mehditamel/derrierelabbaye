@@ -34,7 +34,9 @@
   border-radius: var(--r-card);
   padding: var(--space-6);
   box-shadow: var(--shadow-sm);
-  transition: border-color var(--dur) var(--ease-soft), box-shadow var(--dur) var(--ease-soft);
+  transition:
+    border-color var(--dur) var(--ease-soft),
+    box-shadow var(--dur) var(--ease-soft);
 }
 .card:focus-within {
   border-color: var(--gold);

@@ -20,7 +20,7 @@ source de vérité, sans réinventer le style :
   **Lis-le en entier avant de commencer.**
 - `SKILL.md` — réflexes de marque condensés.
 - `colors_and_type.css` — TOUS les tokens (couleurs, typo, espacements, ombres, radii)
-  + classes utilitaires. **Réutilise ces variables CSS telles quelles.**
+  - classes utilitaires. **Réutilise ces variables CSS telles quelles.**
 - `assets/` — logos (`logo-cream.png` sur fond sombre, `logo-noir.png` sur ivoire),
   photo de la devanture (`enseigne.jpeg`), cartes imprimées (`carte-recto.jpg`,
   `carte-verso.jpg`).
@@ -69,7 +69,7 @@ Livrer **deux applications React de production** dans un monorepo :
 - Animations lentes, jamais bondissantes (fades + translateY 8–16px, ~300–500ms,
   ease-out). La seule emphase « vivante » = un halo ambré (`--shadow-glow`).
 - Inclure la mention légale en pied de page :
-  *« L'abus d'alcool est dangereux pour la santé, à consommer avec modération. »*
+  _« L'abus d'alcool est dangereux pour la santé, à consommer avec modération. »_
 
 ## SITE INTERNET — écrans & composants (cf. `ui_kits/website/`)
 
@@ -92,7 +92,7 @@ PWA avec barre d'onglets basse en verre (Accueil / La carte / Réserver / Fidél
 1. **Accueil** — hero devanture + logo, puce « Ouvert · ferme à 01h00 », actions
    rapides, cocktail « ce soir » mis en avant, scroller horizontal de tapas.
 2. **La carte** — onglets segmentés scrollables (froid / chaud / planches / cocktails)
-   + lignes de menu.
+   - lignes de menu.
 3. **Réserver** — bande de dates, stepper de couverts, grille d'horaires, CTA collant
    en bas → écran de succès.
 4. **Fidélité** — carte de membre noire (points + barre de progression) + liste
