@@ -10,7 +10,7 @@ export function Hero() {
     <section className={styles.hero}>
       <HeroBackdrop
         src={enseigne}
-        alt="Devanture en acier corten de Derrière l'Abbaye, illuminée le soir"
+        alt="Devanture en acier corten de Derrière l'Abbaye, illuminée le soir, rue de l'Abbaye derrière l'Abbaye Saint-Victor à Marseille"
       />
       <div className={styles.scrim} />
       <div className={styles.frame} aria-hidden="true" />

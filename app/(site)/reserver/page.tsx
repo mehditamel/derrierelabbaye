@@ -8,7 +8,7 @@ import styles from "./reserver.module.css";
 export const metadata: Metadata = {
   title: "Réserver une table",
   description:
-    "Réservez votre table chez Derrière l'Abbaye — bar à tapas & cocktails, Saint-Victor, Marseille.",
+    "Réservez votre table chez Derrière l'Abbaye — bar à tapas & cocktails dans une rue calme derrière l'Abbaye Saint-Victor, à deux pas du Vieux-Port à Marseille.",
   alternates: { canonical: "/reserver" },
 };
 

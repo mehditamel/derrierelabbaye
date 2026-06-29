@@ -6,11 +6,12 @@ import "@/styles/colors_and_type.css";
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Derrière l'Abbaye — Bar à tapas & cocktails · Marseille",
+    default:
+      "Derrière l'Abbaye — Bar à tapas & cocktails près de l'Abbaye Saint-Victor · Marseille",
     template: "%s — Derrière l'Abbaye",
   },
   description:
-    "Apéro marseillais, bar à tapas & cocktails au 1 rue de l'Abbaye, quartier Saint-Victor à Marseille. Tapas à partager, planches et cocktails dans une ambiance intimiste.",
+    "Bar à tapas & cocktails niché dans une rue calme, juste derrière l'Abbaye Saint-Victor et à deux pas du Vieux-Port à Marseille. Apéro marseillais, tapas à partager, planches et cocktails dans une ambiance intimiste.",
   applicationName: site.nom,
   keywords: [
     "bar à tapas Marseille",
@@ -19,6 +20,11 @@ export const metadata: Metadata = {
     "Derrière l'Abbaye",
     "bar Marseille 13007",
     "tapas Saint-Victor",
+    "bar près Abbaye Saint-Victor",
+    "bar près Vieux-Port Marseille",
+    "où boire un verre Saint-Victor Marseille",
+    "bar caché Marseille",
+    "apéro Vieux-Port",
   ],
   authors: [{ name: site.nom }],
   manifest: "/manifest.webmanifest",
@@ -28,14 +34,16 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     url: site.url,
     siteName: site.nom,
-    title: "Derrière l'Abbaye — Bar à tapas & cocktails · Marseille",
+    title:
+      "Derrière l'Abbaye — Bar à tapas & cocktails, derrière l'Abbaye Saint-Victor · Marseille",
     description: copies.heroAccroche,
     // og:image (+ width/height/alt) fourni automatiquement par
     // app/opengraph-image.tsx via son export `size` (1200×630).
   },
   twitter: {
     card: "summary_large_image",
-    title: "Derrière l'Abbaye — Bar à tapas & cocktails · Marseille",
+    title:
+      "Derrière l'Abbaye — Bar à tapas & cocktails, derrière l'Abbaye Saint-Victor · Marseille",
     description: copies.heroAccroche,
     // twitter:image fourni automatiquement par app/twitter-image.tsx
   },

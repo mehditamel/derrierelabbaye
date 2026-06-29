@@ -10,6 +10,7 @@ import styles from "./Header.module.css";
 
 const liens = [
   { href: "/#le-lieu", label: "Le lieu" },
+  { href: "/#le-quartier", label: "Le quartier" },
   { href: "/#la-carte", label: "La carte" },
   { href: "/#cocktails", label: "Cocktails" },
   { href: "/#nous-trouver", label: "Nous trouver" },

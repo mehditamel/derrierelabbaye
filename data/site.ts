@@ -74,11 +74,19 @@ export const site = {
 export const copies = {
   heroTitre: "Derrière l'Abbaye",
   heroAccroche:
-    "Apéro marseillais — bar à tapas & cocktails, juste derrière l'Abbaye Saint-Victor.",
+    "Apéro marseillais — bar à tapas & cocktails, niché dans une rue calme, juste derrière l'Abbaye Saint-Victor.",
   introSurtitre: "Le lieu",
-  introTitre: "Juste derrière l'Abbaye Saint-Victor",
+  introTitre: "Une parenthèse derrière l'Abbaye",
   introTexte:
     "Une devanture en acier corten, une lumière chaude, des bouteilles qui scintillent dans la pénombre. Derrière l'Abbaye, c'est l'apéro marseillais dans ce qu'il a de plus généreux : des tapas à partager, des planches de caractère et des cocktails qui sentent le sud. À accompagner d'un verre, d'une bouteille… ou des deux.",
+
+  quartierSurtitre: "Le quartier",
+  quartierTitre: "Saint-Victor, juste derrière le monument",
+  quartierTexte:
+    "On nous trouve au pied de l'Abbaye Saint-Victor, l'une des plus anciennes abbayes de France et l'un des monuments les plus célèbres de Marseille. La foule remonte vers le Vieux-Port ; nous, on reste là, dans une petite rue tranquille, à l'abri du tumulte.",
+  quartierTexte2:
+    "C'est tout le charme du lieu : un repaire d'initiés à deux pas des grands repères marseillais. Après la visite de l'Abbaye, une balade sur le Vieux-Port ou un coucher de soleil au Pharo, poussez la porte — la rue est calme, l'accueil chaleureux, et le sud dans le verre.",
+
   carteSurtitre: "La carte",
   carteTitre: "À partager",
   carteSousTitre: "Froid, chaud & planches",
@@ -93,12 +101,42 @@ export const copies = {
   nousTrouverSurtitre: "Nous trouver",
   nousTrouverTitre: "Passez nous voir, on vous attend",
   nousTrouverTexte:
-    "Juste derrière l'Abbaye Saint-Victor, à deux pas du Vieux-Port. Une envie de réserver, une question sur la carte, ou simplement l'envie de pousser la porte ? Appelez-nous, on décroche avec plaisir — ou venez directement vous installer au comptoir.",
+    "Repérez l'Abbaye Saint-Victor : on est juste derrière, dans une rue calme, à deux pas du Vieux-Port. Une envie de réserver, une question sur la carte, ou simplement l'envie de pousser la porte ? Appelez-nous, on décroche avec plaisir — ou venez directement vous installer au comptoir.",
 } as const;
 
 /** Statistiques / repères affichés en cartes sur la section « Le lieu ». */
 export const reperes = [
-  { valeur: "Saint-Victor", label: "Quartier" },
-  { valeur: "Tapas & cocktails", label: "Bar à" },
+  { valeur: "Abbaye St-Victor", label: "Juste derrière" },
+  { valeur: "Vieux-Port", label: "À deux pas" },
   { valeur: "Apéro → tard", label: "Tous les soirs" },
+] as const;
+
+/** Questions fréquentes — affichées (section FAQ) ET balisées (JSON-LD FAQPage).
+ *  Le contenu visible et le balisage doivent rester identiques (règle Google). */
+export const faq = [
+  {
+    question: "Où se trouve Derrière l'Abbaye ?",
+    reponse:
+      "Au 1 rue de l'Abbaye, dans le 7e arrondissement de Marseille, au cœur du quartier Saint-Victor. On est juste derrière l'Abbaye Saint-Victor, dans une petite rue calme à deux pas du Vieux-Port.",
+  },
+  {
+    question: "C'est près de l'Abbaye Saint-Victor et du Vieux-Port ?",
+    reponse:
+      "Oui : on est littéralement derrière l'Abbaye Saint-Victor, l'un des monuments les plus célèbres de Marseille, et à quelques minutes à pied du Vieux-Port et du jardin du Pharo. L'endroit idéal pour un verre après la visite.",
+  },
+  {
+    question: "Comment venir ? Y a-t-il un parking ou un métro ?",
+    reponse:
+      "À pied depuis le Vieux-Port en une dizaine de minutes par les quais. En bus, l'arrêt Saint-Victor est tout proche. En voiture, plusieurs parkings publics desservent le quartier du Pharo et du Vieux-Port ; la rue de l'Abbaye, elle, reste tranquille.",
+  },
+  {
+    question: "Quels sont les horaires ?",
+    reponse:
+      "On vous accueille du mardi au dimanche à partir de 17h00, pour l'apéro et jusque tard dans la soirée. Fermé le lundi.",
+  },
+  {
+    question: "Faut-il réserver une table ?",
+    reponse:
+      "Ce n'est pas obligatoire — vous pouvez toujours vous installer au comptoir. Mais pour une table, surtout le week-end, mieux vaut réserver en ligne ou nous appeler : on vous confirme avec plaisir.",
+  },
 ] as const;

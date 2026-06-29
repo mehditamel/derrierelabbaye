@@ -1,4 +1,4 @@
-import { site } from "@/data/site";
+import { site, faq } from "@/data/site";
 import { cuisine, barSections, boissonsDouces } from "@/data/menu";
 import type { MenuSection } from "@/data/menu";
 
@@ -45,7 +45,10 @@ export function JsonLd() {
     "@id": `${site.url}/#bar`,
     name: site.nom,
     description:
-      "Apéro marseillais — bar à tapas & cocktails, juste derrière l'Abbaye Saint-Victor.",
+      "Apéro marseillais — bar à tapas & cocktails niché dans une rue calme, juste derrière l'Abbaye Saint-Victor et à deux pas du Vieux-Port à Marseille.",
+    slogan: site.accroche,
+    keywords:
+      "bar à tapas Marseille, cocktails Marseille, bar près Abbaye Saint-Victor, bar près Vieux-Port Marseille, apéro Saint-Victor",
     url: site.url,
     image: `${site.url}/enseigne.jpeg`,
     logo: `${site.url}/logo-noir.png`,
@@ -118,6 +121,17 @@ export function JsonLd() {
     publisher: { "@id": `${site.url}/#bar` },
   };
 
+  const faqPage = {
+    "@type": "FAQPage",
+    "@id": `${site.url}/#faq`,
+    inLanguage: "fr-FR",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.reponse },
+    })),
+  };
+
   const breadcrumb = {
     "@type": "BreadcrumbList",
     "@id": `${site.url}/#breadcrumb`,
@@ -134,7 +148,7 @@ export function JsonLd() {
 
   const data = {
     "@context": "https://schema.org",
-    "@graph": [bar, menu, website, breadcrumb],
+    "@graph": [bar, menu, website, faqPage, breadcrumb],
   };
 
   return (
