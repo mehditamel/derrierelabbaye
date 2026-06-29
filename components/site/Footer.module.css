@@ -26,6 +26,20 @@
   margin: 0;
 }
 
+.brandLink {
+  align-self: flex-start;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  color: var(--cream-70);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--gold-deep);
+  transition: color var(--dur) var(--ease-soft);
+}
+.brandLink:hover {
+  color: var(--gold-light);
+}
+
 .cols {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

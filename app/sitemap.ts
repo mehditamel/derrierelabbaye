@@ -8,6 +8,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/`, lastModified: now, changeFrequency: "monthly", priority: 1 },
     { url: `${site.url}/reserver`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     {
+      url: `${site.url}/quartier-saint-victor`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${site.url}/mentions-legales`,
       lastModified: now,
       changeFrequency: "yearly",

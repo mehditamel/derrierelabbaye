@@ -25,6 +25,7 @@ yarn-error.log*
 
 # tests
 /coverage
+.lighthouseci/
 
 # typescript
 *.tsbuildinfo
