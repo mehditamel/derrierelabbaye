@@ -17,8 +17,8 @@ export default function NotFound() {
       <h1 className={styles.title}>Cette page s'est éclipsée</h1>
       <GoldRule className={styles.rule} />
       <p className={styles.text}>
-        La page que vous cherchez n'existe pas ou a changé d'adresse. Le comptoir,
-        lui, est toujours là — juste derrière l'Abbaye Saint-Victor.
+        La page que vous cherchez n'existe pas ou a changé d'adresse. Le comptoir, lui, est toujours
+        là — juste derrière l'Abbaye Saint-Victor.
       </p>
       <div className={styles.actions}>
         <Button href="/" variant="primary">

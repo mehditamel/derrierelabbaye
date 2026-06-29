@@ -22,11 +22,11 @@ storefront photo treatment).
 If working on **production code**: read the rules here to become an expert in the brand,
 and reuse the UI kit components as cosmetic references.
 
-Key reflexes: French copy, **vous**, never emoji; two grounds only (ivoire *or* noir),
+Key reflexes: French copy, **vous**, never emoji; two grounds only (ivoire _or_ noir),
 gold is the bridge; thin + tracked + uppercase before bigger; sharp corners except the
-pill; always include the legal line *« L'abus d'alcool est dangereux pour la santé, à
-consommer avec modération. »*
+pill; always include the legal line _« L'abus d'alcool est dangereux pour la santé, à
+consommer avec modération. »_
 
 If the user invokes this skill without other guidance, ask what they want to build,
 ask a few focused questions, then act as an expert designer who outputs HTML artifacts
-*or* production code depending on the need.
+_or_ production code depending on the need.

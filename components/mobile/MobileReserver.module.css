@@ -97,7 +97,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: border-color var(--dur) var(--ease-soft), transform 120ms var(--ease-soft);
+  transition:
+    border-color var(--dur) var(--ease-soft),
+    transform 120ms var(--ease-soft);
 }
 .stepper button:hover:not(:disabled) {
   border-color: var(--gold-light);
@@ -236,7 +238,9 @@
   background: var(--gold);
   color: var(--noir);
   cursor: pointer;
-  transition: background var(--dur) var(--ease-soft), box-shadow var(--dur) var(--ease-soft),
+  transition:
+    background var(--dur) var(--ease-soft),
+    box-shadow var(--dur) var(--ease-soft),
     transform 120ms var(--ease-soft);
 }
 .cta:hover:not(:disabled) {
@@ -334,7 +338,9 @@
   background: transparent;
   color: var(--cream-90);
   cursor: pointer;
-  transition: border-color var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft),
+  transition:
+    border-color var(--dur) var(--ease-soft),
+    color var(--dur) var(--ease-soft),
     transform 120ms var(--ease-soft);
 }
 .successAction:hover {
@@ -358,7 +364,9 @@
   background: transparent;
   color: var(--cream-90);
   cursor: pointer;
-  transition: border-color var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft),
+  transition:
+    border-color var(--dur) var(--ease-soft),
+    color var(--dur) var(--ease-soft),
     transform 120ms var(--ease-soft);
 }
 .ghost:hover {

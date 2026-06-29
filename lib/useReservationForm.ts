@@ -1,10 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import {
-  createReservation,
-  type ReservationPayload,
-} from "@/services/reservation";
+import { createReservation, type ReservationPayload } from "@/services/reservation";
 
 export type ReservationStatus = "idle" | "loading" | "done" | "error";
 
@@ -47,5 +44,10 @@ export function useReservationForm() {
     setErreur("");
   }, []);
 
-  return { status, reference, erreur, submit, reset };
+  // Libellé annoncé poliment aux lecteurs d'écran pendant l'envoi.
+  // (L'erreur a déjà role="alert" et le succès role="status" : on n'annonce
+  //  ici que l'état transitoire « en cours » pour ne pas dédoubler la lecture.)
+  const statusLabel = status === "loading" ? "Envoi de votre demande en cours…" : "";
+
+  return { status, reference, erreur, submit, reset, statusLabel };
 }

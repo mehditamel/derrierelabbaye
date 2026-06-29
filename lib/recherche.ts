@@ -25,10 +25,7 @@ export function correspondItem(item: MenuItem, requete: string): boolean {
  * Filtre les sections par requête : items non correspondants retirés,
  * sections vides supprimées. Requête vide → sections inchangées.
  */
-export function filtrerSections(
-  sections: readonly MenuSection[],
-  requete: string
-): MenuSection[] {
+export function filtrerSections(sections: readonly MenuSection[], requete: string): MenuSection[] {
   if (!requete.trim()) return [...sections];
   return sections
     .map((section) => ({

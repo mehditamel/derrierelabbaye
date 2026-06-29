@@ -1,0 +1,74 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+/* On mocke le service pour piloter la confirmation sans réseau. */
+vi.mock("@/services/reservation", () => ({
+  createReservation: vi.fn(),
+}));
+
+import { createReservation } from "@/services/reservation";
+import { ReservationForm } from "@/components/site/ReservationForm";
+
+afterEach(() => vi.mocked(createReservation).mockReset());
+
+describe("ReservationForm", () => {
+  it("signale le nom manquant au blur et n'appelle pas le service", async () => {
+    const user = userEvent.setup();
+    render(<ReservationForm />);
+
+    // Le champ est requis (HTML natif) : on déclenche la validation custom
+    // en quittant le champ vide, puis on vérifie qu'aucun envoi n'a lieu.
+    await user.click(screen.getByPlaceholderText(/votre nom/i));
+    await user.tab();
+
+    expect(screen.getByText(/indiquez un nom pour la réservation/i)).toBeInTheDocument();
+    expect(createReservation).not.toHaveBeenCalled();
+  });
+
+  it("affiche un message d'erreur pour un téléphone incomplet", async () => {
+    const user = userEvent.setup();
+    render(<ReservationForm />);
+
+    await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    const tel = screen.getByPlaceholderText("06 12 34 56 78");
+    await user.type(tel, "06 12");
+    await user.tab();
+
+    expect(screen.getByText(/ce numéro semble incomplet/i)).toBeInTheDocument();
+  });
+
+  it("confirme la demande et affiche la référence", async () => {
+    vi.mocked(createReservation).mockResolvedValue({
+      ok: true,
+      reference: "DLA-9F3K",
+    });
+    const user = userEvent.setup();
+    render(<ReservationForm />);
+
+    await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    await user.click(screen.getByRole("button", { name: /envoyer la demande/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: /demande envoyée/i })).toBeInTheDocument()
+    );
+    expect(screen.getByText(/DLA-9F3K/)).toBeInTheDocument();
+    expect(createReservation).toHaveBeenCalledTimes(1);
+  });
+
+  it("permet de relancer une nouvelle demande", async () => {
+    vi.mocked(createReservation).mockResolvedValue({
+      ok: true,
+      reference: "DLA-9F3K",
+    });
+    const user = userEvent.setup();
+    render(<ReservationForm />);
+
+    await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    await user.click(screen.getByRole("button", { name: /envoyer la demande/i }));
+    await screen.findByRole("heading", { name: /demande envoyée/i });
+
+    await user.click(screen.getByRole("button", { name: /nouvelle demande/i }));
+    expect(screen.getByRole("button", { name: /envoyer la demande/i })).toBeInTheDocument();
+  });
+});

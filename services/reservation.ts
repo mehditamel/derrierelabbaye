@@ -34,9 +34,7 @@ function genererReference(): string {
  * Simule l'enregistrement d'une réservation (faux délai réseau).
  * Remplacer le corps par un appel API réel le moment venu.
  */
-export async function createReservation(
-  payload: ReservationPayload
-): Promise<ReservationResult> {
+export async function createReservation(payload: ReservationPayload): Promise<ReservationResult> {
   await delay(900);
   if (!payload.date || !payload.heure || !payload.nom || payload.couverts < 1) {
     throw new Error("Informations de réservation incomplètes.");

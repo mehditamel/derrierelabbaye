@@ -36,9 +36,7 @@ export function CocktailsSection() {
               <div className={styles.card}>
                 <div className={styles.cardHead}>
                   <h3 className={styles.cardTitle}>{section.titre}</h3>
-                  {section.surtitre && (
-                    <span className={styles.cardPrice}>{section.surtitre}</span>
-                  )}
+                  {section.surtitre && <span className={styles.cardPrice}>{section.surtitre}</span>}
                 </div>
                 <ul className={styles.list}>
                   {section.items.map((item) => (

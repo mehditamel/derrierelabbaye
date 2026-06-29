@@ -10,10 +10,7 @@ class IntersectionObserverMock implements IntersectionObserver {
   readonly thresholds = [];
   constructor(private callback: IntersectionObserverCallback) {}
   observe = (target: Element) => {
-    this.callback(
-      [{ isIntersecting: true, target } as IntersectionObserverEntry],
-      this
-    );
+    this.callback([{ isIntersecting: true, target } as IntersectionObserverEntry], this);
   };
   unobserve = vi.fn();
   disconnect = vi.fn();

@@ -111,8 +111,10 @@
   border-radius: var(--r-card);
   padding: var(--space-4);
   background: rgba(248, 243, 233, 0.03);
-  transition: border-color var(--dur) var(--ease-soft),
-    background var(--dur) var(--ease-soft), box-shadow var(--dur) var(--ease-soft),
+  transition:
+    border-color var(--dur) var(--ease-soft),
+    background var(--dur) var(--ease-soft),
+    box-shadow var(--dur) var(--ease-soft),
     transform var(--dur) var(--ease-soft);
 }
 @media (hover: hover) {

@@ -19,8 +19,7 @@ export function TabBar() {
   return (
     <nav className={styles.bar} aria-label="Navigation de l'application">
       {tabs.map((tab) => {
-        const active =
-          tab.href === "/app" ? pathname === "/app" : pathname.startsWith(tab.href);
+        const active = tab.href === "/app" ? pathname === "/app" : pathname.startsWith(tab.href);
         const Icon = tab.icon;
         return (
           <Link

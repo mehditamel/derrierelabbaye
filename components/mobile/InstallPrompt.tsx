@@ -34,8 +34,8 @@ export function InstallPrompt() {
           <strong className={styles.title}>Installer l'app</strong>
           <span className={styles.steps}>
             Touchez <Share size={14} aria-hidden="true" />
-            <span className="u-visually-hidden">Partager</span> puis « Sur
-            l'écran d'accueil <SquarePlus size={14} aria-hidden="true" /> »
+            <span className="u-visually-hidden">Partager</span> puis « Sur l'écran d'accueil{" "}
+            <SquarePlus size={14} aria-hidden="true" /> »
           </span>
         </div>
         <button className={styles.close} onClick={dismiss} aria-label="J'ai compris">

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 type Variant = "up" | "left" | "right" | "scale";
 
@@ -52,14 +46,8 @@ export function Reveal({ children, delay = 0, variant = "up", className }: Props
   return (
     <div
       ref={ref}
-      className={`u-reveal ${VARIANT_CLASS[variant]} ${shown ? "is-in" : ""} ${
-        className ?? ""
-      }`}
-      style={
-        delay
-          ? ({ "--reveal-delay": `${delay}ms` } as CSSProperties)
-          : undefined
-      }
+      className={`u-reveal ${VARIANT_CLASS[variant]} ${shown ? "is-in" : ""} ${className ?? ""}`}
+      style={delay ? ({ "--reveal-delay": `${delay}ms` } as CSSProperties) : undefined}
     >
       {children}
     </div>

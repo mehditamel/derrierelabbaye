@@ -62,9 +62,7 @@ export function Header() {
 
   return (
     <header
-      className={`${styles.header} ${solid ? styles.solid : ""} ${
-        open ? styles.menuOpen : ""
-      }`}
+      className={`${styles.header} ${solid ? styles.solid : ""} ${open ? styles.menuOpen : ""}`}
     >
       <div className={`u-container ${styles.bar}`}>
         <Link href="/" className={styles.brand} aria-label="Derrière l'Abbaye — accueil">

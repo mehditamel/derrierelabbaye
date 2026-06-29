@@ -58,7 +58,8 @@
   background-repeat: no-repeat;
   background-position: 0 100%;
   background-size: 0% 1px;
-  transition: color var(--dur) var(--ease-soft),
+  transition:
+    color var(--dur) var(--ease-soft),
     background-size var(--dur) var(--ease-out);
 }
 .line:hover {

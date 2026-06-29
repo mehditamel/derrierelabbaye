@@ -58,7 +58,8 @@
   border-radius: var(--r-card);
   padding: 12px 14px;
   width: 100%;
-  transition: border-color var(--dur) var(--ease-soft),
+  transition:
+    border-color var(--dur) var(--ease-soft),
     box-shadow var(--dur) var(--ease-soft);
 }
 .input::placeholder {
@@ -98,7 +99,9 @@
   color: var(--gold-deep);
   cursor: pointer;
   border-radius: var(--r-pill);
-  transition: background var(--dur) var(--ease-soft), transform 120ms var(--ease-soft);
+  transition:
+    background var(--dur) var(--ease-soft),
+    transform 120ms var(--ease-soft);
 }
 .stepper button:hover:not(:disabled) {
   background: rgba(168, 136, 76, 0.12);

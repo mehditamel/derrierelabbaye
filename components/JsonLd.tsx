@@ -5,10 +5,7 @@ import type { MenuSection } from "@/data/menu";
 /* Valeurs encore en placeholder dans data/site.ts : on évite de les émettre
    dans les données structurées pour ne pas exposer de fausses infos à Google. */
 const PLACEHOLDER_TEL = "+33 4 00 00 00 00";
-const PLACEHOLDER_SOCIALS = new Set([
-  "https://www.instagram.com/",
-  "https://www.facebook.com/",
-]);
+const PLACEHOLDER_SOCIALS = new Set(["https://www.instagram.com/", "https://www.facebook.com/"]);
 
 /** Extrait un prix unique d'une chaîne ("7€"→"7", "3,50€"→"3.50").
  *  Renvoie null si zéro ou plusieurs nombres (ex. fourchette "12€ – 15€"). */
@@ -29,12 +26,8 @@ function menuSectionToSchema(section: MenuSection) {
         "@type": "MenuItem",
         name: item.nom,
         ...(item.description ? { description: item.description } : {}),
-        ...(item.vege
-          ? { suitableForDiet: "https://schema.org/VegetarianDiet" }
-          : {}),
-        ...(price
-          ? { offers: { "@type": "Offer", price, priceCurrency: "EUR" } }
-          : {}),
+        ...(item.vege ? { suitableForDiet: "https://schema.org/VegetarianDiet" } : {}),
+        ...(price ? { offers: { "@type": "Offer", price, priceCurrency: "EUR" } } : {}),
       };
     }),
   };
@@ -44,11 +37,8 @@ function menuSectionToSchema(section: MenuSection) {
 export function JsonLd() {
   // Cast en `string` : `site` est `as const`, donc le littéral et la sentinelle
   // n'ont pas de type commun — le garde-fou reste utile si on revenait au placeholder.
-  const telephone =
-    (site.telephone as string) === PLACEHOLDER_TEL ? undefined : site.telephone;
-  const sameAs = site.reseaux
-    .map((r) => r.url)
-    .filter((u) => !PLACEHOLDER_SOCIALS.has(u));
+  const telephone = (site.telephone as string) === PLACEHOLDER_TEL ? undefined : site.telephone;
+  const sameAs = site.reseaux.map((r) => r.url).filter((u) => !PLACEHOLDER_SOCIALS.has(u));
 
   const bar = {
     "@type": "BarOrPub",
@@ -116,9 +106,7 @@ export function JsonLd() {
     "@id": `${site.url}/#menu`,
     name: "La carte — Derrière l'Abbaye",
     inLanguage: "fr-FR",
-    hasMenuSection: [...cuisine, ...barSections, ...boissonsDouces].map(
-      menuSectionToSchema
-    ),
+    hasMenuSection: [...cuisine, ...barSections, ...boissonsDouces].map(menuSectionToSchema),
   };
 
   const website = {
@@ -150,9 +138,6 @@ export function JsonLd() {
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }

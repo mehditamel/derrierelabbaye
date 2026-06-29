@@ -17,9 +17,8 @@ export const site = {
     quartier: "Saint-Victor",
     pays: "France",
     // Coordonnées approximatives du quartier Saint-Victor (À CONFIRMER si besoin de précision)
-    geo: { lat: 43.290, lng: 5.366 },
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=1+rue+de+l%27Abbaye+13007+Marseille",
+    geo: { lat: 43.29, lng: 5.366 },
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=1+rue+de+l%27Abbaye+13007+Marseille",
     // Ouvre Google Maps en mode itinéraire (l'app native sur mobile)
     directionsUrl:
       "https://www.google.com/maps/dir/?api=1&destination=1+rue+de+l%27Abbaye+13007+Marseille",
@@ -66,8 +65,7 @@ export const site = {
     hebergeur: { nom: "À CONFIRMER", adresse: "À CONFIRMER" },
   },
 
-  legal:
-    "L'abus d'alcool est dangereux pour la santé, à consommer avec modération.",
+  legal: "L'abus d'alcool est dangereux pour la santé, à consommer avec modération.",
 
   gammeDePrix: "€€",
 } as const;
@@ -75,7 +73,8 @@ export const site = {
 /** Copies éditoriales réutilisables. */
 export const copies = {
   heroTitre: "Derrière l'Abbaye",
-  heroAccroche: "Apéro marseillais — bar à tapas & cocktails, juste derrière l'Abbaye Saint-Victor.",
+  heroAccroche:
+    "Apéro marseillais — bar à tapas & cocktails, juste derrière l'Abbaye Saint-Victor.",
   introSurtitre: "Le lieu",
   introTitre: "Juste derrière l'Abbaye Saint-Victor",
   introTexte:

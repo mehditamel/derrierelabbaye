@@ -17,9 +17,7 @@ export function Pill({ children, active = false, onClick, onDark = false }: Prop
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`${styles.pill} ${active ? styles.active : ""} ${
-        onDark ? styles.onDark : ""
-      }`}
+      className={`${styles.pill} ${active ? styles.active : ""} ${onDark ? styles.onDark : ""}`}
     >
       {children}
     </button>

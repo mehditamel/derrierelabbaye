@@ -25,54 +25,34 @@ export default function MentionsLegalesPage() {
         <div className={styles.prose}>
           <h2>Éditeur du site</h2>
           <p>
-            {site.nom} —{" "}
-            <span className={styles.aConfirmer}>
-              {site.legales.raisonSociale}
-            </span>{" "}
-            (
-            <span className={styles.aConfirmer}>
-              {site.legales.formeJuridique}
-            </span>
-            ), SIRET{" "}
-            <span className={styles.aConfirmer}>{site.legales.siret}</span>.
+            {site.nom} — <span className={styles.aConfirmer}>{site.legales.raisonSociale}</span> (
+            <span className={styles.aConfirmer}>{site.legales.formeJuridique}</span>
+            ), SIRET <span className={styles.aConfirmer}>{site.legales.siret}</span>.
           </p>
           <p>
-            {site.adresse.rue}, {site.adresse.codePostal} {site.adresse.ville},{" "}
-            {site.adresse.pays}.
+            {site.adresse.rue}, {site.adresse.codePostal} {site.adresse.ville}, {site.adresse.pays}.
           </p>
           <p>
-            Contact :{" "}
-            <a href={`mailto:${site.email}`}>{site.email}</a> ·{" "}
-            <a href={`tel:${site.telephone.replace(/\s/g, "")}`}>
-              {site.telephoneAffichage}
-            </a>
+            Contact : <a href={`mailto:${site.email}`}>{site.email}</a> ·{" "}
+            <a href={`tel:${site.telephone.replace(/\s/g, "")}`}>{site.telephoneAffichage}</a>
           </p>
           <p>
             Directeur de la publication :{" "}
-            <span className={styles.aConfirmer}>
-              {site.legales.directeurPublication}
-            </span>
-            .
+            <span className={styles.aConfirmer}>{site.legales.directeurPublication}</span>.
           </p>
 
           <h2>Hébergement</h2>
           <p>
             Le site est hébergé par{" "}
-            <span className={styles.aConfirmer}>
-              {site.legales.hebergeur.nom}
-            </span>{" "}
-            —{" "}
-            <span className={styles.aConfirmer}>
-              {site.legales.hebergeur.adresse}
-            </span>
-            .
+            <span className={styles.aConfirmer}>{site.legales.hebergeur.nom}</span> —{" "}
+            <span className={styles.aConfirmer}>{site.legales.hebergeur.adresse}</span>.
           </p>
 
           <h2>Propriété intellectuelle</h2>
           <p>
-            Les textes, photographies, logos et éléments graphiques de ce site
-            sont la propriété de {site.nom}, sauf mention contraire. Toute
-            reproduction ou réutilisation sans accord préalable est interdite.
+            Les textes, photographies, logos et éléments graphiques de ce site sont la propriété de{" "}
+            {site.nom}, sauf mention contraire. Toute reproduction ou réutilisation sans accord
+            préalable est interdite.
           </p>
 
           <h2>Boissons alcoolisées</h2>

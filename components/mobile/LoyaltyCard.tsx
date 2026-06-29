@@ -16,10 +16,12 @@ import styles from "../../app/(mobile)/app/fidelite/fidelite.module.css";
 
 /** Carte de fidélité interactive : points persistés localement (aperçu du programme). */
 export function LoyaltyCard() {
-  const { value: points, set, remove, ready } = useLocalStorage(
-    "dla-loyalty-points",
-    demoLoyalty.points
-  );
+  const {
+    value: points,
+    set,
+    remove,
+    ready,
+  } = useLocalStorage("dla-loyalty-points", demoLoyalty.points);
   const [annonce, setAnnonce] = useState("");
   const [vientDeValider, setVientDeValider] = useState(false);
   const annonceTimer = useRef<number>();
@@ -27,9 +29,7 @@ export function LoyaltyCard() {
   useEffect(() => () => window.clearTimeout(annonceTimer.current), []);
 
   const suivant = prochainAvantage(points);
-  const progression = suivant
-    ? Math.min(100, Math.round((points / suivant.seuil) * 100))
-    : 100;
+  const progression = suivant ? Math.min(100, Math.round((points / suivant.seuil) * 100)) : 100;
 
   function annoncer(message: string) {
     setAnnonce(message);
@@ -66,11 +66,7 @@ export function LoyaltyCard() {
         </div>
         <div className={styles.points}>
           {/* Skeleton tant que localStorage n'est pas lu : évite le flash de la valeur démo */}
-          <span
-            className={`${styles.pointsValue} ${!ready ? styles.skeleton : ""}`}
-          >
-            {points}
-          </span>
+          <span className={`${styles.pointsValue} ${!ready ? styles.skeleton : ""}`}>{points}</span>
           <span className={styles.pointsLabel}>points</span>
         </div>
         <p className={styles.member}>{demoLoyalty.membre}</p>
@@ -87,10 +83,7 @@ export function LoyaltyCard() {
               : "Tous les avantages sont débloqués"
           }
         >
-          <div
-            className={styles.progressBar}
-            style={{ width: ready ? `${progression}%` : 0 }}
-          />
+          <div className={styles.progressBar} style={{ width: ready ? `${progression}%` : 0 }} />
         </div>
         {suivant ? (
           <p className={styles.next}>
@@ -131,10 +124,7 @@ export function LoyaltyCard() {
           {avantages.map((a) => {
             const debloque = points >= a.seuil;
             return (
-              <li
-                key={a.seuil}
-                className={`${styles.item} ${debloque ? styles.itemOn : ""}`}
-              >
+              <li key={a.seuil} className={`${styles.item} ${debloque ? styles.itemOn : ""}`}>
                 <span className={styles.itemSeuil}>{a.seuil}</span>
                 <span className={styles.itemBody}>
                   <span className={styles.itemTitle}>{a.titre}</span>

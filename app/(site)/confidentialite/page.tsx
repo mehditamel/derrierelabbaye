@@ -25,27 +25,23 @@ export default function ConfidentialitePage() {
         <div className={styles.prose}>
           <h2>En bref</h2>
           <p>
-            Ce site ne demande pas de compte, ne pose aucun traceur publicitaire
-            et n'envoie aucune donnée personnelle à un serveur. Ce que vous
-            saisissez reste sur votre appareil.
+            Ce site ne demande pas de compte, ne pose aucun traceur publicitaire et n'envoie aucune
+            donnée personnelle à un serveur. Ce que vous saisissez reste sur votre appareil.
           </p>
 
           <h2>Demande de réservation</h2>
           <p>
-            Le site est une démonstration : le formulaire de réservation est
-            simulé dans votre navigateur. Les informations saisies (nom,
-            téléphone, message) ne sont ni transmises ni conservées côté
-            serveur. Dans l'application, vos coordonnées peuvent être mémorisées
-            sur votre appareil uniquement, pour pré-remplir le formulaire la
-            fois suivante.
+            Le site est une démonstration : le formulaire de réservation est simulé dans votre
+            navigateur. Les informations saisies (nom, téléphone, message) ne sont ni transmises ni
+            conservées côté serveur. Dans l'application, vos coordonnées peuvent être mémorisées sur
+            votre appareil uniquement, pour pré-remplir le formulaire la fois suivante.
           </p>
 
           <h2>Programme de fidélité</h2>
           <p>
-            Les points de fidélité de l'aperçu sont stockés dans votre
-            navigateur (localStorage) et ne sont jamais transmis. Vous pouvez
-            les effacer via « Réinitialiser l'aperçu » ou les réglages de votre
-            navigateur.
+            Les points de fidélité de l'aperçu sont stockés dans votre navigateur (localStorage) et
+            ne sont jamais transmis. Vous pouvez les effacer via « Réinitialiser l'aperçu » ou les
+            réglages de votre navigateur.
           </p>
 
           <h2>Stockage technique</h2>
@@ -53,35 +49,28 @@ export default function ConfidentialitePage() {
           <ul>
             <li>votre choix de masquer l'invite d'installation de l'app ;</li>
             <li>
-              une copie hors-ligne de la carte et des pages de l'app (cache du
-              service worker), pour consulter la carte sans réseau.
+              une copie hors-ligne de la carte et des pages de l'app (cache du service worker), pour
+              consulter la carte sans réseau.
             </li>
           </ul>
 
           <h2>Cookies</h2>
-          <p>
-            Aucun cookie de suivi, aucune mesure d'audience, aucune publicité.
-          </p>
+          <p>Aucun cookie de suivi, aucune mesure d'audience, aucune publicité.</p>
 
           <h2>Services tiers</h2>
           <p>
-            La page d'accueil intègre un plan Google Maps (iframe). Son
-            chargement transmet votre adresse IP à Google — voir leur{" "}
-            <a
-              href="https://policies.google.com/privacy?hl=fr"
-              target="_blank"
-              rel="noreferrer"
-            >
+            La page d'accueil intègre un plan Google Maps (iframe). Son chargement transmet votre
+            adresse IP à Google — voir leur{" "}
+            <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noreferrer">
               politique de confidentialité
             </a>
-            . Les polices de caractères sont servies avec le site, sans requête
-            vers un service externe.
+            . Les polices de caractères sont servies avec le site, sans requête vers un service
+            externe.
           </p>
 
           <h2>Contact</h2>
           <p>
-            Une question sur vos données ?{" "}
-            <a href={`mailto:${site.email}`}>{site.email}</a>
+            Une question sur vos données ? <a href={`mailto:${site.email}`}>{site.email}</a>
           </p>
         </div>
       </div>

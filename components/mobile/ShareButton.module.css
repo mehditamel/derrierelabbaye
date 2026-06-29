@@ -14,7 +14,9 @@
   color: var(--cream-90);
   cursor: pointer;
   backdrop-filter: blur(6px);
-  transition: border-color var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft),
+  transition:
+    border-color var(--dur) var(--ease-soft),
+    color var(--dur) var(--ease-soft),
     transform 120ms var(--ease-soft);
 }
 .button:hover {

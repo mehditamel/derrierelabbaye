@@ -150,9 +150,7 @@ export const cocktailsCreations: MenuSection = {
   surtitre: "12 – 15 €",
   // PLACEHOLDER : la carte imprimée laisse cette liste « à compléter ».
   // Renseigner les créations maison ici.
-  items: [
-    { nom: "Création du moment", description: "demandez à l'équipe" },
-  ],
+  items: [{ nom: "Création du moment", description: "demandez à l'équipe" }],
 };
 
 export const longDrinks: MenuSection = {
@@ -233,13 +231,7 @@ export const barSections: MenuSection[] = [
 ];
 
 /** Sections « bar sans alcool & vins ». */
-export const boissonsDouces: MenuSection[] = [
-  softs,
-  jusDeFruits,
-  sirops,
-  eauxMinerales,
-  vins,
-];
+export const boissonsDouces: MenuSection[] = [softs, jusDeFruits, sirops, eauxMinerales, vins];
 
 /** Cocktail mis en avant (PWA « ce soir » / site). */
 export const cocktailVedette: MenuItem = {

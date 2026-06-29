@@ -2,8 +2,10 @@
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 50;
-  transition: background var(--dur) var(--ease-soft),
-    border-color var(--dur) var(--ease-soft), backdrop-filter var(--dur) var(--ease-soft),
+  transition:
+    background var(--dur) var(--ease-soft),
+    border-color var(--dur) var(--ease-soft),
+    backdrop-filter var(--dur) var(--ease-soft),
     box-shadow var(--dur) var(--ease-soft);
   border-bottom: 1px solid transparent;
 }
@@ -12,7 +14,9 @@
   background: rgba(20, 17, 13, 0.86);
   backdrop-filter: blur(10px);
   border-bottom-color: var(--cream-16);
-  box-shadow: 0 1px 0 var(--cream-16), 0 10px 30px rgba(20, 17, 13, 0.35);
+  box-shadow:
+    0 1px 0 var(--cream-16),
+    0 10px 30px rgba(20, 17, 13, 0.35);
 }
 
 .bar {
@@ -27,7 +31,8 @@
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  transition: transform var(--dur) var(--ease-out),
+  transition:
+    transform var(--dur) var(--ease-out),
     filter var(--dur) var(--ease-soft);
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {

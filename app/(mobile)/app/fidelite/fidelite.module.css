@@ -17,11 +17,8 @@
   border: 1px solid var(--hairline-gold);
   border-radius: var(--r-card);
   padding: var(--space-5);
-  background: radial-gradient(
-      120% 120% at 80% 0%,
-      rgba(233, 200, 146, 0.12) 0%,
-      rgba(20, 17, 13, 0) 55%
-    ),
+  background:
+    radial-gradient(120% 120% at 80% 0%, rgba(233, 200, 146, 0.12) 0%, rgba(20, 17, 13, 0) 55%),
     #0f0d0a;
   box-shadow: var(--shadow-glow);
   margin-top: var(--space-3);
@@ -118,7 +115,9 @@
   background: var(--gold);
   color: var(--noir);
   cursor: pointer;
-  transition: background var(--dur) var(--ease-soft), box-shadow var(--dur) var(--ease-soft),
+  transition:
+    background var(--dur) var(--ease-soft),
+    box-shadow var(--dur) var(--ease-soft),
     transform 120ms var(--ease-soft);
 }
 .visite:hover:not(:disabled) {

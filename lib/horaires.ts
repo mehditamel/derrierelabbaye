@@ -46,9 +46,7 @@ function affichageHeure(heure: string): string {
 
 /** Créneau du jour donné (nom anglais), ou null si fermé ce jour-là. */
 function creneauDuJour(jour: string): Creneau | null {
-  const spec = site.horairesSchema.find((h) =>
-    (h.jours as readonly string[]).includes(jour)
-  );
+  const spec = site.horairesSchema.find((h) => (h.jours as readonly string[]).includes(jour));
   if (!spec) return null;
   return {
     ouvre: enMinutes(spec.ouvre),
@@ -71,8 +69,7 @@ function maintenantParis(date: Date): { jour: string; minutes: number } {
     minute: "2-digit",
     hour12: false,
   }).formatToParts(date);
-  const valeur = (type: string) =>
-    parties.find((p) => p.type === type)?.value ?? "";
+  const valeur = (type: string) => parties.find((p) => p.type === type)?.value ?? "";
   // Certains moteurs rendent « 24 » pour minuit en cycle h24.
   const heure = Number(valeur("hour")) % 24;
   return { jour: valeur("weekday"), minutes: heure * 60 + Number(valeur("minute")) };
@@ -90,11 +87,7 @@ export function etatOuverture(date: Date = new Date()): EtatOuverture {
 
   // Encore ouvert depuis hier soir ?
   const creneauHier = creneauDuJour(hier);
-  if (
-    creneauHier &&
-    debordeApresMinuit(creneauHier) &&
-    minutes < creneauHier.ferme
-  ) {
+  if (creneauHier && debordeApresMinuit(creneauHier) && minutes < creneauHier.ferme) {
     return {
       ouvert: true,
       libelle: `Ouvert · ferme à ${creneauHier.fermeAffichage}`,
