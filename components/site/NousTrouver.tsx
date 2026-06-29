@@ -1,11 +1,13 @@
-import { MapPin, Phone, Navigation, Mail } from "lucide-react";
+import { MapPin, Phone, Navigation, Mail, Footprints, Bus, Car, Bike } from "lucide-react";
 import { SectionLabel } from "@/components/SectionLabel";
 import { GoldRule } from "@/components/GoldRule";
 import { Button } from "@/components/Button";
 import { Reveal } from "@/components/Reveal";
 import { StatutOuverture } from "@/components/StatutOuverture";
-import { copies, site } from "@/data/site";
+import { copies, site, acces } from "@/data/site";
 import styles from "./NousTrouver.module.css";
+
+const accesIcones = { "À pied": Footprints, "En bus": Bus, "En voiture": Car, "À vélo": Bike };
 
 export function NousTrouver() {
   const telHref = `tel:${site.telephone.replace(/\s/g, "")}`;
@@ -75,6 +77,23 @@ export function NousTrouver() {
               </Button>
             </div>
           </div>
+        </Reveal>
+
+        <Reveal delay={80} className={styles.acces}>
+          <h3 className={styles.accesTitre}>Comment venir</h3>
+          <ul className={styles.accesList}>
+            {acces.map((a) => {
+              const Icone = accesIcones[a.mode as keyof typeof accesIcones];
+              return (
+                <li key={a.mode} className={styles.accesItem}>
+                  <Icone size={18} strokeWidth={1.5} aria-hidden="true" />
+                  <span>
+                    <strong className={styles.accesMode}>{a.mode}</strong> — {a.detail}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </Reveal>
       </div>
     </section>

@@ -5,7 +5,7 @@ import { Logo } from "@/components/Logo";
 import { StatutOuverture } from "@/components/StatutOuverture";
 import { ShareButton } from "@/components/mobile/ShareButton";
 import { aPartagerFroid, cocktailVedette } from "@/data/menu";
-import { site } from "@/data/site";
+import { site, copies } from "@/data/site";
 import enseigne from "@/public/enseigne.jpeg";
 import styles from "./home.module.css";
 
@@ -98,6 +98,20 @@ export default function AppHome() {
               </div>
             ))}
           </div>
+        </section>
+
+        <section className={styles.quartier}>
+          <span className="app-section-label">{copies.quartierSurtitre}</span>
+          <h2 className={styles.quartierTitle}>{copies.quartierTitre}</h2>
+          <p className={styles.quartierText}>{copies.quartierTexte}</p>
+          <a
+            href={site.adresse.mapsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.quartierLink}
+          >
+            Nous situer
+          </a>
         </section>
       </div>
     </div>
