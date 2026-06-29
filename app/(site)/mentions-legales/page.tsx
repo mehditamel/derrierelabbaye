@@ -7,7 +7,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = {
   title: "Mentions légales",
   description:
-    "Mentions légales du site de Derrière l'Abbaye — bar à tapas & cocktails, Saint-Victor, Marseille.",
+    "Mentions légales du site de Derrière l'Abbaye — bar à tapas & cocktails derrière l'Abbaye Saint-Victor, quartier Saint-Victor, Marseille.",
   alternates: { canonical: "/mentions-legales" },
 };
 

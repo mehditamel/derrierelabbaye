@@ -18,7 +18,7 @@ export default function AppHome() {
       <header className={styles.hero}>
         <Image
           src={enseigne}
-          alt="Devanture de Derrière l'Abbaye le soir"
+          alt="Devanture de Derrière l'Abbaye le soir, derrière l'Abbaye Saint-Victor à Marseille"
           placeholder="blur"
           fill
           sizes="480px"
@@ -29,7 +29,7 @@ export default function AppHome() {
         <ShareButton
           url={site.url}
           title={site.nom}
-          text="Apéro marseillais — bar à tapas & cocktails, juste derrière l'Abbaye Saint-Victor."
+          text="Apéro marseillais — bar à tapas & cocktails, dans une rue calme juste derrière l'Abbaye Saint-Victor."
         />
         <div className={styles.heroInner}>
           <Logo tone="cream" width={210} priority />

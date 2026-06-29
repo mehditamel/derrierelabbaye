@@ -2,7 +2,8 @@ import { ImageResponse } from "next/og";
 import { site } from "@/data/site";
 
 // Runtime Node par défaut : l'image est pré-générée statiquement au build.
-export const alt = "Derrière l'Abbaye — bar à tapas & cocktails, Saint-Victor, Marseille";
+export const alt =
+  "Derrière l'Abbaye — bar à tapas & cocktails, derrière l'Abbaye Saint-Victor, Marseille";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

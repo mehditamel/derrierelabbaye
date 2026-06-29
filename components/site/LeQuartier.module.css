@@ -1,0 +1,34 @@
+.section {
+  background: var(--cream);
+  padding: var(--space-8) 0;
+}
+
+.head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  font-size: clamp(1.9rem, 4.6vw, 2.8rem);
+  color: var(--ink-900);
+}
+
+.rule {
+  margin: var(--space-5) auto;
+  max-width: 240px;
+}
+
+.text {
+  font-size: 1.12rem;
+  line-height: 1.78;
+  color: var(--ink-700);
+  text-align: center;
+  margin: 0 auto;
+  max-width: 62ch;
+}
+
+.text + .text {
+  margin-top: var(--space-4);
+}
