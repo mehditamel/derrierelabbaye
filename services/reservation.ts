@@ -49,7 +49,7 @@ function validerPayload(payload: ReservationPayload): void {
 export async function createReservation(payload: ReservationPayload): Promise<ReservationResult> {
   validerPayload(payload);
   const reference = genererReference();
-  const supabase = getSupabase();
+  const supabase = await getSupabase();
 
   // Repli simulé : aucune configuration back-end.
   if (!supabase) {
