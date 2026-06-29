@@ -150,6 +150,53 @@
   margin-top: var(--space-2);
 }
 
+/* Bloc « Comment venir » — accès & transports */
+.acces {
+  margin-top: var(--space-6);
+  background: var(--cream);
+  border: 1px solid var(--hairline-gold);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5) var(--space-6);
+}
+
+.accesTitre {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.72rem;
+  color: var(--gold-deep);
+  margin-bottom: var(--space-4);
+}
+
+.accesList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3) var(--space-5);
+}
+
+.accesItem {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  color: var(--ink-700);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+.accesItem svg {
+  color: var(--gold);
+  flex: none;
+  margin-top: 2px;
+}
+
+.accesMode {
+  color: var(--ink-900);
+  font-weight: 500;
+}
+
 @media (max-width: 860px) {
   .grid {
     grid-template-columns: 1fr;
@@ -167,5 +214,11 @@
   }
   .ctaRow {
     flex-direction: column;
+  }
+  .acces {
+    padding: var(--space-4);
+  }
+  .accesList {
+    grid-template-columns: 1fr;
   }
 }

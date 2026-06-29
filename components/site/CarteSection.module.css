@@ -25,6 +25,14 @@
   margin: 0;
 }
 
+.intro {
+  margin: var(--space-3) auto 0;
+  max-width: 56ch;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink-700);
+}
+
 .rule {
   margin: var(--space-4) auto var(--space-5);
   max-width: 280px;

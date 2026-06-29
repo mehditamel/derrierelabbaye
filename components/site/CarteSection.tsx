@@ -39,6 +39,7 @@ export function CarteSection() {
             <SectionLabel>{copies.carteSurtitre}</SectionLabel>
             <h2 className={styles.title}>{copies.carteTitre}</h2>
             <p className={styles.sub}>{copies.carteSousTitre}</p>
+            <p className={styles.intro}>{copies.carteIntro}</p>
           </div>
         </Reveal>
 

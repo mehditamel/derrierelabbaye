@@ -90,10 +90,12 @@ export const copies = {
   carteSurtitre: "La carte",
   carteTitre: "À partager",
   carteSousTitre: "Froid, chaud & planches",
+  carteIntro:
+    "Une cuisine du sud pensée pour le partage : produits de saison, huile d'olive et herbes fraîches, des petites assiettes qui passent de main en main au fil de la soirée.",
   cocktailsSurtitre: "Le bar",
   cocktailsTitre: "Cocktails & boissons",
   cocktailsTexte:
-    "Classiques bien tirés, créations maison et long drinks — au comptoir comme en terrasse.",
+    "Des classiques bien tirés aux créations maison, en passant par les long drinks : glace pilée, agrumes et amers, le sud dans le verre. À siroter au comptoir ou sous le ciel de Saint-Victor, au crépuscule.",
   reservationSurtitre: "Réserver",
   reservationTitre: "Réserver une table",
   reservationTexte:
@@ -103,6 +105,16 @@ export const copies = {
   nousTrouverTexte:
     "Repérez l'Abbaye Saint-Victor : on est juste derrière, dans une rue calme, à deux pas du Vieux-Port. Une envie de réserver, une question sur la carte, ou simplement l'envie de pousser la porte ? Appelez-nous, on décroche avec plaisir — ou venez directement vous installer au comptoir.",
 } as const;
+
+/** Accès & transports — bloc « Comment venir » (section Nous trouver).
+ *  Repères volontairement génériques (distances / quartiers vérifiables) ;
+ *  ⚑ À CONFIRMER : lignes de bus exactes et noms de parkings par l'établissement. */
+export const acces = [
+  { mode: "À pied", detail: "à une dizaine de minutes du Vieux-Port par les quais" },
+  { mode: "En bus", detail: "arrêt Saint-Victor, à proximité immédiate" },
+  { mode: "En voiture", detail: "parkings publics du Pharo et du Vieux-Port" },
+  { mode: "À vélo", detail: "stationnements le long des quais" },
+] as const;
 
 /** Statistiques / repères affichés en cartes sur la section « Le lieu ». */
 export const reperes = [

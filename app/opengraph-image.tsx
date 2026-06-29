@@ -86,6 +86,18 @@ export default function Image() {
           display: "flex",
           fontSize: 26,
           marginTop: 28,
+          letterSpacing: 2,
+          color: GOLD,
+        }}
+      >
+        ◆ Juste derrière l'Abbaye Saint-Victor ◆
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          fontSize: 24,
+          marginTop: 16,
           color: CREAM_70,
         }}
       >

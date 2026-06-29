@@ -236,7 +236,8 @@ export const boissonsDouces: MenuSection[] = [softs, jusDeFruits, sirops, eauxMi
 /** Cocktail mis en avant (PWA « ce soir » / site). */
 export const cocktailVedette: MenuItem = {
   nom: "Aperol Spritz",
-  description: "l'apéro marseillais par excellence — amer, vif, ensoleillé",
+  description:
+    "l'apéro marseillais par excellence — amer orangé, bulles vives et glaçons qui chantent, le sud au coucher du soleil",
   prix: "12 €",
   signature: true,
 };
