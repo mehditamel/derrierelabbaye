@@ -12,7 +12,7 @@
   --cream: #f8f3e9; /* crème — surface claire alternative */
   --gold: #a8884c; /* or / laiton — accent métallique unique */
   --gold-light: #c7a86a; /* or clair (hover) */
-  --gold-deep: #856a38; /* or profond (press) */
+  --gold-deep: #7c6334; /* or profond (press + texte sur clair) — assombri vs #856a38 pour le contraste WCAG AA 4.5:1 sur crème/ivoire */
   --corten: #794e35; /* rouille — assaisonnement */
   --ambre: #e9c892; /* ambre — halo, lumière chaude */
 

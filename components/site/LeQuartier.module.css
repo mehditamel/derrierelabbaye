@@ -32,3 +32,8 @@
 .text + .text {
   margin-top: var(--space-4);
 }
+
+.more {
+  margin-top: var(--space-6);
+  text-align: center;
+}
