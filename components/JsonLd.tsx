@@ -1,6 +1,8 @@
 import { site, faq } from "@/data/site";
 import { cuisine, barSections, boissonsDouces } from "@/data/menu";
 import type { MenuSection } from "@/data/menu";
+import { evenements } from "@/data/evenements";
+import { evenementsDates } from "@/lib/evenements";
 import { parseSinglePrice } from "@/lib/prix";
 
 /* Valeurs encore en placeholder dans data/site.ts : on évite de les émettre
@@ -151,9 +153,25 @@ export function JsonLd() {
     ],
   };
 
+  /* Événements datés à venir uniquement (filtrés au rendu, revalidé chaque
+     jour) : jamais d'Event périmé dans les données structurées. `startDate`
+     sans offset : interprétée en heure locale de l'établissement, sans
+     figer un décalage été/hiver erroné. */
+  const events = evenementsDates(evenements).map((e) => ({
+    "@type": "Event",
+    "@id": `${site.url}/#evt-${e.id}`,
+    name: e.titre,
+    description: e.description,
+    startDate: e.heure ? `${e.date}T${e.heure}:00` : e.date,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: { "@id": `${site.url}/#bar` },
+    organizer: { "@id": `${site.url}/#bar` },
+  }));
+
   const data = {
     "@context": "https://schema.org",
-    "@graph": [bar, menu, website, faqPage, breadcrumb],
+    "@graph": [bar, menu, website, faqPage, breadcrumb, ...events],
   };
 
   return (
