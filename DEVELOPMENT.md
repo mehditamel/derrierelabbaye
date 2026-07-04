@@ -103,6 +103,38 @@ activer l'enregistrement réel :
 (`getSupabase()` renvoie `null` sinon → repli simulé). `.env*.local` et `.env` sont
 déjà ignorés par git.
 
+### Notifications e-mail (Edge Function `notifier-reservation`)
+
+Une fois Supabase branché, chaque nouvelle demande peut déclencher deux e-mails
+via [Resend](https://resend.com) : une **notification au bar** (avec les
+coordonnées du client en réponse directe) et un **accusé de réception au
+client** s'il a laissé une adresse. Le code vit dans
+`supabase/functions/notifier-reservation/` (gabarits purs testés par vitest,
+entrée Deno exclue du tsc/eslint du site).
+
+Mise en route :
+
+1. Créer une clé API sur Resend (et vérifier le domaine d'envoi pour ne pas
+   rester sur `onboarding@resend.dev`).
+2. Déployer la fonction et poser les secrets :
+
+   ```bash
+   supabase functions deploy notifier-reservation --no-verify-jwt
+   supabase secrets set \
+     RESEND_API_KEY=re_xxx \
+     RESERVATION_EMAIL_BAR=info@derrierelabbaye.fr \
+     "RESERVATION_FROM=Derrière l'Abbaye <reservations@derrierelabbaye.fr>" \
+     WEBHOOK_SECRET=une-longue-chaine-aleatoire
+   ```
+
+3. Dans le tableau de bord Supabase — **Database → Webhooks** — créer un
+   webhook sur la table `reservations`, événement **INSERT**, cible
+   **Edge Function** `notifier-reservation`, avec l'en-tête HTTP
+   `x-webhook-secret` = la valeur de `WEBHOOK_SECRET`.
+
+Sans configuration, rien ne change : l'INSERT aboutit, aucun e-mail ne part.
+En cas d'échec Resend, la fonction répond 500 et le webhook retente.
+
 - **Réservation** — la logique (machine d'état, validation du téléphone) est mutualisée
   dans `lib/useReservationForm.ts`, consommée par le formulaire site et mobile. Les
   coordonnées saisies dans l'app sont **mémorisées** (`lib/useLocalStorage.ts`) et
