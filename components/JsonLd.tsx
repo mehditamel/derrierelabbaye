@@ -100,6 +100,7 @@ export function JsonLd() {
     "@type": "Menu",
     "@id": `${site.url}/#menu`,
     name: "La carte — Derrière l'Abbaye",
+    url: `${site.url}/carte`,
     inLanguage: "fr-FR",
     hasMenuSection: [...cuisine, ...barSections, ...boissonsDouces].map(menuSectionToSchema),
   };
@@ -132,12 +133,18 @@ export function JsonLd() {
       {
         "@type": "ListItem",
         position: 2,
+        name: "La carte",
+        item: `${site.url}/carte`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
         name: "Réserver",
         item: `${site.url}/reserver`,
       },
       {
         "@type": "ListItem",
-        position: 3,
+        position: 4,
         name: "Le quartier Saint-Victor",
         item: `${site.url}/quartier-saint-victor`,
       },

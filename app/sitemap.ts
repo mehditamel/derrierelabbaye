@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Seules les pages publiques indexables. La coque PWA /app/* est en noindex.
   return [
     { url: `${site.url}/`, changeFrequency: "monthly", priority: 1 },
+    { url: `${site.url}/carte`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${site.url}/reserver`, changeFrequency: "monthly", priority: 0.8 },
     {
       url: `${site.url}/quartier-saint-victor`,

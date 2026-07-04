@@ -149,7 +149,7 @@ export default function QuartierSaintVictorPage() {
               <Button href="/reserver" variant="primary">
                 Réserver une table
               </Button>
-              <Button href="/#la-carte" variant="ghost">
+              <Button href="/carte" variant="ghost">
                 Voir la carte
               </Button>
               <Button href={site.adresse.directionsUrl} variant="ghost">

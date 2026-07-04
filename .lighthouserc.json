@@ -5,6 +5,7 @@
       "startServerReadyPattern": "Ready in",
       "url": [
         "http://localhost:3000/",
+        "http://localhost:3000/carte",
         "http://localhost:3000/reserver",
         "http://localhost:3000/app"
       ],
