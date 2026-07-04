@@ -20,7 +20,12 @@ const filtres = [
   { id: "planches", label: "Planches" },
 ];
 
-export function CarteSection() {
+type CarteSectionProps = {
+  /** Affiche le renvoi vers la page /carte — à désactiver sur la page elle-même. */
+  lienCarteComplete?: boolean;
+};
+
+export function CarteSection({ lienCarteComplete = true }: CarteSectionProps) {
   const [actif, setActif] = useState("tout");
   const [requete, setRequete] = useState("");
   const sections = filtrerSections(
@@ -115,6 +120,13 @@ export function CarteSection() {
           <span aria-hidden="true">★</span> nos spécialités maison ·{" "}
           <Leaf size={11} aria-hidden="true" className={styles.legendeLeaf} /> végétarien
         </p>
+        {lienCarteComplete && (
+          <div className={styles.lienComplet}>
+            <Button href="/carte" variant="ghost">
+              Voir la carte complète
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

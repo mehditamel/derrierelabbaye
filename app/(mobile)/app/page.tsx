@@ -6,10 +6,18 @@ import { StatutOuverture } from "@/components/StatutOuverture";
 import { ShareButton } from "@/components/mobile/ShareButton";
 import { aPartagerFroid, cocktailVedette } from "@/data/menu";
 import { site, copies } from "@/data/site";
+import { evenements } from "@/data/evenements";
+import { evenementsAVenir } from "@/lib/evenements";
+import { dateLongueFr } from "@/lib/creneaux";
 import enseigne from "@/public/enseigne.jpeg";
 import styles from "./home.module.css";
 
+/* Revalidation quotidienne : le filtre des événements « à venir » est figé
+   à la génération de la page — voir lib/evenements.ts. */
+export const revalidate = 86400;
+
 export default function AppHome() {
+  const evenementsAffiches = evenementsAVenir(evenements);
   return (
     <div>
       <h1 className="u-visually-hidden">
@@ -67,6 +75,28 @@ export default function AppHome() {
           <p className={styles.featureDesc}>{cocktailVedette.description}</p>
           <span className={styles.featurePrice}>{cocktailVedette.prix}</span>
         </section>
+
+        {evenementsAffiches.length > 0 && (
+          <section className={styles.evenements}>
+            <span className="app-section-label">En ce moment</span>
+            {evenementsAffiches.map((evt) => (
+              <article key={evt.id} className={styles.evenement}>
+                <p className={styles.evenementQuand}>
+                  {evt.date ? (
+                    <>
+                      {dateLongueFr(evt.date)}
+                      {evt.heure ? ` · ${evt.heure.replace(":", "h")}` : ""}
+                    </>
+                  ) : (
+                    evt.recurrence
+                  )}
+                </p>
+                <h3 className={styles.evenementTitre}>{evt.titre}</h3>
+                <p className={styles.evenementDesc}>{evt.description}</p>
+              </article>
+            ))}
+          </section>
+        )}
 
         <section className={styles.scrollerBlock}>
           <div className={styles.scrollerHead}>

@@ -182,6 +182,12 @@
   vertical-align: -1px;
 }
 
+/* Renvoi vers la page /carte (masqué sur la page elle-même) */
+.lienComplet {
+  text-align: center;
+  margin-top: var(--space-5);
+}
+
 @media (max-width: 760px) {
   .grid {
     grid-template-columns: 1fr;

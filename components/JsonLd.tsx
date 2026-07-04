@@ -1,20 +1,14 @@
 import { site, faq } from "@/data/site";
 import { cuisine, barSections, boissonsDouces } from "@/data/menu";
 import type { MenuSection } from "@/data/menu";
+import { evenements } from "@/data/evenements";
+import { evenementsDates } from "@/lib/evenements";
+import { parseSinglePrice } from "@/lib/prix";
 
 /* Valeurs encore en placeholder dans data/site.ts : on évite de les émettre
    dans les données structurées pour ne pas exposer de fausses infos à Google. */
 const PLACEHOLDER_TEL = "+33 4 00 00 00 00";
 const PLACEHOLDER_SOCIALS = new Set(["https://www.instagram.com/", "https://www.facebook.com/"]);
-
-/** Extrait un prix unique d'une chaîne ("7€"→"7", "3,50€"→"3.50").
- *  Renvoie null si zéro ou plusieurs nombres (ex. fourchette "12€ – 15€"). */
-function parseSinglePrice(raw?: string): string | null {
-  if (!raw) return null;
-  const matches = raw.match(/\d+(?:[.,]\d+)?/g);
-  if (!matches || matches.length !== 1) return null;
-  return matches[0].replace(",", ".");
-}
 
 function menuSectionToSchema(section: MenuSection) {
   return {
@@ -108,6 +102,7 @@ export function JsonLd() {
     "@type": "Menu",
     "@id": `${site.url}/#menu`,
     name: "La carte — Derrière l'Abbaye",
+    url: `${site.url}/carte`,
     inLanguage: "fr-FR",
     hasMenuSection: [...cuisine, ...barSections, ...boissonsDouces].map(menuSectionToSchema),
   };
@@ -140,15 +135,43 @@ export function JsonLd() {
       {
         "@type": "ListItem",
         position: 2,
+        name: "La carte",
+        item: `${site.url}/carte`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
         name: "Réserver",
         item: `${site.url}/reserver`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: "Le quartier Saint-Victor",
+        item: `${site.url}/quartier-saint-victor`,
       },
     ],
   };
 
+  /* Événements datés à venir uniquement (filtrés au rendu, revalidé chaque
+     jour) : jamais d'Event périmé dans les données structurées. `startDate`
+     sans offset : interprétée en heure locale de l'établissement, sans
+     figer un décalage été/hiver erroné. */
+  const events = evenementsDates(evenements).map((e) => ({
+    "@type": "Event",
+    "@id": `${site.url}/#evt-${e.id}`,
+    name: e.titre,
+    description: e.description,
+    startDate: e.heure ? `${e.date}T${e.heure}:00` : e.date,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: { "@id": `${site.url}/#bar` },
+    organizer: { "@id": `${site.url}/#bar` },
+  }));
+
   const data = {
     "@context": "https://schema.org",
-    "@graph": [bar, menu, website, faqPage, breadcrumb],
+    "@graph": [bar, menu, website, faqPage, breadcrumb, ...events],
   };
 
   return (

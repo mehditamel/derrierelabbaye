@@ -1,0 +1,96 @@
+.section {
+  background: var(--paper);
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 4.6vw, 2.6rem);
+  color: var(--ink-900);
+}
+
+.intro {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--ink-700);
+  max-width: 52ch;
+  margin: 0 auto;
+}
+
+.rule {
+  margin: var(--space-5) auto;
+  max-width: 240px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+}
+
+.figure {
+  margin: 0;
+  background: var(--cream);
+  border: 1px solid var(--hairline-gold);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-3);
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+}
+
+.caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-3) var(--space-1) var(--space-1);
+}
+
+.caption > span {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--ink-900);
+}
+
+.download {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: 0.68rem;
+  color: var(--gold-deep);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    color var(--dur) var(--ease-soft),
+    border-color var(--dur) var(--ease-soft);
+}
+
+.download:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

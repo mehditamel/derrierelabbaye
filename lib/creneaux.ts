@@ -8,6 +8,22 @@
 /** On ne propose plus un créneau qui démarre dans moins de 30 minutes. */
 const MARGE_MINUTES = 30;
 
+/** Créneaux de réservation proposés (dernier service 22:30).
+ *  Source unique pour le formulaire du site et celui de la PWA.
+ *  ⚑ À CONFIRMER par l'établissement. */
+export const CRENEAUX_RESERVATION = [
+  "18:00",
+  "18:30",
+  "19:00",
+  "19:30",
+  "20:00",
+  "20:30",
+  "21:00",
+  "21:30",
+  "22:00",
+  "22:30",
+] as const;
+
 /** Date au format yyyy-mm-dd dans le fuseau local. */
 export function isoLocal(d: Date = new Date()): string {
   const mois = String(d.getMonth() + 1).padStart(2, "0");

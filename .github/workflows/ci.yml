@@ -39,10 +39,10 @@ jobs:
       - name: Build
         run: npm run build
 
-  # Audit Lighthouse — informatif (non bloquant) pour suivre perf/a11y/SEO.
+  # Audit Lighthouse — bloquant sur a11y/SEO/best-practices (médiane de 3 runs) ;
+  # seule la performance reste informative (volatile sur runner partagé).
   lighthouse:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
@@ -59,4 +59,3 @@ jobs:
 
       - name: Lighthouse CI
         run: npx @lhci/cli@0.14.x autorun
-        continue-on-error: true

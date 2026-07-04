@@ -18,6 +18,9 @@ export function Footer() {
               <p className={styles.accroche}>
                 {site.accroche} · {site.baseline}
               </p>
+              <Link href="/carte" className={styles.brandLink}>
+                La carte
+              </Link>
               <Link href="/quartier-saint-victor" className={styles.brandLink}>
                 Le quartier Saint-Victor
               </Link>

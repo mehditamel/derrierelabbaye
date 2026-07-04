@@ -4,23 +4,17 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AlertCircle, CalendarPlus, Check, Share2 } from "lucide-react";
 import { Button } from "@/components/Button";
 import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
-import { telechargerIcs } from "@/lib/ics";
-import { partagerOuCopier } from "@/lib/partage";
-import { creneauPasse, dateLongueFr, isoLocal, premierCreneauDisponible } from "@/lib/creneaux";
+import { useRecapReservation, type RecapReservation } from "@/lib/useRecapReservation";
+import {
+  CRENEAUX_RESERVATION,
+  creneauPasse,
+  dateLongueFr,
+  isoLocal,
+  premierCreneauDisponible,
+} from "@/lib/creneaux";
 import styles from "./ReservationForm.module.css";
 
-const heures = [
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-  "21:00",
-  "21:30",
-  "22:00",
-  "22:30",
-];
+const heures = CRENEAUX_RESERVATION;
 
 export function ReservationForm() {
   const [date, setDate] = useState("");
@@ -31,32 +25,13 @@ export function ReservationForm() {
     nom?: string;
     telephone?: string;
   }>({});
-  const [recap, setRecap] = useState<{
-    date: string;
-    heure: string;
-    couverts: number;
-  } | null>(null);
+  const [recap, setRecap] = useState<RecapReservation | null>(null);
   const { status, reference, erreur, submit, reset, statusLabel } = useReservationForm();
   const successRef = useRef<HTMLHeadingElement>(null);
-  const [copie, setCopie] = useState(false);
-  const timerCopie = useRef<number>();
-
-  useEffect(() => () => window.clearTimeout(timerCopie.current), []);
-
-  async function partagerRecap() {
-    if (!recap) return;
-    const resultat = await partagerOuCopier({
-      title: "Réservation — Derrière l'Abbaye",
-      text: `Réservation chez Derrière l'Abbaye — ${dateLongueFr(recap.date)} à ${
-        recap.heure
-      }, ${recap.couverts} couvert${recap.couverts > 1 ? "s" : ""}. Référence ${reference}.`,
-    });
-    if (resultat === "copie") {
-      setCopie(true);
-      window.clearTimeout(timerCopie.current);
-      timerCopie.current = window.setTimeout(() => setCopie(false), 1800);
-    }
-  }
+  const { copie, partager, ajouterAuCalendrier, reinitialiser } = useRecapReservation(
+    recap,
+    reference
+  );
 
   const erreurNom = (nom: string) =>
     nom.trim() ? undefined : "Indiquez un nom pour la réservation.";
@@ -136,23 +111,13 @@ export function ReservationForm() {
         </p>
         <div className={styles.successActions}>
           {recap && (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                telechargerIcs({
-                  dateIso: recap.date,
-                  heure: recap.heure,
-                  couverts: recap.couverts,
-                  reference,
-                })
-              }
-            >
+            <Button variant="ghost" onClick={ajouterAuCalendrier}>
               <CalendarPlus size={16} aria-hidden="true" />
               Ajouter au calendrier
             </Button>
           )}
           {recap && (
-            <Button variant="ghost" onClick={partagerRecap}>
+            <Button variant="ghost" onClick={partager}>
               {copie ? (
                 <Check size={16} aria-hidden="true" />
               ) : (
@@ -164,7 +129,7 @@ export function ReservationForm() {
           <Button
             variant="ghost"
             onClick={() => {
-              setCopie(false);
+              reinitialiser();
               reset();
             }}
           >
