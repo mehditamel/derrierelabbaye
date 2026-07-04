@@ -1,5 +1,27 @@
 import { describe, expect, it } from "vitest";
-import { isoLocal, creneauPasse, premierCreneauDisponible, dateLongueFr } from "@/lib/creneaux";
+import {
+  CRENEAUX_RESERVATION,
+  isoLocal,
+  creneauPasse,
+  premierCreneauDisponible,
+  dateLongueFr,
+} from "@/lib/creneaux";
+
+describe("CRENEAUX_RESERVATION", () => {
+  it("va de 18:00 à 22:30 (source unique site + PWA)", () => {
+    expect(CRENEAUX_RESERVATION[0]).toBe("18:00");
+    expect(CRENEAUX_RESERVATION[CRENEAUX_RESERVATION.length - 1]).toBe("22:30");
+  });
+
+  it("est trié, sans doublon, au format HH:MM", () => {
+    const tries = [...CRENEAUX_RESERVATION].sort();
+    expect([...CRENEAUX_RESERVATION]).toEqual(tries);
+    expect(new Set(CRENEAUX_RESERVATION).size).toBe(CRENEAUX_RESERVATION.length);
+    for (const h of CRENEAUX_RESERVATION) {
+      expect(h).toMatch(/^\d{2}:\d{2}$/);
+    }
+  });
+});
 
 describe("isoLocal", () => {
   it("formate une date en yyyy-mm-dd local", () => {

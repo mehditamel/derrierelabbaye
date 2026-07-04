@@ -1,20 +1,12 @@
 import { site, faq } from "@/data/site";
 import { cuisine, barSections, boissonsDouces } from "@/data/menu";
 import type { MenuSection } from "@/data/menu";
+import { parseSinglePrice } from "@/lib/prix";
 
 /* Valeurs encore en placeholder dans data/site.ts : on évite de les émettre
    dans les données structurées pour ne pas exposer de fausses infos à Google. */
 const PLACEHOLDER_TEL = "+33 4 00 00 00 00";
 const PLACEHOLDER_SOCIALS = new Set(["https://www.instagram.com/", "https://www.facebook.com/"]);
-
-/** Extrait un prix unique d'une chaîne ("7€"→"7", "3,50€"→"3.50").
- *  Renvoie null si zéro ou plusieurs nombres (ex. fourchette "12€ – 15€"). */
-function parseSinglePrice(raw?: string): string | null {
-  if (!raw) return null;
-  const matches = raw.match(/\d+(?:[.,]\d+)?/g);
-  if (!matches || matches.length !== 1) return null;
-  return matches[0].replace(",", ".");
-}
 
 function menuSectionToSchema(section: MenuSection) {
   return {
@@ -142,6 +134,12 @@ export function JsonLd() {
         position: 2,
         name: "Réserver",
         item: `${site.url}/reserver`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Le quartier Saint-Victor",
+        item: `${site.url}/quartier-saint-victor`,
       },
     ],
   };

@@ -3,17 +3,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle, CalendarPlus, Check, Minus, Plus, Share2 } from "lucide-react";
 import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
+import { useRecapReservation } from "@/lib/useRecapReservation";
 import { useOnline } from "@/lib/usePwa";
 import { useLocalStorage } from "@/lib/useLocalStorage";
 import { haptic } from "@/lib/haptic";
-import { telechargerIcs } from "@/lib/ics";
-import { partagerOuCopier } from "@/lib/partage";
-import { creneauPasse, dateLongueFr, isoLocal, premierCreneauDisponible } from "@/lib/creneaux";
+import {
+  CRENEAUX_RESERVATION,
+  creneauPasse,
+  dateLongueFr,
+  isoLocal,
+  premierCreneauDisponible,
+} from "@/lib/creneaux";
 import styles from "./MobileReserver.module.css";
 
 type Contact = { nom: string; tel: string; email: string };
 
-const heures = ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00"];
+const heures = CRENEAUX_RESERVATION;
 
 function prochainsJours(n: number) {
   const jours = [];
@@ -59,10 +64,16 @@ export function MobileReserver() {
     tel: "",
     email: "",
   });
+  const [nomErreur, setNomErreur] = useState("");
   const [telErreur, setTelErreur] = useState("");
   const { status, reference, erreur, submit, reset, statusLabel } = useReservationForm();
   const online = useOnline();
   const successRef = useRef<HTMLHeadingElement>(null);
+  // L'écran mobile partage la réservation « vivante » (pas de snapshot figé).
+  const { copie, partager, ajouterAuCalendrier, reinitialiser } = useRecapReservation(
+    { date, heure, couverts },
+    reference
+  );
 
   const soireePassee = Boolean(maintenant && !premierCreneauDisponible(date, heures, maintenant));
 
@@ -72,25 +83,6 @@ export function MobileReserver() {
       successRef.current?.focus();
     }
   }, [status]);
-
-  const [copie, setCopie] = useState(false);
-  const timerCopie = useRef<number>();
-  useEffect(() => () => window.clearTimeout(timerCopie.current), []);
-
-  async function partagerRecap() {
-    haptic();
-    const resultat = await partagerOuCopier({
-      title: "Réservation — Derrière l'Abbaye",
-      text: `Réservation chez Derrière l'Abbaye — ${dateLongueFr(date)} à ${heure}, ${couverts} couvert${
-        couverts > 1 ? "s" : ""
-      }. Référence ${reference}.`,
-    });
-    if (resultat === "copie") {
-      setCopie(true);
-      window.clearTimeout(timerCopie.current);
-      timerCopie.current = window.setTimeout(() => setCopie(false), 1800);
-    }
-  }
 
   function valider() {
     if (!telephoneValide(contact.tel)) {
@@ -128,13 +120,19 @@ export function MobileReserver() {
             className={styles.successAction}
             onClick={() => {
               haptic();
-              telechargerIcs({ dateIso: date, heure, couverts, reference });
+              ajouterAuCalendrier();
             }}
           >
             <CalendarPlus size={16} aria-hidden="true" />
             Ajouter au calendrier
           </button>
-          <button className={styles.successAction} onClick={partagerRecap}>
+          <button
+            className={styles.successAction}
+            onClick={() => {
+              haptic();
+              void partager();
+            }}
+          >
             {copie ? (
               <Check size={16} aria-hidden="true" />
             ) : (
@@ -145,7 +143,7 @@ export function MobileReserver() {
           <button
             className={styles.ghost}
             onClick={() => {
-              setCopie(false);
+              reinitialiser();
               reset();
             }}
           >
@@ -167,21 +165,23 @@ export function MobileReserver() {
       </div>
 
       <div className="app-pad">
-        <span className="app-section-label">Date</span>
-        <div className={styles.dates}>
-          {jours.map((j) => (
-            <button
-              key={j.iso}
-              className={`${styles.dateChip} ${date === j.iso ? styles.dateActive : ""}`}
-              onClick={() => setDate(j.iso)}
-              aria-pressed={date === j.iso}
-            >
-              <span className={styles.dateJour}>{j.jour}</span>
-              <span className={styles.dateNum}>{j.num}</span>
-              <span className={styles.dateMois}>{j.mois}</span>
-            </button>
-          ))}
-        </div>
+        <fieldset className={styles.groupe}>
+          <legend className="app-section-label">Date</legend>
+          <div className={styles.dates}>
+            {jours.map((j) => (
+              <button
+                key={j.iso}
+                className={`${styles.dateChip} ${date === j.iso ? styles.dateActive : ""}`}
+                onClick={() => setDate(j.iso)}
+                aria-pressed={date === j.iso}
+              >
+                <span className={styles.dateJour}>{j.jour}</span>
+                <span className={styles.dateNum}>{j.num}</span>
+                <span className={styles.dateMois}>{j.mois}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
 
         <div className={styles.coupleRow}>
           <span className="app-section-label">Couverts</span>
@@ -213,74 +213,97 @@ export function MobileReserver() {
           </div>
         </div>
 
-        <span className="app-section-label">Heure</span>
-        <div className={styles.heures}>
-          {heures.map((h) => {
-            const passe = Boolean(maintenant && creneauPasse(date, h, maintenant));
-            return (
-              <button
-                key={h}
-                disabled={passe}
-                className={`${styles.heure} ${heure === h ? styles.heureActive : ""} ${
-                  passe ? styles.heureOff : ""
-                }`}
-                onClick={() => setHeure(h)}
-                aria-pressed={heure === h}
-              >
-                {h}
-              </button>
-            );
-          })}
-        </div>
-        {soireePassee && (
-          <p className={styles.aide}>Plus de créneaux ce soir — choisissez un autre jour.</p>
-        )}
+        <fieldset className={styles.groupe}>
+          <legend className="app-section-label">Heure</legend>
+          <div className={styles.heures}>
+            {heures.map((h) => {
+              const passe = Boolean(maintenant && creneauPasse(date, h, maintenant));
+              return (
+                <button
+                  key={h}
+                  disabled={passe}
+                  className={`${styles.heure} ${heure === h ? styles.heureActive : ""} ${
+                    passe ? styles.heureOff : ""
+                  }`}
+                  onClick={() => setHeure(h)}
+                  aria-pressed={heure === h}
+                >
+                  {h}
+                </button>
+              );
+            })}
+          </div>
+          {soireePassee && (
+            <p className={styles.aide}>Plus de créneaux ce soir — choisissez un autre jour.</p>
+          )}
+        </fieldset>
 
         <span className="app-section-label">Vos coordonnées</span>
-        <input
-          className={styles.input}
-          aria-label="Nom"
-          placeholder="Votre nom *"
-          value={contact.nom}
-          onChange={(e) => setContact((c) => ({ ...c, nom: e.target.value }))}
-          autoComplete="name"
-        />
-        <input
-          className={`${styles.input} ${telErreur ? styles.inputError : ""}`}
-          aria-label="Téléphone"
-          placeholder="06 12 34 56 78"
-          value={contact.tel}
-          onChange={(e) => {
-            setTelErreur("");
-            setContact((c) => ({ ...c, tel: e.target.value }));
-          }}
-          onBlur={(e) =>
-            setTelErreur(
-              telephoneValide(e.target.value)
-                ? ""
-                : "Ce numéro semble incomplet — format 06 12 34 56 78."
-            )
-          }
-          aria-invalid={telErreur ? true : undefined}
-          aria-describedby={telErreur ? "m-tel-err" : undefined}
-          type="tel"
-          inputMode="tel"
-          autoComplete="tel"
-        />
+        <label className={styles.champ}>
+          <span className={styles.champLabel}>
+            Nom <span aria-hidden="true">*</span>
+          </span>
+          <input
+            className={`${styles.input} ${nomErreur ? styles.inputError : ""}`}
+            placeholder="Votre nom"
+            value={contact.nom}
+            onChange={(e) => {
+              setNomErreur("");
+              setContact((c) => ({ ...c, nom: e.target.value }));
+            }}
+            onBlur={(e) =>
+              setNomErreur(e.target.value.trim() ? "" : "Indiquez un nom pour la réservation.")
+            }
+            aria-invalid={nomErreur ? true : undefined}
+            aria-describedby={nomErreur ? "m-nom-err" : undefined}
+            autoComplete="name"
+          />
+        </label>
+        {nomErreur && (
+          <span id="m-nom-err" role="alert" className={styles.fieldError}>
+            {nomErreur}
+          </span>
+        )}
+        <label className={styles.champ}>
+          <span className={styles.champLabel}>Téléphone</span>
+          <input
+            className={`${styles.input} ${telErreur ? styles.inputError : ""}`}
+            placeholder="06 12 34 56 78"
+            value={contact.tel}
+            onChange={(e) => {
+              setTelErreur("");
+              setContact((c) => ({ ...c, tel: e.target.value }));
+            }}
+            onBlur={(e) =>
+              setTelErreur(
+                telephoneValide(e.target.value)
+                  ? ""
+                  : "Ce numéro semble incomplet — format 06 12 34 56 78."
+              )
+            }
+            aria-invalid={telErreur ? true : undefined}
+            aria-describedby={telErreur ? "m-tel-err" : undefined}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+          />
+        </label>
         {telErreur && (
           <span id="m-tel-err" role="alert" className={styles.fieldError}>
             {telErreur}
           </span>
         )}
-        <input
-          className={styles.input}
-          aria-label="E-mail"
-          placeholder="E-mail (facultatif)"
-          value={contact.email}
-          onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
-          type="email"
-          autoComplete="email"
-        />
+        <label className={styles.champ}>
+          <span className={styles.champLabel}>E-mail (facultatif)</span>
+          <input
+            className={styles.input}
+            placeholder="vous@exemple.fr"
+            value={contact.email}
+            onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
+            type="email"
+            autoComplete="email"
+          />
+        </label>
 
         {status === "error" && (
           <p className={styles.error} role="alert">
