@@ -1,10 +1,14 @@
 /* =====================================================================
-   Service de réservation.
-   Persiste dans Supabase si l'app est configurée (variables d'env présentes) ;
-   sinon retombe sur une simulation locale (faux délai). L'UI ne change pas.
-   ===================================================================== */
+   Service de réservation (côté client).
 
-import { getSupabase } from "@/lib/supabase";
+   Poste la demande à /api/reservations : c'est le serveur qui valide, génère
+   la référence et envoie les e-mails. Le navigateur ne connaît aucun secret et
+   ne parle à aucun tiers.
+
+   Il n'y a plus de repli simulé silencieux : si la demande n'aboutit pas, une
+   erreur est levée et l'interface le dit. Une confirmation affichée signifie
+   toujours qu'un e-mail est parti.
+   ===================================================================== */
 
 export type ReservationPayload = {
   date: string; // ISO yyyy-mm-dd
@@ -14,6 +18,10 @@ export type ReservationPayload = {
   telephone?: string;
   email?: string;
   message?: string;
+  /** Honeypot : doit rester vide (rempli par les robots). */
+  societe?: string;
+  /** Horodatage de montage du formulaire (contrôle anti-robot). */
+  rendu?: number;
 };
 
 export type ReservationResult = {
@@ -21,55 +29,36 @@ export type ReservationResult = {
   reference: string;
 };
 
-const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const ERREUR_GENERIQUE =
+  "Votre demande n'a pas pu être envoyée. Vérifiez votre connexion ou appelez-nous.";
 
-/** Génère une référence lisible type « DLA-7F3K ». */
-function genererReference(): string {
-  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let suffixe = "";
-  for (let i = 0; i < 4; i++) {
-    suffixe += alphabet[Math.floor(Math.random() * alphabet.length)];
-  }
-  return `DLA-${suffixe}`;
-}
-
-/** Valide le payload côté service (garde commune aux deux modes). */
+/** Valide le payload côté client (le serveur revalide de toute façon). */
 function validerPayload(payload: ReservationPayload): void {
   if (!payload.date || !payload.heure || !payload.nom || payload.couverts < 1) {
     throw new Error("Informations de réservation incomplètes.");
   }
 }
 
-/**
- * Enregistre une demande de réservation.
- * - Si Supabase est configuré : insère la ligne dans `reservations`.
- * - Sinon : simule l'enregistrement (faux délai réseau) — utile en démo,
- *   en preview sans secrets ou en local.
- */
+/** Envoie une demande de réservation. Lève une erreur explicite si elle échoue. */
 export async function createReservation(payload: ReservationPayload): Promise<ReservationResult> {
   validerPayload(payload);
-  const reference = genererReference();
-  const supabase = await getSupabase();
 
-  // Repli simulé : aucune configuration back-end.
-  if (!supabase) {
-    await delay(900);
-    return { ok: true, reference };
+  let reponse: Response;
+  try {
+    reponse = await fetch("/api/reservations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    // Réseau coupé, requête bloquée : rien n'est parti.
+    throw new Error(ERREUR_GENERIQUE);
   }
 
-  const { error } = await supabase.from("reservations").insert({
-    reference,
-    date: payload.date,
-    heure: payload.heure,
-    couverts: payload.couverts,
-    nom: payload.nom,
-    telephone: payload.telephone ?? null,
-    email: payload.email ?? null,
-    message: payload.message ?? null,
-  });
+  const donnees = await reponse.json().catch(() => null);
 
-  if (error) {
-    throw new Error("La réservation n'a pas pu être enregistrée. Réessayez.");
+  if (!reponse.ok || !donnees?.ok) {
+    throw new Error(donnees?.erreur || ERREUR_GENERIQUE);
   }
-  return { ok: true, reference };
+  return { ok: true, reference: String(donnees.reference) };
 }

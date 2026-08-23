@@ -2,15 +2,12 @@
 
 import { useCallback, useState } from "react";
 import { createReservation, type ReservationPayload } from "@/services/reservation";
+import { emailValide, telephoneValide } from "@/lib/validationReservation";
+
+// Réexport : les formulaires importent déjà ces règles depuis ce module.
+export { emailValide, telephoneValide };
 
 export type ReservationStatus = "idle" | "loading" | "done" | "error";
-
-/** Valide un numéro de téléphone français souple (fixe ou mobile). Vide = valide. */
-export function telephoneValide(tel: string): boolean {
-  const v = tel.trim();
-  if (v === "") return true;
-  return /^(?:\+33|0)\s?[1-9](?:[\s.]?\d{2}){4}$/.test(v);
-}
 
 /**
  * Machine d'état partagée par les formulaires de réservation (site + mobile).
@@ -24,6 +21,11 @@ export function useReservationForm() {
   const submit = useCallback(async (payload: ReservationPayload) => {
     if (!telephoneValide(payload.telephone ?? "")) {
       setErreur("Le numéro de téléphone semble incorrect.");
+      setStatus("error");
+      return;
+    }
+    if (!emailValide(payload.email ?? "")) {
+      setErreur("L'adresse e-mail semble incorrecte.");
       setStatus("error");
       return;
     }

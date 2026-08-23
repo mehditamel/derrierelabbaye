@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   construireEmailBar,
   construireEmailClient,
-  dateLongue,
+  echapperHtml,
   type ReservationRow,
-} from "./emails";
+} from "@/lib/emailsReservation";
 
 const complete: ReservationRow = {
   reference: "DLA-7F3K",
@@ -28,14 +28,16 @@ const minimale: ReservationRow = {
   message: null,
 };
 
-describe("dateLongue", () => {
-  it("formate la date en toutes lettres avec l'année", () => {
-    expect(dateLongue("2027-03-18")).toBe("jeudi 18 mars 2027");
+describe("echapperHtml", () => {
+  it("neutralise le balisage saisi par le visiteur", () => {
+    expect(echapperHtml('<script>alert("x")</script>')).toBe(
+      "&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;"
+    );
   });
 });
 
 describe("construireEmailClient", () => {
-  it("récapitule la demande : nom, date, couverts, référence", () => {
+  it("récapitule la demande : nom, date avec année, couverts, référence", () => {
     const email = construireEmailClient(complete);
     expect(email.sujet).toContain("DLA-7F3K");
     expect(email.texte).toContain("Bonjour Camille");
@@ -49,6 +51,12 @@ describe("construireEmailClient", () => {
     expect(email.texte).toContain("1 couvert,");
     expect(email.texte).toContain("L'abus d'alcool est dangereux pour la santé");
     expect(email.html).toContain("L'abus d'alcool est dangereux pour la santé");
+  });
+
+  it("échappe le nom dans le HTML", () => {
+    const email = construireEmailClient({ ...complete, nom: "<b>Camille</b>" });
+    expect(email.html).not.toContain("<b>Camille</b>");
+    expect(email.html).toContain("&lt;b&gt;Camille&lt;/b&gt;");
   });
 });
 
@@ -70,5 +78,17 @@ describe("construireEmailBar", () => {
     expect(email.texte).not.toContain("Message");
     expect(email.texte).not.toContain("null");
     expect(email.html).not.toContain("null");
+  });
+
+  it("échappe le message injecté dans le HTML reçu par le bar", () => {
+    const email = construireEmailBar({ ...complete, message: '<img src=x onerror="1">' });
+    expect(email.html).not.toContain("<img src=x");
+    expect(email.html).toContain("&lt;img src=x");
+  });
+
+  it("reprend les coordonnées du bar depuis data/site.ts", () => {
+    const email = construireEmailClient(complete);
+    expect(email.texte).toContain("1 rue de l'Abbaye, 13007 Marseille");
+    expect(email.texte).toContain("04 91 92 18 62");
   });
 });

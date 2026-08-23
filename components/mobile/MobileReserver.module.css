@@ -403,3 +403,13 @@
     transform: scale(var(--press));
   }
 }
+
+/* Piège à robots : sorti de l'écran plutôt que display:none, que certains
+   robots savent détecter. Hors tabulation et masqué aux lecteurs d'écran. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

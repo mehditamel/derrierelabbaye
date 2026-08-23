@@ -1,11 +1,15 @@
 /* =====================================================================
-   Gabarits des e-mails de réservation (Edge Function notifier-reservation).
+   Gabarits des e-mails de réservation (bar + accusé de réception client).
 
-   Module volontairement autonome (aucun import du reste du site) : la
-   fonction est déployée seule sur Supabase (Deno). Les coordonnées du bar
-   sont donc dupliquées ici — à garder synchronisées avec data/site.ts.
-   Logique pure, couverte par emails.test.ts (vitest).
+   Logique pure : aucune I/O, aucun secret. La route serveur
+   app/api/reservations s'occupe de l'envoi via Resend.
+
+   Les coordonnées du bar viennent de data/site.ts — source unique, plus de
+   duplication à resynchroniser à la main.
    ===================================================================== */
+
+import { dateLongueFr } from "@/lib/creneaux";
+import { site } from "@/data/site";
 
 export type ReservationRow = {
   reference: string;
@@ -24,24 +28,22 @@ export type EmailContenu = {
   html: string;
 };
 
-/* ⚑ Synchroniser avec data/site.ts si ces informations changent. */
 const BAR = {
-  nom: "Derrière l'Abbaye",
-  adresse: "1 rue de l'Abbaye, 13007 Marseille",
-  telephone: "04 91 92 18 62",
-  legal: "L'abus d'alcool est dangereux pour la santé, à consommer avec modération.",
+  nom: site.nom,
+  adresse: `${site.adresse.rue}, ${site.adresse.codePostal} ${site.adresse.ville}`,
+  telephone: site.telephoneAffichage,
+  legal: site.legal,
 } as const;
 
-const formatLong = new Intl.DateTimeFormat("fr-FR", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
-
-/** « jeudi 18 mars 2027 » — midi local : aucun glissement de fuseau. */
-export function dateLongue(dateIso: string): string {
-  return formatLong.format(new Date(`${dateIso}T12:00:00`));
+/** Neutralise le balisage dans tout ce qui vient du visiteur : sans cela, un
+ *  nom ou un message peut injecter du HTML dans la boîte mail du bar. */
+export function echapperHtml(valeur: string): string {
+  return valeur
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function couvertsTexte(n: number): string {
@@ -63,7 +65,7 @@ function ligneOr(): string {
 
 /** E-mail envoyé au client (si une adresse a été laissée). */
 export function construireEmailClient(r: ReservationRow): EmailContenu {
-  const quand = `${dateLongue(r.date)} à ${r.heure}`;
+  const quand = `${dateLongueFr(r.date, { annee: true })} à ${r.heure}`;
   const sujet = `Votre demande de réservation — ${r.reference}`;
 
   const texte = [
@@ -82,7 +84,7 @@ export function construireEmailClient(r: ReservationRow): EmailContenu {
   ].join("\n");
 
   const html = envelopperHtml(`
-    <p style="margin:0 0 16px;">Bonjour ${r.nom},</p>
+    <p style="margin:0 0 16px;">Bonjour ${echapperHtml(r.nom)},</p>
     <p style="margin:0 0 16px;">
       Nous avons bien reçu votre demande de table pour <strong>${couvertsTexte(r.couverts)}</strong>,
       le <strong>${quand}</strong>.
@@ -102,7 +104,7 @@ export function construireEmailClient(r: ReservationRow): EmailContenu {
 
 /** E-mail de notification envoyé au bar. */
 export function construireEmailBar(r: ReservationRow): EmailContenu {
-  const quand = `${dateLongue(r.date)} à ${r.heure}`;
+  const quand = `${dateLongueFr(r.date, { annee: true })} à ${r.heure}`;
   const sujet = `Nouvelle demande de réservation — ${quand}, ${couvertsTexte(r.couverts)} (${r.reference})`;
 
   const lignes = [
@@ -119,7 +121,7 @@ export function construireEmailBar(r: ReservationRow): EmailContenu {
   const texte = lignes.join("\n");
 
   const detail = (label: string, valeur: string) =>
-    `<tr><td style="padding:4px 12px 4px 0;color:#6b6353;white-space:nowrap;">${label}</td><td style="padding:4px 0;"><strong>${valeur}</strong></td></tr>`;
+    `<tr><td style="padding:4px 12px 4px 0;color:#6b6353;white-space:nowrap;">${label}</td><td style="padding:4px 0;"><strong>${echapperHtml(valeur)}</strong></td></tr>`;
 
   const html = envelopperHtml(`
     <p style="margin:0 0 16px;">Nouvelle demande de réservation à confirmer.</p>
@@ -131,7 +133,7 @@ export function construireEmailBar(r: ReservationRow): EmailContenu {
       ${r.telephone ? detail("Téléphone", r.telephone) : ""}
       ${r.email ? detail("E-mail", r.email) : ""}
     </table>
-    ${r.message ? `${ligneOr()}<p style="margin:0;font-style:italic;">${r.message}</p>` : ""}
+    ${r.message ? `${ligneOr()}<p style="margin:0;font-style:italic;">${echapperHtml(r.message)}</p>` : ""}
   `);
 
   return { sujet, texte, html };

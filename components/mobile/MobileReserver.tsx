@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle, CalendarPlus, Check, Minus, Plus, Share2 } from "lucide-react";
-import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
+import { emailValide, telephoneValide, useReservationForm } from "@/lib/useReservationForm";
 import { useRecapReservation } from "@/lib/useRecapReservation";
 import { useOnline } from "@/lib/usePwa";
 import { useLocalStorage } from "@/lib/useLocalStorage";
@@ -66,9 +66,17 @@ export function MobileReserver() {
   });
   const [nomErreur, setNomErreur] = useState("");
   const [telErreur, setTelErreur] = useState("");
+  const [emailErreur, setEmailErreur] = useState("");
+  // Piège à robots : reste vide chez un humain (champ hors écran et hors tabulation).
+  const [societe, setSociete] = useState("");
   const { status, reference, erreur, submit, reset, statusLabel } = useReservationForm();
   const online = useOnline();
   const successRef = useRef<HTMLHeadingElement>(null);
+  // Instant de montage : un envoi quasi instantané trahit un robot (cf. la route).
+  const rendu = useRef(0);
+  useEffect(() => {
+    rendu.current = Date.now();
+  }, []);
   // L'écran mobile partage la réservation « vivante » (pas de snapshot figé).
   const { copie, partager, ajouterAuCalendrier, reinitialiser } = useRecapReservation(
     { date, heure, couverts },
@@ -89,6 +97,10 @@ export function MobileReserver() {
       setTelErreur("Ce numéro semble incomplet — format 06 12 34 56 78.");
       return;
     }
+    if (!emailValide(contact.email)) {
+      setEmailErreur("Cette adresse semble incomplète — format vous@exemple.fr.");
+      return;
+    }
     submit({
       date,
       heure,
@@ -96,6 +108,8 @@ export function MobileReserver() {
       nom: contact.nom,
       telephone: contact.tel,
       email: contact.email,
+      societe,
+      rendu: rendu.current,
     });
   }
 
@@ -299,11 +313,36 @@ export function MobileReserver() {
             className={styles.input}
             placeholder="vous@exemple.fr"
             value={contact.email}
-            onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
+            onChange={(e) => {
+              setContact((c) => ({ ...c, email: e.target.value }));
+              setEmailErreur("");
+            }}
             type="email"
             autoComplete="email"
+            inputMode="email"
+            aria-invalid={emailErreur ? true : undefined}
+            aria-describedby={emailErreur ? "m-email-err" : undefined}
           />
         </label>
+        {emailErreur && (
+          <span id="m-email-err" role="alert" className={styles.fieldError}>
+            {emailErreur}
+          </span>
+        )}
+
+        {/* Piège à robots : hors écran, hors tabulation, ignoré des lecteurs
+            d'écran. Un envoi avec ce champ rempli est écarté côté serveur. */}
+        <div className={styles.honeypot} aria-hidden="true">
+          <label htmlFor="m-societe">Société</label>
+          <input
+            id="m-societe"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={societe}
+            onChange={(e) => setSociete(e.target.value)}
+          />
+        </div>
 
         {status === "error" && (
           <p className={styles.error} role="alert">
