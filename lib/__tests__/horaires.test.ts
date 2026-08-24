@@ -35,3 +35,28 @@ describe("etatOuverture", () => {
     expect(etat.ouvert).toBe(false);
   });
 });
+
+/* Les deux bords les moins évidents du calendrier, tracés à la main : la
+   logique est correcte aujourd'hui, mais ce sont les branches qu'une
+   modification d'horaires casserait en premier. */
+describe("etatOuverture — bords de calendrier", () => {
+  it("dit « ferme à minuit » le dimanche soir (fermeture à 00:00)", () => {
+    // Dimanche 23h30 — la fermeture 00:00 ne doit pas être lue comme « déjà fermé ».
+    const etat = etatOuverture(new Date("2026-06-07T21:30:00Z"));
+    expect(etat.ouvert).toBe(true);
+    expect(etat.libelle).toMatch(/minuit/i);
+  });
+
+  it("reste ouvert dans la nuit du samedi au dimanche jusqu'à 02h00", () => {
+    // Dimanche 01h30 à Paris : débordement de la soirée du samedi.
+    const etat = etatOuverture(new Date("2026-06-06T23:30:00Z"));
+    expect(etat.ouvert).toBe(true);
+  });
+
+  it("est fermé le lundi matin après le débordement du dimanche", () => {
+    // Lundi 00h30 : le dimanche ferme à minuit, le lundi est fermé.
+    const etat = etatOuverture(new Date("2026-06-07T22:30:00Z"));
+    expect(etat.ouvert).toBe(false);
+    expect(etat.libelle).toMatch(/mardi/i);
+  });
+});

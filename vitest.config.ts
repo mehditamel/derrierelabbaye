@@ -26,9 +26,9 @@ export default defineConfig({
       // Seuils-plancher calibrés sur l'existant : garde anti-régression, à
       // relever au fur et à mesure que la couverture composant progresse.
       thresholds: {
-        statements: 57,
-        lines: 57,
-        functions: 68,
+        statements: 64,
+        lines: 64,
+        functions: 71,
         branches: 83,
       },
     },
