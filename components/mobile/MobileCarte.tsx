@@ -41,6 +41,9 @@ export function MobileCarte() {
     const params = new URLSearchParams(window.location.search);
     const onglet = params.get("onglet");
     const q = params.get("q");
+    // l'URL n'est lisible qu'au client : la restaurer au montage est le seul moyen de ne
+    // pas faire diverger le HTML pré-rendu.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (onglet && onglets.some((o) => o.id === onglet)) setActif(onglet);
     if (q) setRequete(q);
   }, []);

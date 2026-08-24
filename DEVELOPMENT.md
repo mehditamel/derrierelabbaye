@@ -4,7 +4,7 @@ Site internet (vitrine + réservation) et web-app mobile (PWA : carte, réservat
 fidélité) de **Derrière l'Abbaye**, bar à tapas & cocktails — 1 rue de l'Abbaye, 13007
 Marseille (quartier Saint-Victor).
 
-Construit avec **Next.js 14 (App Router) + React 18 + TypeScript**, sans Tailwind : les
+Construit avec **Next.js 16 (App Router, Turbopack) + React 19 + TypeScript**, sans Tailwind : les
 tokens de marque vivent dans [`styles/colors_and_type.css`](styles/colors_and_type.css)
 et les styles par composant en **CSS Modules**. Le design system de référence est décrit
 dans [`README.md`](README.md).
@@ -17,10 +17,13 @@ npm run dev      # http://localhost:3000
 ```
 
 ```bash
-npm run build    # build de production
+npm run build    # build de production (Turbopack, par défaut depuis Next 16)
 npm run start    # sert le build de production
-npm run lint
+npm run lint     # ESLint CLI — `next lint` a été supprimé en Next 16
 ```
+
+Node **20.9+** requis (contrainte de Next 16). La configuration ESLint est au
+format « flat » (`eslint.config.mjs`) ; `.eslintrc.json` n'existe plus.
 
 ## Structure
 

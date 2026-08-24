@@ -24,7 +24,7 @@ export function LoyaltyCard() {
   } = useLocalStorage("dla-loyalty-points", demoLoyalty.points);
   const [annonce, setAnnonce] = useState("");
   const [vientDeValider, setVientDeValider] = useState(false);
-  const annonceTimer = useRef<number>();
+  const annonceTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => () => window.clearTimeout(annonceTimer.current), []);
 
@@ -62,7 +62,7 @@ export function LoyaltyCard() {
       <section className={styles.card}>
         <div className={styles.cardTop}>
           <Logo tone="cream" width={150} />
-          <span className={styles.chip}>Membre</span>
+          <span className={styles.chip}>Aperçu</span>
         </div>
         <div className={styles.points}>
           {/* Skeleton tant que localStorage n'est pas lu : évite le flash de la valeur démo */}
@@ -70,6 +70,9 @@ export function LoyaltyCard() {
           <span className={styles.pointsLabel}>points</span>
         </div>
         <p className={styles.member}>{demoLoyalty.membre}</p>
+        {/* Mention dans la carte, et non en pied de page : elle doit être lue en
+            même temps que le solde, pas après la liste des avantages. */}
+        <p className={styles.apercu}>Points simulés sur cet appareil, sans valeur au comptoir.</p>
 
         <div
           className={`${styles.progress} ${!ready ? styles.skeleton : ""}`}

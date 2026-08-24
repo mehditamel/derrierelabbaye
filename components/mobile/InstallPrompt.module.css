@@ -95,7 +95,7 @@
   border: 0;
   border-radius: var(--r-pill);
   background: transparent;
-  color: var(--cream-40);
+  color: var(--cream-70);
   cursor: pointer;
   transition: color var(--dur) var(--ease-soft);
 }

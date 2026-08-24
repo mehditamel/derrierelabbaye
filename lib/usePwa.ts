@@ -64,6 +64,8 @@ export function useInstallPrompt() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // localStorage et le user-agent ne sont lisibles qu'au client.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDismissed(localStorage.getItem(DISMISS_KEY) === "1");
     setIos(estIos() && !estStandalone());
 

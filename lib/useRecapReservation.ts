@@ -22,7 +22,7 @@ const DUREE_COPIE_MS = 1800;
 
 export function useRecapReservation(recap: RecapReservation | null, reference: string) {
   const [copie, setCopie] = useState(false);
-  const timerCopie = useRef<number>();
+  const timerCopie = useRef<number | undefined>(undefined);
 
   useEffect(() => () => window.clearTimeout(timerCopie.current), []);
 

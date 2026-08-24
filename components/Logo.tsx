@@ -20,7 +20,12 @@ export function Logo({ tone = "noir", width = 220, priority = false, className }
       height={width}
       priority={priority}
       className={className}
-      style={{ height: "auto", width }}
+      // `width` n'est PAS repris en style en ligne : il l'emportait sur les
+      // règles des CSS modules (ex. `.logo { width: min(360px, 78vw) }` dans le
+      // héros), figeant le logo à sa largeur nominale sur mobile étroit.
+      // L'attribut width/height suffit à réserver le ratio ; `height: auto`
+      // laisse la CSS piloter la largeur réelle.
+      style={{ height: "auto" }}
     />
   );
 }

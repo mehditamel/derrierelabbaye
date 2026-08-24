@@ -30,6 +30,10 @@ jobs:
       - name: Format (Prettier)
         run: npm run format:check
 
+      # Le script lance `next typegen` avant tsc : `next-env.d.ts` (types des
+      # images importées) et les types de routes sont générés, pas versionnés.
+      # `next lint` les produisait avant sa suppression en Next 16 ; l'ESLint CLI
+      # ne le fait pas, et tsc échouait donc sur un dépôt fraîchement cloné.
       - name: Type-check
         run: npm run type-check
 
@@ -39,8 +43,12 @@ jobs:
       - name: Build
         run: npm run build
 
-  # Audit Lighthouse — bloquant sur a11y/SEO/best-practices (médiane de 3 runs) ;
-  # seule la performance reste informative (volatile sur runner partagé).
+  # Audit Lighthouse — bloquant sur a11y et best-practices partout, sur le SEO
+  # des seules pages publiques (la coque PWA /app est volontairement noindex,
+  # cf. .lighthouserc.json) ; la performance reste informative, trop volatile
+  # sur runner partagé. Agrégation sur la médiane des 3 runs, explicitement :
+  # par défaut LHCI retient le MEILLEUR run, ce qui suffirait à passer sur un
+  # coup de chance.
   lighthouse:
     runs-on: ubuntu-latest
     steps:

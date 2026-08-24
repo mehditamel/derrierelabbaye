@@ -4,7 +4,7 @@ import { Logo } from "@/components/Logo";
 import { GoldRule } from "@/components/GoldRule";
 import { LegalLine } from "@/components/LegalLine";
 import { Reveal } from "@/components/Reveal";
-import { site } from "@/data/site";
+import { site, reseauxPublies } from "@/data/site";
 import styles from "./Footer.module.css";
 
 export function Footer() {
@@ -69,13 +69,17 @@ export function Footer() {
                 <a className={styles.line} href={`mailto:${site.email}`}>
                   {site.email}
                 </a>
-                <div className={styles.social}>
-                  {site.reseaux.map((r) => (
-                    <a key={r.nom} href={r.url} target="_blank" rel="noreferrer">
-                      {r.nom}
-                    </a>
-                  ))}
-                </div>
+                {/* Rien tant qu'aucun compte réel n'est renseigné : mieux vaut
+                    pas de lien qu'un lien vers la page d'accueil d'Instagram. */}
+                {reseauxPublies.length > 0 && (
+                  <div className={styles.social}>
+                    {reseauxPublies.map((r) => (
+                      <a key={r.nom} href={r.url} target="_blank" rel="noreferrer">
+                        {r.nom}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

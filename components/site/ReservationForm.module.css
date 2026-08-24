@@ -63,7 +63,7 @@
     box-shadow var(--dur) var(--ease-soft);
 }
 .input::placeholder {
-  color: var(--ink-300);
+  color: var(--ink-500);
 }
 .input:focus {
   outline: none;

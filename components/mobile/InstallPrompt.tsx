@@ -10,7 +10,7 @@ export function InstallPrompt() {
 
   if (canInstall) {
     return (
-      <div className={styles.card} role="dialog" aria-label="Installer l'application">
+      <div className={styles.card} role="region" aria-label="Installer l'application">
         <div className={styles.text}>
           <strong className={styles.title}>Installer l'app</strong>
           <span className={styles.sub}>La carte et la réservation, dans votre poche.</span>
@@ -29,7 +29,7 @@ export function InstallPrompt() {
   // iOS Safari : pas d'invite native, on explique le geste.
   if (iosHint) {
     return (
-      <div className={styles.card} role="dialog" aria-label="Installer l'application">
+      <div className={styles.card} role="region" aria-label="Installer l'application">
         <div className={styles.text}>
           <strong className={styles.title}>Installer l'app</strong>
           <span className={styles.steps}>

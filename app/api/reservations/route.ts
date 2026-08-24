@@ -10,7 +10,7 @@
    ===================================================================== */
 
 import { NextResponse } from "next/server";
-import { CRENEAUX_RESERVATION, isoLocal } from "@/lib/creneaux";
+import { CRENEAUX_RESERVATION, creneauPasseAParis, isoAParis } from "@/lib/creneaux";
 import {
   construireEmailBar,
   construireEmailClient,
@@ -73,13 +73,20 @@ function cleClient(req: Request): string {
 
 /** Valide côté serveur : le client est faillible et contournable. */
 function validerDemande(corps: CorpsRequete): { row: ReservationRow } | { message: string } {
+  // Toutes les comparaisons de temps se font à l'heure de Marseille : le serveur
+  // tourne en UTC, et entre minuit et 2 h la date UTC est encore celle de la veille.
   const date = texteNettoye(corps.date, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { message: "La date de réservation est invalide." };
-  if (date < isoLocal()) return { message: "Cette date est déjà passée." };
+  if (date < isoAParis()) return { message: "Cette date est déjà passée." };
 
   const heure = texteNettoye(corps.heure, 5);
   if (!(CRENEAUX_RESERVATION as readonly string[]).includes(heure)) {
     return { message: "Ce créneau n'est pas proposé à la réservation." };
+  }
+  // Le formulaire masque déjà les créneaux passés, mais un onglet resté ouvert
+  // depuis la veille peut encore les poster : le serveur doit trancher.
+  if (creneauPasseAParis(date, heure)) {
+    return { message: "Ce créneau vient de passer. Choisissez un horaire plus tard." };
   }
 
   const couverts = Number(corps.couverts);

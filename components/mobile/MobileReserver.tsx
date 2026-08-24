@@ -18,6 +18,16 @@ import styles from "./MobileReserver.module.css";
 
 type Contact = { nom: string; tel: string; email: string };
 
+/* Garde de forme sur la valeur relue dans localStorage. Sans elle, une entrée
+   corrompue ou héritée d'une version antérieure fait lever `contact.nom.trim()`
+   à chaque rendu de cet écran — et la valeur étant relue à chaque montage,
+   l'utilisateur ne peut plus réserver du tout depuis l'app. */
+function estContact(v: unknown): v is Contact {
+  if (typeof v !== "object" || v === null) return false;
+  const c = v as Record<string, unknown>;
+  return typeof c.nom === "string" && typeof c.tel === "string" && typeof c.email === "string";
+}
+
 const heures = CRENEAUX_RESERVATION;
 
 function prochainsJours(n: number) {
@@ -48,6 +58,9 @@ export function MobileReserver() {
   // Posé au montage pour que le HTML pré-rendu reste neutre (pas de créneau
   // grisé selon l'horloge du serveur) — l'état réel arrive côté client.
   useEffect(() => {
+    // volontaire : l'heure courante n'existe pas au rendu serveur (cf. commentaire
+    // ci-dessus).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMaintenant(new Date());
   }, []);
 
@@ -56,14 +69,17 @@ export function MobileReserver() {
     if (!maintenant) return;
     if (creneauPasse(date, heure, maintenant)) {
       const libre = premierCreneauDisponible(date, heures, maintenant);
+      // Correction d'un état devenu invalide avec le temps qui passe : elle dépend
+      // de l'horloge, donc impossible à dériver pendant le rendu.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (libre) setHeure(libre);
     }
   }, [maintenant, date, heure]);
-  const { value: contact, set: setContact } = useLocalStorage<Contact>("dla-reservation-contact", {
-    nom: "",
-    tel: "",
-    email: "",
-  });
+  const { value: contact, set: setContact } = useLocalStorage<Contact>(
+    "dla-reservation-contact",
+    { nom: "", tel: "", email: "" },
+    estContact
+  );
   const [nomErreur, setNomErreur] = useState("");
   const [telErreur, setTelErreur] = useState("");
   const [emailErreur, setEmailErreur] = useState("");

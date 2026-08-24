@@ -110,6 +110,17 @@ export const copies = {
     "Repérez l'Abbaye Saint-Victor : on est juste derrière, dans une rue calme, à deux pas du Vieux-Port. Une envie de réserver, une question sur la carte, ou simplement l'envie de pousser la porte ? Appelez-nous, on décroche avec plaisir — ou venez directement vous installer au comptoir.",
 } as const;
 
+/** Liens de réseaux encore en placeholder : ce sont les pages d'accueil des
+ *  plateformes, qui ne mènent à aucun compte de l'établissement. */
+const RESEAUX_PLACEHOLDER = new Set(["https://www.instagram.com/", "https://www.facebook.com/"]);
+
+/** Réseaux réellement renseignés.
+ *
+ *  Source unique pour l'affichage (pied de page) **et** pour le `sameAs` du
+ *  JSON-LD : le filtre existait déjà côté données structurées, mais pas côté
+ *  visiteur, qui se retrouvait donc envoyé sur instagram.com déconnecté. */
+export const reseauxPublies = site.reseaux.filter((r) => !RESEAUX_PLACEHOLDER.has(r.url));
+
 /** Accès & transports — bloc « Comment venir » (section Nous trouver).
  *  Repères volontairement génériques (distances / quartiers vérifiables) ;
  *  ⚑ À CONFIRMER : lignes de bus exactes et noms de parkings par l'établissement. */

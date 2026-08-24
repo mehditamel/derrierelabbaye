@@ -20,11 +20,18 @@ export const avantages: Avantage[] = [
   { seuil: 250, titre: "Apéro pour deux", detail: "deux cocktails + une planche mixte" },
 ];
 
-/** État de démonstration affiché dans l'écran Fidélité. */
+/**
+ * État initial de l'aperçu Fidélité.
+ *
+ * `points: 0` volontairement : créditer des points à un visiteur qui n'a jamais
+ * mis les pieds au bar afficherait un solde — voire un avantage « Acquis » —
+ * qu'aucun comptoir n'honorera. L'aperçu doit montrer le mécanisme, pas
+ * fabriquer un crédit.
+ */
 export const demoLoyalty: LoyaltyState = {
-  membre: "Membre Derrière l'Abbaye",
-  points: 80,
-  palier: 120,
+  membre: "Aperçu du programme",
+  points: 0,
+  palier: 50,
 };
 
 /** Points crédités par visite (aperçu du programme). */

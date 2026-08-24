@@ -5,6 +5,9 @@ import {
   creneauPasse,
   premierCreneauDisponible,
   dateLongueFr,
+  maintenantAParis,
+  isoAParis,
+  creneauPasseAParis,
 } from "@/lib/creneaux";
 
 describe("CRENEAUX_RESERVATION", () => {
@@ -70,5 +73,56 @@ describe("premierCreneauDisponible", () => {
 describe("dateLongueFr", () => {
   it("formate une date en toutes lettres en français", () => {
     expect(dateLongueFr("2026-06-09")).toBe("mardi 9 juin");
+  });
+});
+
+/* Ces helpers existent parce que le serveur tourne en UTC (Vercel) alors que le
+   bar vit à Marseille. Les tests ci-dessous n'ont de sens que sur une machine
+   qui n'est PAS déjà à Paris — ils sont écrits pour valoir dans les deux cas,
+   en passant des instants absolus. */
+describe("maintenantAParis", () => {
+  it("donne l'heure murale de Marseille, pas celle du serveur", () => {
+    // 1er juillet 22:30 UTC = 2 juillet 00:30 à Paris (UTC+2 en été).
+    expect(maintenantAParis(new Date("2099-07-01T22:30:00Z"))).toEqual({
+      date: "2099-07-02",
+      heure: "00:30",
+    });
+  });
+
+  it("suit l'heure d'hiver (UTC+1)", () => {
+    // 15 janvier 23:30 UTC = 16 janvier 00:30 à Paris.
+    expect(maintenantAParis(new Date("2099-01-15T23:30:00Z"))).toEqual({
+      date: "2099-01-16",
+      heure: "00:30",
+    });
+  });
+
+  it("écrit minuit 00:00 et non 24:00", () => {
+    expect(maintenantAParis(new Date("2099-07-01T22:00:00Z")).heure).toBe("00:00");
+  });
+});
+
+describe("isoAParis", () => {
+  it("bascule de jour à minuit à Paris, pas à minuit UTC", () => {
+    expect(isoAParis(new Date("2099-07-01T21:59:00Z"))).toBe("2099-07-01");
+    expect(isoAParis(new Date("2099-07-01T22:01:00Z"))).toBe("2099-07-02");
+  });
+});
+
+describe("creneauPasseAParis", () => {
+  const soir = new Date("2099-07-01T18:00:00Z"); // 20:00 à Paris
+
+  it("considère passé un créneau antérieur à l'heure de Marseille", () => {
+    expect(creneauPasseAParis("2099-07-01", "18:00", soir)).toBe(true);
+  });
+
+  it("applique la même marge de 30 minutes que le formulaire", () => {
+    // 20:00 à Paris + 30 min de marge : 20:30 est encore inclus, 21:00 non.
+    expect(creneauPasseAParis("2099-07-01", "20:30", soir)).toBe(true);
+    expect(creneauPasseAParis("2099-07-01", "21:00", soir)).toBe(false);
+  });
+
+  it("laisse passer les jours suivants", () => {
+    expect(creneauPasseAParis("2099-07-02", "18:00", soir)).toBe(false);
   });
 });

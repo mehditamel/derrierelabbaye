@@ -11,7 +11,11 @@
   --paper: #f2ecdb; /* ivoire — fond par défaut */
   --cream: #f8f3e9; /* crème — surface claire alternative */
   --gold: #a8884c; /* or / laiton — accent métallique unique */
-  --gold-light: #c7a86a; /* or clair (hover) */
+  /* Éclairci de #c7a86a : à 0,72rem sur les surfaces sombres de la PWA, il
+     calculait 4,46:1 — sous le plancher AA de 4,5:1, de peu mais réellement.
+     Cette teinte n'est employée en texte que sur fond sombre ; le gain y est
+     donc général (9,4:1 sur le noir), sans contrepartie sur l'ivoire. */
+  --gold-light: #d0b478; /* or clair (hover) */
   --gold-deep: #7c6334; /* or profond (press + texte sur clair) — assombri vs #856a38 pour le contraste WCAG AA 4.5:1 sur crème/ivoire */
   --corten: #794e35; /* rouille — assaisonnement */
   --ambre: #e9c892; /* ambre — halo, lumière chaude */
@@ -65,7 +69,9 @@
      fallbacks pour usage hors Next. */
   --font-sans: var(--font-jost), "Jost", "Futura", system-ui, sans-serif;
   --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
-  --font-body: var(--font-eb-garamond), "EB Garamond", Georgia, serif;
+  /* Le corps de texte partage la famille des titres : une seule garamond
+     chargée. La variable reste distincte pour pouvoir les redissocier. */
+  --font-body: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
 
   /* Graisses */
   --w-thin: 300;
