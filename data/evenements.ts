@@ -1,8 +1,9 @@
 /* =====================================================================
    Derrière l'Abbaye — Événements & actualités (« En ce moment »)
-   ⚑ À REMPLACER : contenu de DÉMONSTRATION, comme les placeholders de
-   data/site.ts. Renseigner ici les vraies soirées / annonces du bar ;
-   vider le tableau masque simplement la section (site + PWA).
+
+   Ce fichier alimente à la fois l'affichage (site + PWA) et le JSON-LD
+   schema.org/Event envoyé à Google. Tout ce qui y figure est donc annoncé
+   publiquement comme un événement réel : n'y mettre que du programmé.
    ===================================================================== */
 
 export type Evenement = {
@@ -19,29 +20,14 @@ export type Evenement = {
   lien?: { label: string; url: string };
 };
 
-export const evenements: Evenement[] = [
-  /* ⚑ À REMPLACER — exemples de démonstration */
-  {
-    id: "jeudis-vinyle",
-    titre: "Les jeudis vinyle",
-    description:
-      "Un invité, une platine, une sélection — soul, jazz et musiques du sud jusqu'à la fermeture.",
-    recurrence: "Tous les jeudis, dès 19h00",
-  },
-  {
-    id: "soiree-vigneron-2027-03-18",
-    titre: "Soirée vigneron — Côtes-de-Provence",
-    description:
-      "Un domaine invité au comptoir : dégustation commentée de trois cuvées, accordées à nos planches.",
-    date: "2027-03-18",
-    heure: "19:00",
-  },
-  {
-    id: "fete-navettes-2027-02-02",
-    titre: "Chandeleur à Saint-Victor",
-    description:
-      "Le quartier célèbre les navettes de l'Abbaye : pour l'occasion, apéro prolongé et navettes maison au comptoir.",
-    date: "2027-02-02",
-    heure: "17:00",
-  },
-];
+/**
+ * Événements réellement programmés par l'établissement.
+ *
+ * Tableau vide = section masquée partout (site, PWA) et aucun `Event` émis dans
+ * le JSON-LD. C'est l'état correct tant que rien n'est programmé : mieux vaut
+ * ne rien annoncer qu'annoncer une soirée qui n'aura pas lieu.
+ *
+ * ⚑ À renseigner par l'établissement. Les identifiants commençant par
+ * « demo- » sont refusés par lib/__tests__/site.test.ts.
+ */
+export const evenements: Evenement[] = [];

@@ -165,6 +165,52 @@ describe("POST /api/reservations — validation serveur", () => {
   });
 });
 
+describe("POST /api/reservations — le temps est celui de Marseille", () => {
+  it("refuse un créneau du jour déjà écoulé", async () => {
+    // 23:00 à Paris (21:00 UTC en été) : tous les créneaux du jour sont passés.
+    vi.setSystemTime(new Date("2099-07-01T21:00:00Z"));
+    const fetchMock = vi.fn().mockResolvedValue(envoiOk());
+    vi.stubGlobal("fetch", fetchMock);
+
+    const res = await POST(requete({ ...valide, heure: "18:00" }));
+    const corps = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(corps.erreur).toMatch(/vient de passer/i);
+    expect(fetchMock).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it("accepte un créneau du jour encore à venir", async () => {
+    // 17:00 à Paris (15:00 UTC) : le service de 20:00 est encore ouvert.
+    vi.setSystemTime(new Date("2099-07-01T15:00:00Z"));
+    const fetchMock = vi.fn().mockResolvedValue(envoiOk());
+    vi.stubGlobal("fetch", fetchMock);
+
+    const res = await POST(requete({ ...valide, email: "", heure: "20:00" }));
+
+    expect(res.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it("ne considère pas la veille comme aujourd'hui juste après minuit à Paris", async () => {
+    // 00:30 à Paris le 2 juillet = 22:30 UTC le 1er : sur un serveur UTC, la
+    // date « du jour » serait encore le 1er, et la veille passerait pour valide.
+    vi.setSystemTime(new Date("2099-07-01T22:30:00Z"));
+    const fetchMock = vi.fn().mockResolvedValue(envoiOk());
+    vi.stubGlobal("fetch", fetchMock);
+
+    const res = await POST(requete({ ...valide, date: "2099-07-01" }));
+    const corps = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(corps.erreur).toMatch(/déjà passée/i);
+    expect(fetchMock).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+});
+
 describe("POST /api/reservations — anti-robots", () => {
   it("écarte silencieusement un envoi dont le honeypot est rempli", async () => {
     const fetchMock = vi.fn().mockResolvedValue(envoiOk());

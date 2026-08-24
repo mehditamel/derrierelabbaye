@@ -21,7 +21,7 @@
   border: 1px solid var(--cream-16);
   border-radius: var(--r-pill);
   background: rgba(248, 243, 233, 0.05);
-  color: var(--cream-40);
+  color: var(--cream-70);
   transition: border-color var(--dur) var(--ease-soft);
 }
 .search:focus-within {
@@ -44,7 +44,7 @@
   outline: none;
 }
 .searchInput::placeholder {
-  color: var(--cream-40);
+  color: var(--cream-70);
 }
 .searchInput::-webkit-search-cancel-button {
   display: none;

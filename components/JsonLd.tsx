@@ -1,14 +1,14 @@
-import { site, faq } from "@/data/site";
+import { site, faq, reseauxPublies } from "@/data/site";
 import { cuisine, barSections, boissonsDouces } from "@/data/menu";
 import type { MenuSection } from "@/data/menu";
 import { evenements } from "@/data/evenements";
 import { evenementsDates } from "@/lib/evenements";
 import { parseSinglePrice } from "@/lib/prix";
 
-/* Valeurs encore en placeholder dans data/site.ts : on évite de les émettre
-   dans les données structurées pour ne pas exposer de fausses infos à Google. */
+/* Valeur encore en placeholder dans data/site.ts : on évite de l'émettre dans
+   les données structurées pour ne pas exposer de fausses infos à Google.
+   (Les réseaux sont filtrés en amont, cf. `reseauxPublies`.) */
 const PLACEHOLDER_TEL = "+33 4 00 00 00 00";
-const PLACEHOLDER_SOCIALS = new Set(["https://www.instagram.com/", "https://www.facebook.com/"]);
 
 function menuSectionToSchema(section: MenuSection) {
   return {
@@ -32,7 +32,7 @@ export function JsonLd() {
   // Cast en `string` : `site` est `as const`, donc le littéral et la sentinelle
   // n'ont pas de type commun — le garde-fou reste utile si on revenait au placeholder.
   const telephone = (site.telephone as string) === PLACEHOLDER_TEL ? undefined : site.telephone;
-  const sameAs = site.reseaux.map((r) => r.url).filter((u) => !PLACEHOLDER_SOCIALS.has(u));
+  const sameAs = reseauxPublies.map((r) => r.url);
 
   const bar = {
     "@type": "BarOrPub",

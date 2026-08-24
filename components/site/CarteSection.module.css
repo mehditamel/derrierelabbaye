@@ -82,7 +82,7 @@
   outline: none;
 }
 .searchInput::placeholder {
-  color: var(--ink-300);
+  color: var(--ink-500);
 }
 .searchInput::-webkit-search-cancel-button {
   display: none;

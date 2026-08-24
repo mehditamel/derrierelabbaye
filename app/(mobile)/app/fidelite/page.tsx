@@ -5,7 +5,7 @@ import styles from "./fidelite.module.css";
 export const metadata: Metadata = {
   title: { absolute: "Fidélité — Derrière l'Abbaye" },
   description:
-    "Votre carte de membre Derrière l'Abbaye : points, paliers et avantages à débloquer.",
+    "Aperçu du programme de fidélité Derrière l'Abbaye : points, paliers et avantages à venir.",
   alternates: { canonical: "/app/fidelite" },
 };
 
@@ -14,7 +14,7 @@ export default function AppFidelitePage() {
     <div>
       <div className={styles.header}>
         <h1 className="app-h app-h1">Fidélité</h1>
-        <p className={styles.sub}>Votre carte de membre</p>
+        <p className={styles.sub}>Aperçu du programme</p>
       </div>
 
       <div className="app-pad">

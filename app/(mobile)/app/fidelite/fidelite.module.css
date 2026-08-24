@@ -143,7 +143,7 @@
   padding: 12px 0;
   border: 0;
   background: transparent;
-  color: var(--cream-40);
+  color: var(--cream-70);
   cursor: pointer;
   transition: color var(--dur) var(--ease-soft);
 }
@@ -281,5 +281,15 @@
   text-align: center;
   font-style: italic;
   font-size: 0.85rem;
-  color: var(--cream-40);
+  /* --cream-40 tombait à 3,55:1 sur --noir, sous le plancher AA de 4,5:1. */
+  color: var(--cream-70);
+}
+
+/* Mention d'aperçu, dans la carte, juste sous le solde. */
+.apercu {
+  margin: 4px 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+  color: var(--cream-70);
 }
