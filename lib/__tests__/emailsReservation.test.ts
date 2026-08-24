@@ -89,6 +89,6 @@ describe("construireEmailBar", () => {
   it("reprend les coordonnées du bar depuis data/site.ts", () => {
     const email = construireEmailClient(complete);
     expect(email.texte).toContain("1 rue de l'Abbaye, 13007 Marseille");
-    expect(email.texte).toContain("04 91 92 18 62");
+    expect(email.texte).toContain("06 44 76 91 74");
   });
 });
