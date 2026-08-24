@@ -23,7 +23,15 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      // Une demande de réservation ne doit jamais être servie depuis un cache
+      // (proxy, navigateur) : chaque envoi doit atteindre la fonction.
+      {
+        source: "/api/:path*",
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      },
+    ];
   },
 };
 

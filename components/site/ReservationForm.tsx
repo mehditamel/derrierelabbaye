@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AlertCircle, CalendarPlus, Check, Share2 } from "lucide-react";
 import { Button } from "@/components/Button";
-import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
+import { emailValide, telephoneValide, useReservationForm } from "@/lib/useReservationForm";
 import { useRecapReservation, type RecapReservation } from "@/lib/useRecapReservation";
 import {
   CRENEAUX_RESERVATION,
@@ -24,10 +24,13 @@ export function ReservationForm() {
   const [fieldErrors, setFieldErrors] = useState<{
     nom?: string;
     telephone?: string;
+    email?: string;
   }>({});
   const [recap, setRecap] = useState<RecapReservation | null>(null);
   const { status, reference, erreur, submit, reset, statusLabel } = useReservationForm();
   const successRef = useRef<HTMLHeadingElement>(null);
+  // Instant de montage : un envoi quasi instantané trahit un robot (cf. la route).
+  const rendu = useRef(0);
   const { copie, partager, ajouterAuCalendrier, reinitialiser } = useRecapReservation(
     recap,
     reference
@@ -37,6 +40,8 @@ export function ReservationForm() {
     nom.trim() ? undefined : "Indiquez un nom pour la réservation.";
   const erreurTelephone = (tel: string) =>
     telephoneValide(tel) ? undefined : "Ce numéro semble incomplet — format 06 12 34 56 78.";
+  const erreurEmail = (mail: string) =>
+    emailValide(mail) ? undefined : "Cette adresse semble incomplète — format vous@exemple.fr.";
 
   // La date du jour est posée au montage : le HTML pré-rendu ne fige ainsi
   // ni la date de build, ni le fuseau du serveur (UTC ≠ heure de Marseille).
@@ -44,6 +49,7 @@ export function ReservationForm() {
     const d = new Date();
     setMaintenant(d);
     setDate((prev) => prev || isoLocal(d));
+    rendu.current = d.getTime();
   }, []);
 
   // Si l'heure choisie est passée (changement de date, retour sur l'onglet…),
@@ -69,11 +75,13 @@ export function ReservationForm() {
     const form = new FormData(e.currentTarget);
     const nom = String(form.get("nom") || "");
     const telephone = String(form.get("telephone") || "");
+    const email = String(form.get("email") || "");
     const erreurs = {
       nom: erreurNom(nom),
       telephone: erreurTelephone(telephone),
+      email: erreurEmail(email),
     };
-    if (erreurs.nom || erreurs.telephone) {
+    if (erreurs.nom || erreurs.telephone || erreurs.email) {
       setFieldErrors(erreurs);
       return;
     }
@@ -84,7 +92,10 @@ export function ReservationForm() {
       couverts,
       nom,
       telephone,
+      email,
       message: String(form.get("message") || ""),
+      societe: String(form.get("societe") || ""),
+      rendu: rendu.current,
     });
   }
 
@@ -279,6 +290,37 @@ export function ReservationForm() {
               Pour confirmer la table de vive voix.
             </span>
           </label>
+        </div>
+
+        <label className={styles.field}>
+          <span className={styles.label}>E-mail (facultatif)</span>
+          <input
+            type="email"
+            name="email"
+            autoComplete="email"
+            inputMode="email"
+            placeholder="vous@exemple.fr"
+            className={`${styles.input} ${fieldErrors.email ? styles.inputError : ""}`}
+            aria-invalid={fieldErrors.email ? true : undefined}
+            aria-describedby={`email-aide${fieldErrors.email ? " email-err" : ""}`}
+            onBlur={(e) => setFieldErrors((f) => ({ ...f, email: erreurEmail(e.target.value) }))}
+            onChange={() => setFieldErrors((f) => (f.email ? { ...f, email: undefined } : f))}
+          />
+          {fieldErrors.email && (
+            <span id="email-err" role="alert" className={styles.fieldError}>
+              {fieldErrors.email}
+            </span>
+          )}
+          <span id="email-aide" className={styles.aide}>
+            Pour recevoir un accusé de réception.
+          </span>
+        </label>
+
+        {/* Piège à robots : invisible, non focalisable, ignoré des lecteurs
+            d'écran. Un envoi avec ce champ rempli est écarté côté serveur. */}
+        <div className={styles.honeypot} aria-hidden="true">
+          <label htmlFor="societe">Société</label>
+          <input id="societe" type="text" name="societe" tabIndex={-1} autoComplete="off" />
         </div>
 
         <label className={styles.field}>

@@ -308,3 +308,14 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* Piège à robots : sorti de l'écran plutôt que display:none, que certains
+   robots savent détecter. Jamais atteignable au clavier (tabindex -1) ni
+   annoncé (aria-hidden sur le conteneur). */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

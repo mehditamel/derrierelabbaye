@@ -59,7 +59,17 @@ const formatLong = new Intl.DateTimeFormat("fr-FR", {
   month: "long",
 });
 
-/** « mardi 9 juin » à partir d'une date yyyy-mm-dd (midi local : aucun glissement de fuseau). */
-export function dateLongueFr(dateIso: string): string {
-  return formatLong.format(new Date(`${dateIso}T12:00:00`));
+const formatLongAvecAnnee = new Intl.DateTimeFormat("fr-FR", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+/** « mardi 9 juin » à partir d'une date yyyy-mm-dd (midi local : aucun glissement de fuseau).
+ *  `annee: true` ajoute l'année — utile dans les e-mails, qui se relisent
+ *  longtemps après l'envoi. */
+export function dateLongueFr(dateIso: string, options?: { annee?: boolean }): string {
+  const format = options?.annee ? formatLongAvecAnnee : formatLong;
+  return format.format(new Date(`${dateIso}T12:00:00`));
 }

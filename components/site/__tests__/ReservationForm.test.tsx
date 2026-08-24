@@ -26,6 +26,46 @@ describe("ReservationForm", () => {
     expect(createReservation).not.toHaveBeenCalled();
   });
 
+  it("affiche un message d'erreur pour un e-mail incomplet", async () => {
+    const user = userEvent.setup();
+    render(<ReservationForm />);
+
+    await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    await user.type(screen.getByPlaceholderText("vous@exemple.fr"), "camille@exemple");
+    await user.tab();
+
+    expect(screen.getByText(/cette adresse semble incomplète/i)).toBeInTheDocument();
+    expect(createReservation).not.toHaveBeenCalled();
+  });
+
+  it("transmet l'e-mail saisi et le piège à robots vide", async () => {
+    const user = userEvent.setup();
+    vi.mocked(createReservation).mockResolvedValue({ ok: true, reference: "DLA-7F3K" });
+    render(<ReservationForm />);
+
+    await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    await user.type(screen.getByPlaceholderText("vous@exemple.fr"), "camille@exemple.fr");
+    await user.click(screen.getByRole("button", { name: /envoyer/i }));
+
+    await waitFor(() => expect(createReservation).toHaveBeenCalled());
+    expect(vi.mocked(createReservation).mock.calls[0][0]).toMatchObject({
+      nom: "Camille",
+      email: "camille@exemple.fr",
+      societe: "",
+    });
+  });
+
+  it("garde le piège à robots hors du parcours clavier et des lecteurs d'écran", () => {
+    const { container } = render(<ReservationForm />);
+    const piege = container.querySelector("#societe") as HTMLInputElement;
+
+    expect(piege).not.toBeNull();
+    expect(piege.tabIndex).toBe(-1);
+    expect(piege.closest("[aria-hidden='true']")).not.toBeNull();
+    // aria-hidden le retire de l'arbre d'accessibilité : aucun rôle exposé.
+    expect(screen.queryByRole("textbox", { name: /société/i })).toBeNull();
+  });
+
   it("affiche un message d'erreur pour un téléphone incomplet", async () => {
     const user = userEvent.setup();
     render(<ReservationForm />);

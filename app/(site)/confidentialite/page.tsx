@@ -7,7 +7,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = {
   title: "Confidentialité",
   description:
-    "Politique de confidentialité du site de Derrière l'Abbaye : aucune donnée transmise à un serveur, pas de cookies de suivi.",
+    "Politique de confidentialité du site de Derrière l'Abbaye : vos demandes de réservation nous parviennent par e-mail, pas de cookies de suivi.",
   alternates: { canonical: "/confidentialite" },
 };
 
@@ -25,19 +25,21 @@ export default function ConfidentialitePage() {
         <div className={styles.prose}>
           <h2>En bref</h2>
           <p>
-            Ce site ne demande pas de compte, ne pose aucun traceur publicitaire et n'envoie aucune
-            donnée personnelle à un serveur. Ce que vous saisissez reste sur votre appareil.
+            Ce site ne demande pas de compte et ne pose aucun traceur publicitaire. Rien n'est
+            transmis, à une exception près : la demande de réservation, qui nous est envoyée par
+            e-mail. Tout le reste demeure sur votre appareil.
           </p>
 
           <h2>Demande de réservation</h2>
           <p>
-            Lorsque la réservation en ligne est active, les informations saisies (date, heure,
-            nombre de couverts, nom et, si vous les indiquez, téléphone, e-mail et message) sont
-            transmises à notre prestataire d'hébergement de données afin de traiter votre demande ;
-            elles ne servent qu'à cela et ne sont pas utilisées à des fins publicitaires. Si la
-            réservation en ligne n'est pas configurée, le formulaire fonctionne en démonstration et
-            rien n'est transmis. Dans l'application, vos coordonnées peuvent en outre être
-            mémorisées sur votre appareil uniquement, pour pré-remplir le formulaire la fois
+            Les informations saisies (date, heure, nombre de couverts, nom et, si vous les indiquez,
+            téléphone, e-mail et message) nous sont transmises par e-mail afin que nous puissions
+            traiter votre demande. Elles ne servent qu'à cela, ne sont pas utilisées à des fins
+            publicitaires et ne sont conservées dans aucune base de données : elles restent dans
+            notre messagerie. L'acheminement est assuré par notre prestataire d'envoi d'e-mails,
+            Resend (Plus Five Five, Inc., États-Unis). Si vous nous laissez une adresse, vous
+            recevez un accusé de réception. Dans l'application, vos coordonnées peuvent en outre
+            être mémorisées sur votre appareil uniquement, pour pré-remplir le formulaire la fois
             suivante.
           </p>
 

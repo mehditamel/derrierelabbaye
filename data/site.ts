@@ -56,13 +56,17 @@ export const site = {
     { nom: "Facebook", url: "https://www.facebook.com/" },
   ],
 
-  // ⚑ À CONFIRMER — informations légales de l'établissement
+  // ⚑ À CONFIRMER — informations légales de l'établissement.
+  // L'hébergeur, lui, est une donnée établie : le site est déployé sur Vercel.
   legales: {
     raisonSociale: "À CONFIRMER",
     formeJuridique: "À CONFIRMER",
     siret: "À CONFIRMER",
     directeurPublication: "À CONFIRMER",
-    hebergeur: { nom: "À CONFIRMER", adresse: "À CONFIRMER" },
+    hebergeur: {
+      nom: "Vercel Inc.",
+      adresse: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
+    },
   },
 
   legal: "L'abus d'alcool est dangereux pour la santé, à consommer avec modération.",

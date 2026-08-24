@@ -43,9 +43,7 @@ export default function MentionsLegalesPage() {
 
           <h2>Hébergement</h2>
           <p>
-            Le site est hébergé par{" "}
-            <span className={styles.aConfirmer}>{site.legales.hebergeur.nom}</span> —{" "}
-            <span className={styles.aConfirmer}>{site.legales.hebergeur.adresse}</span>.
+            Le site est hébergé par {site.legales.hebergeur.nom} — {site.legales.hebergeur.adresse}.
           </p>
 
           <h2>Propriété intellectuelle</h2>

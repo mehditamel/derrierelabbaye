@@ -8,7 +8,7 @@ vi.mock("@/services/reservation", () => ({
 }));
 
 import { createReservation } from "@/services/reservation";
-import { telephoneValide, useReservationForm } from "@/lib/useReservationForm";
+import { emailValide, telephoneValide, useReservationForm } from "@/lib/useReservationForm";
 
 const payloadValide = {
   date: "2026-07-01",
@@ -32,6 +32,35 @@ describe("telephoneValide", () => {
   it("rejette un numéro manifestement incomplet", () => {
     expect(telephoneValide("06 12")).toBe(false);
     expect(telephoneValide("abc")).toBe(false);
+  });
+});
+
+describe("emailValide", () => {
+  it("accepte une adresse vide (champ facultatif)", () => {
+    expect(emailValide("")).toBe(true);
+    expect(emailValide("   ")).toBe(true);
+  });
+
+  it("accepte les adresses usuelles", () => {
+    expect(emailValide("camille@exemple.fr")).toBe(true);
+    expect(emailValide("c.dupont+resa@sous.domaine.co.uk")).toBe(true);
+  });
+
+  it("rejette une adresse manifestement invalide", () => {
+    expect(emailValide("camille@exemple")).toBe(false);
+    expect(emailValide("camille.exemple.fr")).toBe(false);
+    expect(emailValide("camille @exemple.fr")).toBe(false);
+    expect(emailValide("@exemple.fr")).toBe(false);
+  });
+
+  it("bloque l'envoi et le signale à l'utilisateur", async () => {
+    const { result } = renderHook(() => useReservationForm());
+    await act(async () => {
+      await result.current.submit({ ...payloadValide, email: "camille@exemple" });
+    });
+    expect(result.current.status).toBe("error");
+    expect(result.current.erreur).toMatch(/adresse e-mail/i);
+    expect(createReservation).not.toHaveBeenCalled();
   });
 });
 
