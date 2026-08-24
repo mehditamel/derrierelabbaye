@@ -117,7 +117,7 @@ describe("POST /api/reservations — échecs honnêtes", () => {
 
     expect(res.status).toBe(503);
     expect(corps.ok).toBe(false);
-    expect(corps.erreur).toContain("04 91 92 18 62");
+    expect(corps.erreur).toContain("06 44 76 91 74");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -130,7 +130,7 @@ describe("POST /api/reservations — échecs honnêtes", () => {
 
     expect(res.status).toBe(502);
     expect(corps.ok).toBe(false);
-    expect(corps.erreur).toContain("04 91 92 18 62");
+    expect(corps.erreur).toContain("06 44 76 91 74");
   });
 
   it("rejette un corps illisible", async () => {

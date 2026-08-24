@@ -30,8 +30,8 @@ export const site = {
   },
 
   // Téléphone de l'établissement (source de vérité — voir public/offline.html à synchroniser)
-  telephone: "+33 4 91 92 18 62",
-  telephoneAffichage: "04 91 92 18 62",
+  telephone: "+33 6 44 76 91 74",
+  telephoneAffichage: "06 44 76 91 74",
   email: "info@derrierelabbaye.fr",
 
   // ⚑ À CONFIRMER — horaires réels.
