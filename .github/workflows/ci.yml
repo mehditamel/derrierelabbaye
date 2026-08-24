@@ -30,6 +30,10 @@ jobs:
       - name: Format (Prettier)
         run: npm run format:check
 
+      # Le script lance `next typegen` avant tsc : `next-env.d.ts` (types des
+      # images importées) et les types de routes sont générés, pas versionnés.
+      # `next lint` les produisait avant sa suppression en Next 16 ; l'ESLint CLI
+      # ne le fait pas, et tsc échouait donc sur un dépôt fraîchement cloné.
       - name: Type-check
         run: npm run type-check
 
