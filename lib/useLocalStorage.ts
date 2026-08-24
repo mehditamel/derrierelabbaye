@@ -14,6 +14,9 @@ export function useLocalStorage<T>(key: string, initial: T) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(key);
+      // localStorage n'existe pas au rendu serveur ; l'hydratation doit partir de la valeur
+      // initiale, puis rattraper la valeur stockée.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (raw !== null) setValue(JSON.parse(raw) as T);
     } catch {
       /* lecture best-effort */

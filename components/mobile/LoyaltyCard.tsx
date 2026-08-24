@@ -24,7 +24,7 @@ export function LoyaltyCard() {
   } = useLocalStorage("dla-loyalty-points", demoLoyalty.points);
   const [annonce, setAnnonce] = useState("");
   const [vientDeValider, setVientDeValider] = useState(false);
-  const annonceTimer = useRef<number>();
+  const annonceTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => () => window.clearTimeout(annonceTimer.current), []);
 

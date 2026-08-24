@@ -47,6 +47,8 @@ export function ReservationForm() {
   // ni la date de build, ni le fuseau du serveur (UTC ≠ heure de Marseille).
   useEffect(() => {
     const d = new Date();
+    // volontaire : ni la date du jour ni le fuseau réel n'existent au rendu serveur.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMaintenant(d);
     setDate((prev) => prev || isoLocal(d));
     rendu.current = d.getTime();
@@ -58,6 +60,9 @@ export function ReservationForm() {
     if (!maintenant || !date) return;
     if (creneauPasse(date, heure, maintenant)) {
       const libre = premierCreneauDisponible(date, heures, maintenant);
+      // Correction d'un état devenu invalide avec le temps qui passe : elle dépend
+      // de l'horloge, donc impossible à dériver pendant le rendu.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (libre) setHeure(libre);
     }
   }, [maintenant, date, heure]);

@@ -48,6 +48,9 @@ export function MobileReserver() {
   // Posé au montage pour que le HTML pré-rendu reste neutre (pas de créneau
   // grisé selon l'horloge du serveur) — l'état réel arrive côté client.
   useEffect(() => {
+    // volontaire : l'heure courante n'existe pas au rendu serveur (cf. commentaire
+    // ci-dessus).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMaintenant(new Date());
   }, []);
 
@@ -56,6 +59,9 @@ export function MobileReserver() {
     if (!maintenant) return;
     if (creneauPasse(date, heure, maintenant)) {
       const libre = premierCreneauDisponible(date, heures, maintenant);
+      // Correction d'un état devenu invalide avec le temps qui passe : elle dépend
+      // de l'horloge, donc impossible à dériver pendant le rendu.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (libre) setHeure(libre);
     }
   }, [maintenant, date, heure]);

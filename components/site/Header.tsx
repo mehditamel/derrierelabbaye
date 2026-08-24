@@ -58,6 +58,8 @@ export function Header() {
   // Toute navigation ferme le drawer (couvre le CTA « Réserver une table »,
   // dont le lien ne transmet pas de onClick).
   useEffect(() => {
+    // fermeture en réaction à la navigation : il n'y a pas d'événement à écouter côté lien.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOpen(false);
   }, [pathname]);
 
