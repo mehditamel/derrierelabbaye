@@ -59,6 +59,21 @@ describe("MobileReserver", () => {
     expect(screen.getByText(/ce numéro semble incomplet/i)).toBeInTheDocument();
   });
 
+  it("garde l'envoi fermé tant qu'aucun contact n'est laissé", async () => {
+    const u = user();
+    render(<MobileReserver />);
+
+    await u.type(screen.getByLabelText(/nom/i), "Camille");
+    const envoyer = screen.getByRole("button", { name: /demander cette table/i });
+
+    // Nom seul : la demande arriverait au bar sans personne à joindre.
+    expect(envoyer).toBeDisabled();
+    expect(screen.getByText(/laissez un téléphone ou un e-mail/i)).toBeInTheDocument();
+
+    await u.type(screen.getByLabelText(/e-mail/i), "camille@exemple.fr");
+    expect(envoyer).toBeEnabled();
+  });
+
   it("confirme la demande et affiche la référence", async () => {
     vi.mocked(createReservation).mockResolvedValue({ ok: true, reference: "DLA-9F3K" });
     const u = user();

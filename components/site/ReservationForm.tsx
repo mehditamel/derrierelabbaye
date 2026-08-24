@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AlertCircle, CalendarPlus, Check, Share2 } from "lucide-react";
 import { Button } from "@/components/Button";
-import { emailValide, telephoneValide, useReservationForm } from "@/lib/useReservationForm";
+import {
+  contactJoignable,
+  emailValide,
+  MESSAGE_CONTACT_MANQUANT,
+  telephoneValide,
+  useReservationForm,
+} from "@/lib/useReservationForm";
 import { useRecapReservation, type RecapReservation } from "@/lib/useRecapReservation";
 import {
   CRENEAUX_RESERVATION,
@@ -42,6 +48,8 @@ export function ReservationForm() {
     telephoneValide(tel) ? undefined : "Ce numéro semble incomplet — format 06 12 34 56 78.";
   const erreurEmail = (mail: string) =>
     emailValide(mail) ? undefined : "Cette adresse semble incomplète — format vous@exemple.fr.";
+  const erreurContact = (tel: string, mail: string) =>
+    contactJoignable(tel, mail) ? undefined : MESSAGE_CONTACT_MANQUANT;
 
   // La date du jour est posée au montage : le HTML pré-rendu ne fige ainsi
   // ni la date de build, ni le fuseau du serveur (UTC ≠ heure de Marseille).
@@ -83,7 +91,9 @@ export function ReservationForm() {
     const email = String(form.get("email") || "");
     const erreurs = {
       nom: erreurNom(nom),
-      telephone: erreurTelephone(telephone),
+      // Le couple téléphone / e-mail se juge d'un bloc : chacun est facultatif,
+      // mais les deux vides laisseraient une demande impossible à confirmer.
+      telephone: erreurTelephone(telephone) ?? erreurContact(telephone, email),
       email: erreurEmail(email),
     };
     if (erreurs.nom || erreurs.telephone || erreurs.email) {
@@ -266,7 +276,7 @@ export function ReservationForm() {
             )}
           </label>
           <label className={styles.field}>
-            <span className={styles.label}>Téléphone (facultatif)</span>
+            <span className={styles.label}>Téléphone</span>
             <input
               type="tel"
               name="telephone"
@@ -292,13 +302,14 @@ export function ReservationForm() {
               </span>
             )}
             <span id="tel-aide" className={styles.aide}>
-              Pour confirmer la table de vive voix.
+              Téléphone ou e-mail, au moins l&apos;un des deux : c&apos;est ainsi que nous
+              confirmons la table.
             </span>
           </label>
         </div>
 
         <label className={styles.field}>
-          <span className={styles.label}>E-mail (facultatif)</span>
+          <span className={styles.label}>E-mail</span>
           <input
             type="email"
             name="email"
@@ -309,7 +320,19 @@ export function ReservationForm() {
             aria-invalid={fieldErrors.email ? true : undefined}
             aria-describedby={`email-aide${fieldErrors.email ? " email-err" : ""}`}
             onBlur={(e) => setFieldErrors((f) => ({ ...f, email: erreurEmail(e.target.value) }))}
-            onChange={() => setFieldErrors((f) => (f.email ? { ...f, email: undefined } : f))}
+            onChange={(e) =>
+              setFieldErrors((f) => {
+                // L'exigence de contact s'affiche sous le téléphone : la lever dès
+                // qu'une adresse est saisie, sinon le message resterait affiché
+                // alors que le visiteur vient d'y répondre.
+                const leveContact =
+                  f.telephone === MESSAGE_CONTACT_MANQUANT && Boolean(e.target.value.trim());
+                // Objet inchangé si rien n'est à effacer : pas de rendu inutile
+                // à chaque frappe.
+                if (!f.email && !leveContact) return f;
+                return { ...f, email: undefined, ...(leveContact && { telephone: undefined }) };
+              })
+            }
           />
           {fieldErrors.email && (
             <span id="email-err" role="alert" className={styles.fieldError}>

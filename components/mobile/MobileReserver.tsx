@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle, CalendarPlus, Check, Minus, Plus, Share2 } from "lucide-react";
-import { emailValide, telephoneValide, useReservationForm } from "@/lib/useReservationForm";
+import {
+  contactJoignable,
+  emailValide,
+  telephoneValide,
+  useReservationForm,
+} from "@/lib/useReservationForm";
 import { useRecapReservation } from "@/lib/useRecapReservation";
 import { useOnline } from "@/lib/usePwa";
 import { useLocalStorage } from "@/lib/useLocalStorage";
@@ -100,6 +105,9 @@ export function MobileReserver() {
   );
 
   const soireePassee = Boolean(maintenant && !premierCreneauDisponible(date, heures, maintenant));
+  /* Sans téléphone ni e-mail, la demande arriverait au bar sans personne à
+     joindre : le bouton attend l'un des deux, comme il attend déjà le nom. */
+  const joignable = contactJoignable(contact.tel, contact.email);
 
   useEffect(() => {
     if (status === "done") {
@@ -324,7 +332,7 @@ export function MobileReserver() {
           </span>
         )}
         <label className={styles.champ}>
-          <span className={styles.champLabel}>E-mail (facultatif)</span>
+          <span className={styles.champLabel}>E-mail</span>
           <input
             className={styles.input}
             placeholder="vous@exemple.fr"
@@ -345,6 +353,10 @@ export function MobileReserver() {
             {emailErreur}
           </span>
         )}
+        <p className={styles.aide}>
+          Téléphone ou e-mail, au moins l&apos;un des deux : c&apos;est ainsi que nous confirmons la
+          table.
+        </p>
 
         {/* Piège à robots : hors écran, hors tabulation, ignoré des lecteurs
             d'écran. Un envoi avec ce champ rempli est écarté côté serveur. */}
@@ -377,7 +389,9 @@ export function MobileReserver() {
         <button
           className={styles.cta}
           onClick={valider}
-          disabled={status === "loading" || !contact.nom.trim() || !online || soireePassee}
+          disabled={
+            status === "loading" || !contact.nom.trim() || !joignable || !online || soireePassee
+          }
           aria-busy={status === "loading"}
         >
           {!online ? (
@@ -391,8 +405,14 @@ export function MobileReserver() {
             "Demander cette table"
           )}
         </button>
-        {!contact.nom.trim() && (
+        {!contact.nom.trim() ? (
           <p className={styles.ctaHint}>Indiquez votre nom pour envoyer la demande.</p>
+        ) : (
+          !joignable && (
+            <p className={styles.ctaHint}>
+              Laissez un téléphone ou un e-mail pour envoyer la demande.
+            </p>
+          )
         )}
       </div>
     </div>

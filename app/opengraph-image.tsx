@@ -13,6 +13,25 @@ const CREAM = "#f8f3e9";
 const CREAM_70 = "rgba(248, 243, 233, 0.72)";
 const GOLD = "#a8884c";
 
+/* Nœud ◆ du filet doré, dessiné plutôt qu'écrit. Le rendu Satori n'embarque
+   qu'une police latine : le caractère « ◆ » (U+25C6) en est absent, il déclenche
+   une requête de police dynamique qui échoue (HTTP 400) et le glyphe finit en
+   carré vide sur la carte partagée. Un carré tourné à 45° ne dépend d'aucune
+   police et donne exactement le même signe. */
+function Losange() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        width: 12,
+        height: 12,
+        backgroundColor: GOLD,
+        transform: "rotate(45deg)",
+      }}
+    />
+  );
+}
+
 /** Carte de partage 1200×630 générée à la volée (Open Graph + Twitter). */
 export default function Image() {
   return new ImageResponse(
@@ -84,13 +103,17 @@ export default function Image() {
       <div
         style={{
           display: "flex",
+          alignItems: "center",
+          gap: 16,
           fontSize: 26,
           marginTop: 28,
           letterSpacing: 2,
           color: GOLD,
         }}
       >
-        ◆ Juste derrière l'Abbaye Saint-Victor ◆
+        <Losange />
+        <span>Juste derrière l&apos;Abbaye Saint-Victor</span>
+        <Losange />
       </div>
 
       <div

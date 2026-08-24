@@ -18,7 +18,12 @@ import {
   type ReservationRow,
 } from "@/lib/emailsReservation";
 import { autoriser } from "@/lib/limiteDebit";
-import { emailValide, telephoneValide } from "@/lib/validationReservation";
+import {
+  contactJoignable,
+  emailValide,
+  MESSAGE_CONTACT_MANQUANT,
+  telephoneValide,
+} from "@/lib/validationReservation";
 import { site } from "@/data/site";
 
 export const dynamic = "force-dynamic";
@@ -102,6 +107,10 @@ function validerDemande(corps: CorpsRequete): { row: ReservationRow } | { messag
 
   const email = texteNettoye(corps.email, 120);
   if (!emailValide(email)) return { message: "L'adresse e-mail semble incorrecte." };
+
+  // Dernier mot du serveur : les deux formulaires posent déjà la règle, mais la
+  // route est publique et un client sur mesure peut poster sans aucun contact.
+  if (!contactJoignable(telephone, email)) return { message: MESSAGE_CONTACT_MANQUANT };
 
   return {
     row: {
