@@ -2,10 +2,15 @@
 
 import { useCallback, useState } from "react";
 import { createReservation, type ReservationPayload } from "@/services/reservation";
-import { emailValide, telephoneValide } from "@/lib/validationReservation";
+import {
+  contactJoignable,
+  emailValide,
+  MESSAGE_CONTACT_MANQUANT,
+  telephoneValide,
+} from "@/lib/validationReservation";
 
 // Réexport : les formulaires importent déjà ces règles depuis ce module.
-export { emailValide, telephoneValide };
+export { contactJoignable, emailValide, MESSAGE_CONTACT_MANQUANT, telephoneValide };
 
 export type ReservationStatus = "idle" | "loading" | "done" | "error";
 
@@ -26,6 +31,11 @@ export function useReservationForm() {
     }
     if (!emailValide(payload.email ?? "")) {
       setErreur("L'adresse e-mail semble incorrecte.");
+      setStatus("error");
+      return;
+    }
+    if (!contactJoignable(payload.telephone ?? "", payload.email ?? "")) {
+      setErreur(MESSAGE_CONTACT_MANQUANT);
       setStatus("error");
       return;
     }

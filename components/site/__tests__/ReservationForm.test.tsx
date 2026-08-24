@@ -78,6 +78,34 @@ describe("ReservationForm", () => {
     expect(screen.getByText(/ce numéro semble incomplet/i)).toBeInTheDocument();
   });
 
+  it("refuse une demande sans téléphone ni e-mail et le dit à l'écran", async () => {
+    const user = userEvent.setup();
+    render(<ReservationForm />);
+
+    await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    await user.click(screen.getByRole("button", { name: /envoyer la demande/i }));
+
+    expect(screen.getByText(/laissez un téléphone ou un e-mail/i)).toBeInTheDocument();
+    expect(createReservation).not.toHaveBeenCalled();
+  });
+
+  it("lève l'exigence de contact dès qu'une adresse est saisie", async () => {
+    vi.mocked(createReservation).mockResolvedValue({ ok: true, reference: "DLA-7F3K" });
+    const user = userEvent.setup();
+    render(<ReservationForm />);
+
+    await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    await user.click(screen.getByRole("button", { name: /envoyer la demande/i }));
+    expect(screen.getByText(/laissez un téléphone ou un e-mail/i)).toBeInTheDocument();
+
+    // Le message s'affiche sous le téléphone : renseigner l'e-mail doit le lever.
+    await user.type(screen.getByPlaceholderText("vous@exemple.fr"), "camille@exemple.fr");
+    expect(screen.queryByText(/laissez un téléphone ou un e-mail/i)).toBeNull();
+
+    await user.click(screen.getByRole("button", { name: /envoyer la demande/i }));
+    await waitFor(() => expect(createReservation).toHaveBeenCalledTimes(1));
+  });
+
   it("confirme la demande et affiche la référence", async () => {
     vi.mocked(createReservation).mockResolvedValue({
       ok: true,
@@ -87,6 +115,7 @@ describe("ReservationForm", () => {
     render(<ReservationForm />);
 
     await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    await user.type(screen.getByPlaceholderText("06 12 34 56 78"), "06 12 34 56 78");
     await user.click(screen.getByRole("button", { name: /envoyer la demande/i }));
 
     await waitFor(() =>
@@ -105,6 +134,7 @@ describe("ReservationForm", () => {
     render(<ReservationForm />);
 
     await user.type(screen.getByPlaceholderText(/votre nom/i), "Camille");
+    await user.type(screen.getByPlaceholderText("06 12 34 56 78"), "06 12 34 56 78");
     await user.click(screen.getByRole("button", { name: /envoyer la demande/i }));
     await screen.findByRole("heading", { name: /demande envoyée/i });
 

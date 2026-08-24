@@ -8,13 +8,21 @@ vi.mock("@/services/reservation", () => ({
 }));
 
 import { createReservation } from "@/services/reservation";
-import { emailValide, telephoneValide, useReservationForm } from "@/lib/useReservationForm";
+import {
+  contactJoignable,
+  emailValide,
+  MESSAGE_CONTACT_MANQUANT,
+  telephoneValide,
+  useReservationForm,
+} from "@/lib/useReservationForm";
 
 const payloadValide = {
   date: "2026-07-01",
   heure: "20:00",
   couverts: 2,
   nom: "Camille",
+  // Une demande doit toujours porter un moyen de rappel (cf. contactJoignable).
+  telephone: "06 12 34 56 78",
 };
 
 describe("telephoneValide", () => {
@@ -61,6 +69,31 @@ describe("emailValide", () => {
     expect(result.current.status).toBe("error");
     expect(result.current.erreur).toMatch(/adresse e-mail/i);
     expect(createReservation).not.toHaveBeenCalled();
+  });
+});
+
+describe("contactJoignable", () => {
+  it("accepte une demande qui laisse un téléphone seul", () => {
+    expect(contactJoignable("06 12 34 56 78", "")).toBe(true);
+  });
+
+  it("accepte une demande qui laisse un e-mail seul", () => {
+    expect(contactJoignable("", "camille@exemple.fr")).toBe(true);
+  });
+
+  it("rejette une demande sans aucun moyen de rappel", () => {
+    expect(contactJoignable("", "")).toBe(false);
+    expect(contactJoignable("   ", "  ")).toBe(false);
+  });
+
+  it("bloque l'envoi : le bar ne pourrait ni confirmer ni rappeler", async () => {
+    const { result } = renderHook(() => useReservationForm());
+    await act(async () => {
+      await result.current.submit({ ...payloadValide, telephone: "", email: "" });
+    });
+    expect(createReservation).not.toHaveBeenCalled();
+    expect(result.current.status).toBe("error");
+    expect(result.current.erreur).toBe(MESSAGE_CONTACT_MANQUANT);
   });
 });
 

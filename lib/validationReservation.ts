@@ -21,3 +21,20 @@ export function emailValide(email: string): boolean {
   if (v === "") return true;
   return /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(v);
 }
+
+/** Message unique, repris mot pour mot par les formulaires et par la route :
+ *  le visiteur doit lire la même phrase quel que soit l'endroit où la règle
+ *  est appliquée. */
+export const MESSAGE_CONTACT_MANQUANT =
+  "Laissez un téléphone ou un e-mail : sans l'un des deux, nous ne pouvons pas confirmer votre table.";
+
+/** Vrai si la demande laisse au moins un moyen de rappel.
+ *
+ *  Les deux champs sont facultatifs pris séparément — beaucoup de clients ne
+ *  donnent qu'un numéro, d'autres qu'une adresse. Mais aucun des deux, c'est une
+ *  demande morte : sans base de données, la boîte mail du bar est le registre, et
+ *  une ligne sans contact ne peut être ni confirmée, ni rappelée en cas
+ *  d'imprévu — pendant que la table, elle, reste bloquée. */
+export function contactJoignable(telephone: string, email: string): boolean {
+  return telephone.trim() !== "" || email.trim() !== "";
+}

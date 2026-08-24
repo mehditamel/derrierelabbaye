@@ -93,7 +93,8 @@ Le parcours complet :
    (`app/api/reservations/route.ts`). Le navigateur ne parle à aucun tiers et ne
    connaît aucun secret.
 2. La route valide côté serveur (créneau appartenant à `CRENEAUX_RESERVATION`,
-   couverts 1–20, date non passée, téléphone et e-mail), génère la référence
+   couverts 1–20, date non passée, téléphone et e-mail — et **au moins l'un des
+   deux**, cf. « Toujours un moyen de rappel » ci-dessous), génère la référence
    `DLA-XXXX`, puis envoie via [Resend](https://resend.com) une **notification au
    bar** (répondre écrit directement au client) et, si une adresse a été laissée,
    un **accusé de réception au client**. Les gabarits sont dans
@@ -118,6 +119,20 @@ manque, si Resend refuse, ou si le réseau tombe, l'utilisateur voit une erreur 
 l'invite à appeler le bar. Le mode démo est un **opt-in explicite**, jamais déduit
 d'une variable absente — c'est précisément ce qui, auparavant, faisait croire à des
 clients que leur table était réservée alors que rien n'était enregistré.
+
+### Toujours un moyen de rappel
+
+Le téléphone et l'e-mail sont facultatifs **pris séparément** — beaucoup de clients
+ne laissent qu'un numéro, d'autres qu'une adresse — mais une demande sans aucun des
+deux est refusée. Sans base de données, la boîte mail du bar est le registre : une
+ligne sans contact ne peut être ni confirmée, ni rappelée en cas d'imprévu, pendant
+que la table reste bloquée.
+
+La règle vit dans `contactJoignable()` (`lib/validationReservation.ts`) et
+s'applique en trois endroits, avec le même message (`MESSAGE_CONTACT_MANQUANT`) :
+le formulaire du site l'affiche sous le champ téléphone à l'envoi, la PWA garde son
+bouton fermé tant qu'aucun contact n'est saisi, et `/api/reservations` tranche en
+dernier — la route est publique.
 
 ### Anti-spam
 

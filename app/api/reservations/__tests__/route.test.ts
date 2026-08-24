@@ -150,6 +150,10 @@ describe("POST /api/reservations — validation serveur", () => {
     ["nom vide", { nom: "   " }, /nom/i],
     ["téléphone invalide", { telephone: "12" }, /téléphone/i],
     ["e-mail invalide", { email: "camille@exemple" }, /e-mail/i],
+    // Chaque champ pris seul est facultatif ; les deux vides, la demande serait
+    // impossible à confirmer — le serveur tranche même si le formulaire est contourné.
+    ["aucun moyen de rappel", { telephone: "", email: "" }, /laissez un téléphone ou un e-mail/i],
+    ["moyens de rappel blancs", { telephone: "  ", email: " " }, /téléphone ou un e-mail/i],
   ];
 
   it.each(cas)("refuse : %s", async (_titre, remplacement, attendu) => {
@@ -162,6 +166,26 @@ describe("POST /api/reservations — validation serveur", () => {
     expect(res.status).toBe(400);
     expect(corps.erreur).toMatch(attendu);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("accepte une demande qui ne laisse qu'un téléphone", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(envoiOk());
+    vi.stubGlobal("fetch", fetchMock);
+
+    const res = await POST(requete({ ...valide, email: "" }));
+
+    expect(res.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1); // le bar seul : pas d'accusé sans adresse
+  });
+
+  it("accepte une demande qui ne laisse qu'un e-mail", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(envoiOk());
+    vi.stubGlobal("fetch", fetchMock);
+
+    const res = await POST(requete({ ...valide, telephone: "" }));
+
+    expect(res.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 });
 
