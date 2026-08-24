@@ -25,11 +25,19 @@ export default defineConfig({
       exclude: ["**/__tests__/**", "**/*.d.ts"],
       // Seuils-plancher calibrés sur l'existant : garde anti-régression, à
       // relever au fur et à mesure que la couverture composant progresse.
+      //
+      // ⚑ RECALIBRÉS lors de la montée en Vitest 4, qui réécrit la couverture V8
+      // en remapping AST. Le même code, mesuré plus rigoureusement, donne :
+      // instructions 64,6 → 65,7 et lignes 64,6 → 67,2 (en hausse), mais
+      // branches 84,6 → 67,2 et fonctions 72,1 → 62,7 (en baisse — l'ancienne
+      // mesure était optimiste sur les fichiers non testés). Baisser ces deux
+      // nombres n'abaisse donc PAS l'exigence : c'est la métrique qui a changé,
+      // pas la couverture du code.
       thresholds: {
-        statements: 64,
-        lines: 64,
-        functions: 71,
-        branches: 83,
+        statements: 65,
+        lines: 67,
+        functions: 62,
+        branches: 67,
       },
     },
   },
