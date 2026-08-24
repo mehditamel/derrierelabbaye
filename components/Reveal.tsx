@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { animationsReduites, observerApparition } from "@/lib/observateurReveal";
 
 type Variant = "up" | "left" | "right" | "scale";
 
@@ -20,7 +21,11 @@ const VARIANT_CLASS: Record<Variant, string> = {
   scale: "u-reveal--scale",
 };
 
-/** Enveloppe d'apparition douce (fade + montée / glissement) au scroll. */
+/** Enveloppe d'apparition douce (fade + montée / glissement) au scroll.
+ *
+ *  L'observation passe par `lib/observateurReveal` : un seul
+ *  IntersectionObserver pour toute la page, au lieu d'un par instance — il y en
+ *  a 34 sur l'accueil et 25 sur /carte. */
 export function Reveal({ children, delay = 0, variant = "up", className }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
@@ -28,19 +33,10 @@ export function Reveal({ children, delay = 0, variant = "up", className }: Props
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setShown(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    // Sous « animations réduites », la CSS d'apparition ne s'applique pas : le
+    // contenu est déjà visible et observer ne servirait à rien.
+    if (animationsReduites()) return;
+    return observerApparition(el, () => setShown(true));
   }, []);
 
   return (
