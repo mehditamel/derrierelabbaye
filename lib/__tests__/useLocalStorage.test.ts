@@ -47,3 +47,39 @@ describe("useLocalStorage", () => {
     expect(result.current.value).toEqual({ nom: "repli" });
   });
 });
+
+describe("useLocalStorage — garde de forme", () => {
+  it("ignore et purge une valeur bien formée mais de mauvaise structure", () => {
+    const estContact = (v: unknown): v is { nom: string } =>
+      typeof v === "object" && v !== null && typeof (v as { nom?: unknown }).nom === "string";
+
+    // JSON syntaxiquement valide, structurellement faux : le cas que le
+    // try/catch ne rattrapait pas.
+    localStorage.setItem("cle-forme", JSON.stringify({ nom: 42 }));
+
+    const { result } = renderHook(() =>
+      useLocalStorage("cle-forme", { nom: "défaut" }, estContact)
+    );
+
+    expect(result.current.value).toEqual({ nom: "défaut" });
+    // La valeur fautive est retirée, sans quoi elle serait relue à chaque montage.
+    expect(localStorage.getItem("cle-forme")).toBeNull();
+  });
+
+  it("accepte une valeur conforme", () => {
+    const estContact = (v: unknown): v is { nom: string } =>
+      typeof v === "object" && v !== null && typeof (v as { nom?: unknown }).nom === "string";
+    localStorage.setItem("cle-ok", JSON.stringify({ nom: "Camille" }));
+
+    const { result } = renderHook(() => useLocalStorage("cle-ok", { nom: "défaut" }, estContact));
+
+    expect(result.current.value).toEqual({ nom: "Camille" });
+    expect(localStorage.getItem("cle-ok")).not.toBeNull();
+  });
+
+  it("sans garde, se comporte comme avant", () => {
+    localStorage.setItem("cle-libre", JSON.stringify({ nom: 42 }));
+    const { result } = renderHook(() => useLocalStorage("cle-libre", { nom: "défaut" }));
+    expect(result.current.value).toEqual({ nom: 42 });
+  });
+});

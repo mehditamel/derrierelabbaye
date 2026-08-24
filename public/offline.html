@@ -93,9 +93,18 @@
     Une table ? <a class="tel" href="tel:+33491921862">04 91 92 18 62</a>
   </p>
   <div class="actions">
-    <button onclick="location.reload()">Réessayer</button>
+    <button id="reessayer" type="button">Réessayer</button>
     <a class="lien" href="/app/carte">Voir la carte (version enregistrée)</a>
   </div>
 </main>
+<!-- Gestionnaire attaché en script plutôt qu'en attribut onclick : les
+     attributs de gestionnaire sont les premiers que casse un durcissement de
+     la CSP, et le bouton cesserait alors de fonctionner en silence — sur la
+     page hors-ligne, c'est-à-dire au pire moment. -->
+<script>
+  document.getElementById("reessayer").addEventListener("click", function () {
+    location.reload();
+  });
+</script>
 </body>
 </html>
