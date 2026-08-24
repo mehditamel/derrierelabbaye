@@ -5,6 +5,24 @@
    carte réellement consultable hors-ligne (au lieu de retomber sur offline.html). */
 
 const CACHE = "dla-shell-v5";
+
+/* Cache d'exécution, séparé de la coque : il accumule les chunks /_next/static
+   rencontrés au fil de la navigation. Chaque déploiement en apporte un jeu
+   neuf ; sans plafond, il croît indéfiniment jusqu'au prochain changement
+   manuel de version — et sur iOS, où le quota d'origine est serré, l'éviction
+   finit par emporter TOUT le cache, coque comprise. */
+const RUNTIME = "dla-runtime-v1";
+const RUNTIME_MAX = 60;
+
+/** Rogne le cache d'exécution en supprimant les entrées les plus anciennes. */
+async function limiterRuntime() {
+  const cache = await caches.open(RUNTIME);
+  const cles = await cache.keys();
+  // `keys()` renvoie les entrées dans leur ordre d'insertion.
+  for (const cle of cles.slice(0, Math.max(0, cles.length - RUNTIME_MAX))) {
+    await cache.delete(cle);
+  }
+}
 const SHELL = [
   "/",
   "/app",
@@ -21,8 +39,21 @@ const SHELL = [
 self.addEventListener("install", (event) => {
   // On pré-cache la coque sans forcer l'activation : la mise à jour attend
   // un geste explicite de l'utilisateur (message SKIP_WAITING).
+  //
+  // Chaque URL est mise en cache indépendamment : `cache.addAll` est atomique,
+  // si UNE seule des dix échoue (déploiement en cours, route renommée),
+  // l'installation entière est rejetée et la PWA perd le hors-ligne, sans le
+  // moindre signal. Mieux vaut une coque incomplète qu'aucune coque.
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(SHELL))
+    caches.open(CACHE).then((cache) =>
+      Promise.allSettled(
+        SHELL.map((url) =>
+          cache.add(url).catch((err) => {
+            console.warn("[sw] pré-cache impossible :", url, err);
+          })
+        )
+      )
+    )
   );
 });
 
@@ -38,7 +69,9 @@ self.addEventListener("activate", (event) => {
     caches
       .keys()
       .then((keys) =>
-        Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+        Promise.all(
+          keys.filter((k) => k !== CACHE && k !== RUNTIME).map((k) => caches.delete(k))
+        )
       )
       .then(() => self.clients.claim())
   );
@@ -71,11 +104,24 @@ self.addEventListener("fetch", (event) => {
         .then((response) => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+            caches
+              .open(RUNTIME)
+              .then((cache) => cache.put(request, copy).then(limiterRuntime))
+              .catch(() => {});
           }
           return response;
         })
-        .catch(() => cached);
+        // Ni cache ni réseau : on renvoie une réponse d'erreur explicite.
+        // `respondWith` d'une promesse résolue à `undefined` lève une exception
+        // et noie la vraie cause dans un bruit de console trompeur.
+        .catch(
+          () =>
+            cached ||
+            new Response("Ressource indisponible hors-ligne", {
+              status: 504,
+              statusText: "Gateway Timeout",
+            })
+        );
       return cached || reseau;
     })
   );

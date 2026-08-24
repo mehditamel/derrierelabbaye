@@ -26,7 +26,10 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .photo {
-    animation: kenburns 24s var(--ease-soft) infinite alternate;
+    /* Jouée une seule fois : en `infinite alternate`, la couche GPU plein
+       écran de l'image LCP se re-rastérisait sans fin, y compris longtemps
+       après que le visiteur a fini de lire. */
+    animation: kenburns 24s var(--ease-soft) both;
   }
 }
 

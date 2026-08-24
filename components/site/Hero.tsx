@@ -16,7 +16,7 @@ export function Hero() {
       <div className={styles.frame} aria-hidden="true" />
 
       <div className={styles.inner}>
-        <Logo tone="cream" width={360} priority className={styles.logo} />
+        <Logo tone="cream" width={360} className={styles.logo} />
         <h1 className={styles.accroche}>{copies.heroAccroche}</h1>
         <p className={styles.address}>
           {site.adresse.rue} · {site.adresse.codePostal} {site.adresse.ville}
