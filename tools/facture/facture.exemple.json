@@ -2,7 +2,6 @@
   "numero": "2026-09-XXX",
   "date": "8 septembre 2026",
   "taux_tva": 20,
-  "montant_lettres": "trois cent soixante euros toutes taxes comprises",
   "emetteur": {
     "nom": "DERRIÈRE L'ABBAYE",
     "forme": "SARL — Bar à tapas & cocktails",
@@ -24,9 +23,9 @@
   "lignes": [
     {
       "titre": "Indemnité de mise à disposition des lieux",
-      "qte": "1 demi-journée",
+      "quantite": 1,
+      "unite": "demi-journée",
       "pu": 300.0,
-      "n": 1,
       "details": [
         "Mardi 1er septembre 2026, de 07h00 à 11h00 (demi-journée, matin).",
         "Somme globale, forfaitaire et définitive incluant les droits d'utilisation, toutes charges et consommations d'énergie (article 5 de la convention)."

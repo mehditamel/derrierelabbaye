@@ -38,3 +38,6 @@ next-env.d.ts
 tools/facture/*.json
 !tools/facture/facture.exemple.json
 tools/facture/*.pdf
+
+# Python (outils de tools/)
+__pycache__/
