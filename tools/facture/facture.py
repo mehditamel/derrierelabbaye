@@ -19,6 +19,8 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 
+import dates
+import epc
 from controles import anomalies
 from lettres import montant_en_lettres
 
@@ -39,6 +41,7 @@ SANS = "Helvetica"
 W, H = A4
 mm = 2.83465
 MG = 22 * mm
+COTE_QR = 24 * mm
 
 
 def data(chemin):
@@ -201,7 +204,8 @@ class Feuille:
             c.setFont(SERIF, 9)
             c.setFillColor(GRIS)
             c.drawRightString(self.x1, self.y - 9 * mm, f"N° {d['numero']}")
-            c.drawRightString(self.x1, self.y - 13.5 * mm, f"Le {d['date']}")
+            c.drawRightString(self.x1, self.y - 13.5 * mm,
+                              f"Le {dates.en_toutes_lettres(d['date'])}")
             self.y -= 24 * mm
         else:
             caps(c, self.x0, self.y - 2 * mm, f"Facture n° {d['numero']} — suite",
@@ -281,13 +285,40 @@ def hauteur_cloture(f):
     Calquée sur la géométrie réellement tracée plus bas — une estimation à la
     louche ferait basculer en page 2 des factures qui tiennent sur une seule.
     """
-    r = f.d["reglement"]
     entete = 13 + 9 * mm + 11 * mm + 7 * mm + 7 * mm + 6.5 * mm
-    colonnes = max(
-        12 + max(len(r["banque"]) - 1, 0) * 11.5,
-        max(len(r["echeance"]) - 1, 0) * 13 * mm + 5.5 * mm,
-    )
+    # Colonne de gauche : mode + titulaire, IBAN, BIC, banque.
+    # Colonne du milieu : échéance et conditions. À droite, le QR de virement.
+    colonnes = max(12 + 3 * 11.5, 13 * mm + 5.5 * mm)
     return entete + colonnes + 2 * mm  # 2 mm de marge pour les jambages
+
+
+def qr_virement(f, r, ttc, y_haut):
+    """Carré EPC, dans le vide à gauche du cartouche : le payeur scanne, son
+    application pré-remplit le virement — bénéficiaire, IBAN, montant,
+    référence. Placé là, il jouxte la somme qu'il encode et ne coûte pas une
+    ligne de hauteur.
+
+    Sauté en silence si l'IBAN n'est pas exploitable (gabarit à trous) ou si
+    `segno` n'est pas installé : le PDF reste valable, il perd un raccourci.
+    """
+    try:
+        texte = epc.payload(
+            nom=r["titulaire"],
+            iban=r["iban"],
+            montant=ttc,
+            bic=r["bic"],
+            communication=f"Facture {f.d['numero']}",
+        )
+        png = epc.image(texte)
+    except (ValueError, ImportError):
+        return
+
+    y = y_haut + 3 * mm - COTE_QR
+    f.c.drawImage(ImageReader(png), f.x0, y, width=COTE_QR, height=COTE_QR,
+                  mask="auto")
+    caps(f.c, f.x0, y - 4 * mm, "Virement SEPA — à scanner", size=5.8,
+         track=1.1, color=GRIS)
+    f.bas = min(f.bas, y - 4 * mm)
 
 
 # ---------------------------------------------------------------- rendu
@@ -349,6 +380,7 @@ def build(d, sortie):
     ttc = round(ht + tva, 2)
     xt = f.x1 - 62 * mm
 
+    y_totaux = f.y
     f.ecrire(xt, f.y, "Total HT", size=9.5, color=GRIS)
     c.setFillColor(NOIR)
     c.drawRightString(f.x1, f.y, euros(ht))
@@ -371,6 +403,8 @@ def build(d, sortie):
     c.drawRightString(f.x1, f.y - 1.5 * mm, euros(ttc))
     f.bas = min(f.bas, f.y - 6.5 * mm)
 
+    qr_virement(f, d["reglement"], ttc, y_totaux)
+
     f.y -= 11 * mm
     # Le montant en lettres est calculé : recopié à la main, il finirait par
     # contredire le total chiffré sur une pièce comptable.
@@ -389,17 +423,25 @@ def build(d, sortie):
 
     r = d["reglement"]
     y = f.y
-    f.ecrire(f.x0, y, r["mode"])
+    f.ecrire(f.x0, y, f"{r['mode']} Titulaire : {r['titulaire']}.")
     y -= 12
-    for l in r["banque"]:
+    for l in (f"IBAN : {r['iban']}", f"BIC : {r['bic']}",
+              f"Banque : {r['banque']}"):
         f.ecrire(f.x0, y, l)
         y -= 11.5
 
+    # Colonne du milieu : l'échéance, calculée depuis la date et le délai.
+    due = dates.echeance(d["date"], r["delai"])
+    conditions = dates.DELAIS[r["delai"]]
+    if r.get("reference"):
+        conditions += f" ({r['reference']})"
+
     y = f.y
-    for label, valeur in r["echeance"]:
+    for label, valeur in (("Date d'échéance", dates.en_toutes_lettres(due)),
+                          ("Conditions de règlement", conditions)):
         caps(c, f.xc, y, label, size=6.8)
-        f.ecrire(f.xc, y - 5.5 * mm, valeur)
-        y -= 13 * mm
+        y = f.bloc(f.xc, y - 5.5 * mm, valeur, size=9, leading=11,
+                   maxw=f.x1 - f.xc - COTE_QR - 6 * mm) - 2 * mm
 
     # ---- mentions légales, sur le dernier feuillet seulement
     yl = 26 * mm

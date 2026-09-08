@@ -1,6 +1,6 @@
 {
   "numero": "2026-09-XXX",
-  "date": "8 septembre 2026",
+  "date": "2026-09-08",
   "taux_tva": 20,
   "emetteur": {
     "nom": "DERRIÈRE L'ABBAYE",
@@ -34,16 +34,12 @@
   ],
   "reglement": {
     "mode": "Par virement bancaire.",
-    "banque": [
-      "Titulaire : DERRIERE L ABBAYE",
-      "IBAN : FR76 …  (à recopier depuis le RIB, non versionné)",
-      "BIC : ………",
-      "Banque : CCM Marseille La Phocéenne"
-    ],
-    "echeance": [
-      ["Date d'échéance", "31 octobre 2026"],
-      ["Conditions de règlement", "30 jours fin de mois (article 5 de la convention)"]
-    ]
+    "titulaire": "DERRIERE L ABBAYE",
+    "iban": "FR76 …",
+    "bic": "………",
+    "banque": "CCM Marseille La Phocéenne",
+    "delai": "30j-fin-de-mois",
+    "reference": "article 5 de la convention"
   },
   "mentions": [
     "Pas d'escompte pour paiement anticipé. TVA acquittée d'après les encaissements.",

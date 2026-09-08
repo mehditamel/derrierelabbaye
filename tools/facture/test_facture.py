@@ -11,6 +11,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import dates  # noqa: E402
+import epc  # noqa: E402
 from controles import anomalies, cle_tva, iban_valide, tva_valide  # noqa: E402
 from lettres import entier_en_lettres, montant_en_lettres  # noqa: E402
 
@@ -61,10 +63,25 @@ IBAN_VALIDES = ("FR14 2004 1010 0505 0001 3M02 606", "DE89370400440532013000")
 IBAN_INVALIDES = ("FR14 2004 1010 0505 0001 3M02 607", "FR76", "bonjour")
 
 
+# Échéances vérifiées à la main : le report « fin de mois » se fait APRÈS
+# l'ajout des jours, et doit franchir proprement les mois courts et l'année.
+ECHEANCES = {
+    ("2026-09-08", "reception"): "2026-09-08",
+    ("2026-09-08", "30j"): "2026-10-08",
+    ("2026-09-08", "45j"): "2026-10-23",
+    ("2026-09-08", "60j"): "2026-11-07",
+    ("2026-09-08", "30j-fin-de-mois"): "2026-10-31",
+    ("2026-09-08", "45j-fin-de-mois"): "2026-10-31",
+    ("2026-11-15", "30j-fin-de-mois"): "2026-12-31",   # décembre, mois de bord
+    ("2026-12-15", "30j-fin-de-mois"): "2027-01-31",   # passage d'année
+    ("2026-01-31", "30j-fin-de-mois"): "2026-03-31",   # février, mois court
+}
+
+
 def gabarit():
     return {
         "numero": "2026-09-001",
-        "date": "8 septembre 2026",
+        "date": "2026-09-08",
         "taux_tva": 20,
         "emetteur": {
             "nom": "N", "forme": "F", "adresse": ["A"],
@@ -74,8 +91,11 @@ def gabarit():
         "objet": "O",
         "lignes": [{"titre": "T", "quantite": 1, "unite": "u", "pu": 300.0,
                     "details": []}],
-        "reglement": {"mode": "M", "banque": ["IBAN : FR14 2004 1010 0505 0001 3M02 606"],
-                      "echeance": []},
+        "reglement": {
+            "mode": "M", "titulaire": "DERRIERE L ABBAYE",
+            "iban": "FR14 2004 1010 0505 0001 3M02 606", "bic": "PSSTFRPPXXX",
+            "banque": "B", "delai": "30j-fin-de-mois",
+        },
         "mentions": ["M"],
         "pied": "P",
     }
@@ -100,6 +120,49 @@ def verifier():
     assert not tva_valide("FR62 105 044 291")
     assert tva_valide("BE0123456789"), "les numéros hors France ne sont pas contrôlés"
 
+    for (jour, delai), attendu in ECHEANCES.items():
+        obtenu = dates.echeance(jour, delai).isoformat()
+        assert obtenu == attendu, f"{jour} + {delai} → {obtenu}, attendu {attendu}"
+
+    assert dates.en_toutes_lettres("2026-09-08") == "8 septembre 2026"
+    assert dates.en_toutes_lettres("2026-09-01") == "1er septembre 2026"
+    assert dates.en_toutes_lettres("2026-08-31") == "31 août 2026"
+    for delai in dates.DELAIS:
+        assert dates.echeance("2026-09-08", delai), delai
+
+    texte = epc.payload(nom="DERRIERE L ABBAYE",
+                        iban="FR14 2004 1010 0505 0001 3M02 606",
+                        montant=360.0, bic="PSSTFRPPXXX",
+                        communication="Facture 2026-09-001")
+    lignes = texte.split("\n")
+    assert lignes[0] == "BCD" and lignes[3] == "SCT", lignes
+    assert lignes[6] == "FR1420041010050500013M02606", "l'IBAN doit être compacté"
+    assert lignes[7] == "EUR360.00", lignes[7]
+    assert lignes[-1] == "Facture 2026-09-001", lignes
+    assert len(texte.encode("utf-8")) <= epc.TAILLE_MAX
+
+    for montant in (0.0, 1_000_000_000.0):
+        try:
+            epc.payload("N", "FR1420041010050500013M02606", montant)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"montant {montant} aurait dû être rejeté")
+    # Un gabarit à trous ne doit jamais produire de carré scannable.
+    try:
+        epc.payload("N", "FR76 …", 10.0)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("un IBAN au gabarit aurait dû être rejeté")
+
+    try:
+        epc.payload("N" * 71, "FR1420041010050500013M02606", 10.0)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("un nom de 71 caractères aurait dû être rejeté")
+
     erreurs, avertissements = anomalies(gabarit())
     assert not erreurs and not avertissements, (erreurs, avertissements)
 
@@ -114,9 +177,19 @@ def verifier():
     assert any("pu doit être un nombre" in e for e in erreurs), erreurs
 
     d = gabarit()
-    d["reglement"]["banque"] = ["IBAN : FR14 2004 1010 0505 0001 3M02 607"]
+    d["reglement"]["iban"] = "FR14 2004 1010 0505 0001 3M02 607"
     erreurs, _ = anomalies(d)
     assert any("IBAN invalide" in e for e in erreurs), erreurs
+
+    d = gabarit()
+    d["reglement"]["delai"] = "quand vous pourrez"
+    erreurs, _ = anomalies(d)
+    assert any("délai de règlement inconnu" in e for e in erreurs), erreurs
+
+    d = gabarit()
+    d["date"] = "08/09/2026"
+    erreurs, _ = anomalies(d)
+    assert any("AAAA-MM-JJ" in e for e in erreurs), erreurs
 
     d = gabarit()
     d["emetteur"]["identite"] = ["TVA intracommunautaire : FR62 105 044 291"]
@@ -131,4 +204,5 @@ def verifier():
 
 if __name__ == "__main__":
     verifier()
-    print(f"{len(ENTIERS) + len(MONTANTS)} montants et 12 contrôles vérifiés.")
+    print(f"{len(ENTIERS) + len(MONTANTS)} montants, {len(ECHEANCES)} échéances "
+          "et 19 contrôles vérifiés.")
