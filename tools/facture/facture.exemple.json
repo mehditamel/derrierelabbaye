@@ -6,11 +6,7 @@
   "emetteur": {
     "nom": "DERRIÈRE L'ABBAYE",
     "forme": "SARL — Bar à tapas & cocktails",
-    "adresse": [
-      "97 rue Sauveur Tobelem",
-      "13007 Marseille",
-      "France"
-    ],
+    "adresse": ["97 rue Sauveur Tobelem", "13007 Marseille", "France"],
     "identite": [
       "RCS Marseille 105 044 291",
       "TVA intracommunautaire : FR__ 105 044 291",
@@ -21,15 +17,8 @@
   "client": {
     "nom": "NOM DU CLIENT",
     "forme": "Forme juridique et capital",
-    "adresse": [
-      "Rue",
-      "Code postal Ville",
-      "France"
-    ],
-    "identite": [
-      "RCS / SIREN",
-      "À l'attention de …"
-    ]
+    "adresse": ["Rue", "Code postal Ville", "France"],
+    "identite": ["RCS / SIREN", "À l'attention de …"]
   },
   "objet": "Mise à disposition de l'établissement « Derrière l'Abbaye », 1 rue de l'Abbaye 13007 Marseille, à usage de prises de vues — décor « Extérieur Café » — pour le tournage de la série « Plus Belle la Vie, Encore Plus Belle », en exécution de la convention de mise à disposition de lieux signée le 26 août 2026.",
   "lignes": [
@@ -53,14 +42,8 @@
       "Banque : CCM Marseille La Phocéenne"
     ],
     "echeance": [
-      [
-        "Date d'échéance",
-        "31 octobre 2026"
-      ],
-      [
-        "Conditions de règlement",
-        "30 jours fin de mois (article 5 de la convention)"
-      ]
+      ["Date d'échéance", "31 octobre 2026"],
+      ["Conditions de règlement", "30 jours fin de mois (article 5 de la convention)"]
     ]
   },
   "mentions": [
