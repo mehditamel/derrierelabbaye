@@ -1,0 +1,71 @@
+{
+  "numero": "2026-09-XXX",
+  "date": "8 septembre 2026",
+  "taux_tva": 20,
+  "montant_lettres": "trois cent soixante euros toutes taxes comprises",
+  "emetteur": {
+    "nom": "DERRIÈRE L'ABBAYE",
+    "forme": "SARL — Bar à tapas & cocktails",
+    "adresse": [
+      "97 rue Sauveur Tobelem",
+      "13007 Marseille",
+      "France"
+    ],
+    "identite": [
+      "RCS Marseille 105 044 291",
+      "TVA intracommunautaire : FR__ 105 044 291",
+      "Tél. 06 77 60 61 72 — info@derrierelabbaye.fr",
+      "Représentée par M. Mathieu Maionara, gérant"
+    ]
+  },
+  "client": {
+    "nom": "NOM DU CLIENT",
+    "forme": "Forme juridique et capital",
+    "adresse": [
+      "Rue",
+      "Code postal Ville",
+      "France"
+    ],
+    "identite": [
+      "RCS / SIREN",
+      "À l'attention de …"
+    ]
+  },
+  "objet": "Mise à disposition de l'établissement « Derrière l'Abbaye », 1 rue de l'Abbaye 13007 Marseille, à usage de prises de vues — décor « Extérieur Café » — pour le tournage de la série « Plus Belle la Vie, Encore Plus Belle », en exécution de la convention de mise à disposition de lieux signée le 26 août 2026.",
+  "lignes": [
+    {
+      "titre": "Indemnité de mise à disposition des lieux",
+      "qte": "1 demi-journée",
+      "pu": 300.0,
+      "n": 1,
+      "details": [
+        "Mardi 1er septembre 2026, de 07h00 à 11h00 (demi-journée, matin).",
+        "Somme globale, forfaitaire et définitive incluant les droits d'utilisation, toutes charges et consommations d'énergie (article 5 de la convention)."
+      ]
+    }
+  ],
+  "reglement": {
+    "mode": "Par virement bancaire.",
+    "banque": [
+      "Titulaire : DERRIERE L ABBAYE",
+      "IBAN : FR76 …  (à recopier depuis le RIB, non versionné)",
+      "BIC : ………",
+      "Banque : CCM Marseille La Phocéenne"
+    ],
+    "echeance": [
+      [
+        "Date d'échéance",
+        "31 octobre 2026"
+      ],
+      [
+        "Conditions de règlement",
+        "30 jours fin de mois (article 5 de la convention)"
+      ]
+    ]
+  },
+  "mentions": [
+    "Pas d'escompte pour paiement anticipé. TVA acquittée d'après les encaissements.",
+    "En cas de retard de paiement, application de plein droit de pénalités au taux d'intérêt de la Banque centrale européenne à son opération de refinancement la plus récente majoré de 10 points, ainsi que d'une indemnité forfaitaire pour frais de recouvrement de 40 € (art. L.441-10 et D.441-5 du code de commerce)."
+  ],
+  "pied": "Derrière l'Abbaye · Bar à tapas & cocktails · Saint-Victor, Marseille"
+}

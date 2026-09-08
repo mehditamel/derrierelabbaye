@@ -33,3 +33,8 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# Factures : données réelles (RIB, coordonnées client) et PDF générés
+tools/facture/*.json
+!tools/facture/facture.exemple.json
+tools/facture/*.pdf
