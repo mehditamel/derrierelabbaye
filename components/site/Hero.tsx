@@ -16,15 +16,25 @@ export function Hero() {
         />
         <div className={styles.scrim} aria-hidden="true" />
         <div className={styles.halo} aria-hidden="true" />
+        <div className={styles.lightBeam} aria-hidden="true" />
         <div className={styles.frame} aria-hidden="true" />
+        <div className={styles.seal} aria-hidden="true">
+          <span>Saint-Victor</span>
+          <strong>07</strong>
+          <span>Marseille la nuit</span>
+        </div>
         <div className={[styles.inner, "u-container"].join(" ")}>
           <p className={styles.eyebrow}>
             <span /> Marseille · Saint-Victor
           </p>
           <h1 id="accueil-titre" className={styles.title}>
             <span className="u-visually-hidden">Derrière l&apos;Abbaye — </span>
-            La nuit a<br />
-            <em>son adresse.</em>
+            <span className={styles.titleLine}>
+              <span>La nuit a</span>
+            </span>
+            <span className={styles.titleLine}>
+              <em>son adresse.</em>
+            </span>
           </h1>
           <p className={styles.description}>
             Des cocktails, des tapas, et la soirée devant vous.

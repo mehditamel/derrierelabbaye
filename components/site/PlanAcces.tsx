@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { MapPin } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { Button } from "@/components/Button";
 import { site } from "@/data/site";
 import styles from "./NousTrouver.module.css";
 
 /** Google n'est contacté qu'après le choix explicite du visiteur. */
-export function PlanAcces() {
+export function PlanAcces({ preview }: { preview?: ReactNode }) {
   const [charge, setCharge] = useState(false);
   return (
     <div className={styles.mapWrap}>
@@ -21,7 +20,7 @@ export function PlanAcces() {
         />
       ) : (
         <div className={styles.mapPlaceholder}>
-          <MapPin size={32} strokeWidth={1.25} aria-hidden="true" />
+          {preview && <div className={styles.mapVisual}>{preview}</div>}
           <h3>Juste derrière l&apos;Abbaye</h3>
           <p>
             {site.adresse.rue}

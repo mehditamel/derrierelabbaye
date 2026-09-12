@@ -51,6 +51,9 @@
 .onDark {
   color: var(--cream-70);
 }
+.onDark a {
+  color: var(--gold-light);
+}
 .onDark a:hover {
   color: var(--cream);
 }

@@ -1,11 +1,13 @@
 import { PlanAcces } from "./PlanAcces";
-import { MapPin, Phone, Navigation, Mail, Footprints, Bus, Car, Bike } from "lucide-react";
+import Image from "next/image";
+import { ArrowUpRight, Phone, Navigation, Mail, Footprints, Bus, Car, Bike } from "lucide-react";
 import { SectionLabel } from "@/components/SectionLabel";
-import { GoldRule } from "@/components/GoldRule";
 import { Button } from "@/components/Button";
 import { Reveal } from "@/components/Reveal";
 import { StatutOuverture } from "@/components/StatutOuverture";
 import { copies, site, acces } from "@/data/site";
+import { photosAbbaye } from "@/data/photosAbbaye";
+import { CreditPhotoAbbaye } from "./AbbayePhoto";
 import styles from "./NousTrouver.module.css";
 
 const accesIcones = { "À pied": Footprints, "En bus": Bus, "En voiture": Car, "À vélo": Bike };
@@ -17,16 +19,37 @@ export function NousTrouver() {
     <section id="nous-trouver" className={styles.section}>
       <div className="u-container">
         <div className={styles.head}>
-          <SectionLabel>{copies.nousTrouverSurtitre}</SectionLabel>
-          <h2 className={styles.title}>{copies.nousTrouverTitre}</h2>
-          <Reveal delay={60}>
-            <GoldRule className={styles.rule} draw />
+          <Reveal>
+            <SectionLabel>{copies.nousTrouverSurtitre}</SectionLabel>
+            <h2 className={styles.title}>
+              Tous les chemins
+              <br />
+              <em>mènent à Saint-Victor.</em>
+            </h2>
           </Reveal>
-          <p className={styles.text}>{copies.nousTrouverTexte}</p>
+          <p className={styles.text}>
+            Repérez l&apos;Abbaye, longez ses pierres, poussez notre porte. Votre soirée se trouve
+            au 1 rue de l&apos;Abbaye, à deux pas du Vieux-Port.
+          </p>
         </div>
 
         <Reveal className={styles.grid}>
-          <PlanAcces />
+          <PlanAcces
+            preview={
+              <>
+                <Image
+                  src={photosAbbaye.jour.image}
+                  alt={photosAbbaye.jour.alt}
+                  fill
+                  sizes="(max-width: 860px) 100vw, 60vw"
+                  placeholder="blur"
+                />
+                <p className={styles.mapCredit}>
+                  <CreditPhotoAbbaye photo="jour" onDark />
+                </p>
+              </>
+            }
+          />
 
           <div className={styles.info}>
             <StatutOuverture
@@ -36,13 +59,11 @@ export function NousTrouver() {
             />
 
             <address className={styles.address}>
-              <MapPin size={18} strokeWidth={1.5} />
               <span>
-                {site.adresse.rue}
-                <br />
-                {site.adresse.codePostal} {site.adresse.ville}
-                <br />
-                quartier {site.adresse.quartier}
+                <strong>{site.adresse.rue}</strong>
+                <span>
+                  {site.adresse.codePostal} {site.adresse.ville} · {site.adresse.quartier}
+                </span>
               </span>
             </address>
 
@@ -56,14 +77,19 @@ export function NousTrouver() {
             </ul>
 
             <div className={styles.ctaRow}>
-              <Button href={telHref} variant="primary" target="_self">
-                <Phone size={18} strokeWidth={1.5} /> Appeler · {site.telephoneAffichage}
+              <a href={telHref} className={styles.contactCall}>
+                <span>
+                  <Phone size={15} aria-hidden="true" /> Appeler le bar
+                </span>
+                <strong>
+                  {site.telephoneAffichage} <ArrowUpRight size={23} aria-hidden="true" />
+                </strong>
+              </a>
+              <Button href={site.adresse.directionsUrl} variant="ghost-dark">
+                <Navigation size={18} strokeWidth={1.5} aria-hidden="true" /> Itinéraire
               </Button>
-              <Button href={site.adresse.directionsUrl} variant="ghost">
-                <Navigation size={18} strokeWidth={1.5} /> Itinéraire
-              </Button>
-              <Button href={`mailto:${site.email}`} variant="ghost" target="_self">
-                <Mail size={18} strokeWidth={1.5} /> Écrire
+              <Button href={`mailto:${site.email}`} variant="ghost-dark" target="_self">
+                <Mail size={18} strokeWidth={1.5} aria-hidden="true" /> Écrire
               </Button>
             </div>
           </div>
