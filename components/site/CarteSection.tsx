@@ -1,6 +1,5 @@
 import { Leaf } from "lucide-react";
 import { SectionLabel } from "@/components/SectionLabel";
-import { GoldRule } from "@/components/GoldRule";
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/Button";
 import { CarteFiltrable } from "./CarteFiltrable";
@@ -17,7 +16,7 @@ type CarteSectionProps = {
  *
  *  Tout ce qui est ici est du texte statique tiré de `copies` : le garder côté
  *  serveur sort `data/site.ts` — son plus gros objet — du bundle client, et
- *  laisse SectionLabel, GoldRule et Button en composants serveur sur cette
+ *  laisse SectionLabel et Button en composants serveur sur cette
  *  route. Les données de la carte, elles, restent côté client : le filtrage
  *  s'exécute à chaque frappe (cf. commentaire dans CarteFiltrable). */
 export function CarteSection({ lienCarteComplete = true }: CarteSectionProps) {
@@ -26,15 +25,13 @@ export function CarteSection({ lienCarteComplete = true }: CarteSectionProps) {
       <div className="u-container">
         <Reveal>
           <div className={styles.head}>
-            <SectionLabel>{copies.carteSurtitre}</SectionLabel>
-            <h2 className={styles.title}>{copies.carteTitre}</h2>
-            <p className={styles.sub}>{copies.carteSousTitre}</p>
+            <div>
+              <SectionLabel>{copies.carteSurtitre}</SectionLabel>
+              <h2 className={styles.title}>{copies.carteTitre}</h2>
+              <p className={styles.sub}>{copies.carteSousTitre}</p>
+            </div>
             <p className={styles.intro}>{copies.carteIntro}</p>
           </div>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <GoldRule className={styles.rule} draw />
         </Reveal>
 
         <CarteFiltrable />
