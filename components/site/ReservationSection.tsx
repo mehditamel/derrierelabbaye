@@ -1,3 +1,4 @@
+import { ReservationAccess } from "@/components/ReservationAccess";
 import { SectionLabel } from "@/components/SectionLabel";
 import { GoldRule } from "@/components/GoldRule";
 import { Reveal } from "@/components/Reveal";
@@ -19,7 +20,9 @@ export function ReservationSection() {
         </Reveal>
         <Reveal delay={120} variant="scale">
           <div className={styles.card}>
-            <ReservationForm />
+            <ReservationAccess>
+              <ReservationForm />
+            </ReservationAccess>
           </div>
         </Reveal>
       </div>

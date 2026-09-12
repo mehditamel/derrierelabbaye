@@ -19,27 +19,30 @@ export default function MentionsLegalesPage() {
           <SectionLabel>Informations</SectionLabel>
           <h1 className={styles.title}>Mentions légales</h1>
           <GoldRule className={styles.rule} />
-          <p className={styles.updated}>Dernière mise à jour : 10 juin 2026</p>
+          <p className={styles.updated}>Dernière mise à jour : 12 septembre 2026</p>
         </div>
 
         <div className={styles.prose}>
           <h2>Éditeur du site</h2>
           <p>
-            {site.nom} — <span className={styles.aConfirmer}>{site.legales.raisonSociale}</span> (
-            <span className={styles.aConfirmer}>{site.legales.formeJuridique}</span>
-            ), SIRET <span className={styles.aConfirmer}>{site.legales.siret}</span>.
+            {site.legales.raisonSociale}, {site.legales.formeJuridique}, au capital de{" "}
+            {site.legales.capital}.
           </p>
           <p>
-            {site.adresse.rue}, {site.adresse.codePostal} {site.adresse.ville}, {site.adresse.pays}.
+            Siège social : {site.legales.siege}. SIRET du siège : {site.legales.siretSiege}.
+          </p>
+          <p>
+            Immatriculation : {site.legales.rcs}. TVA intracommunautaire : {site.legales.tva}.
+          </p>
+          <p>
+            Établissement : {site.adresse.rue}, {site.adresse.codePostal} {site.adresse.ville},{" "}
+            {site.adresse.pays}. SIRET : {site.legales.siret}.
           </p>
           <p>
             Contact : <a href={`mailto:${site.email}`}>{site.email}</a> ·{" "}
             <a href={`tel:${site.telephone.replace(/\s/g, "")}`}>{site.telephoneAffichage}</a>
           </p>
-          <p>
-            Directeur de la publication :{" "}
-            <span className={styles.aConfirmer}>{site.legales.directeurPublication}</span>.
-          </p>
+          <p>Responsable de la publication : {site.legales.directeurPublication}.</p>
 
           <h2>Hébergement</h2>
           <p>

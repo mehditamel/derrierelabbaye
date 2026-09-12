@@ -7,7 +7,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = {
   title: "Confidentialité",
   description:
-    "Politique de confidentialité du site de Derrière l'Abbaye : vos demandes de réservation nous parviennent par e-mail, pas de cookies de suivi.",
+    "Politique de confidentialité de Derrière l'Abbaye : réservation par téléphone, aucun traceur publicitaire et plan chargé à votre demande.",
   alternates: { canonical: "/confidentialite" },
 };
 
@@ -19,35 +19,31 @@ export default function ConfidentialitePage() {
           <SectionLabel>Informations</SectionLabel>
           <h1 className={styles.title}>Confidentialité</h1>
           <GoldRule className={styles.rule} />
-          <p className={styles.updated}>Dernière mise à jour : 10 juin 2026</p>
+          <p className={styles.updated}>Dernière mise à jour : 12 septembre 2026</p>
         </div>
 
         <div className={styles.prose}>
           <h2>En bref</h2>
           <p>
-            Ce site ne demande pas de compte et ne pose aucun traceur publicitaire. Rien n'est
-            transmis, à une exception près : la demande de réservation, qui nous est envoyée par
-            e-mail. Tout le reste demeure sur votre appareil.
+            Ce site ne demande pas de compte et ne pose aucun traceur publicitaire. Les réservations
+            se font par téléphone. Le site est hébergé par Vercel, qui reçoit les informations
+            techniques nécessaires à la connexion, notamment votre adresse IP. Le plan Google Maps
+            ne se charge qu'après votre choix de l'afficher.
           </p>
 
-          <h2>Demande de réservation</h2>
+          <h2>Réservation par téléphone</h2>
           <p>
-            Les informations saisies (date, heure, nombre de couverts, nom et, si vous les indiquez,
-            téléphone, e-mail et message) nous sont transmises par e-mail afin que nous puissions
-            traiter votre demande. Elles ne servent qu'à cela, ne sont pas utilisées à des fins
-            publicitaires et ne sont conservées dans aucune base de données : elles restent dans
-            notre messagerie. L'acheminement est assuré par notre prestataire d'envoi d'e-mails,
-            Resend (Plus Five Five, Inc., États-Unis). Si vous nous laissez une adresse, vous
-            recevez un accusé de réception. Dans l'application, vos coordonnées peuvent en outre
-            être mémorisées sur votre appareil uniquement, pour pré-remplir le formulaire la fois
-            suivante.
+            Le site vous permet d'appeler directement le bar au {site.telephoneAffichage}. Aucun
+            formulaire de réservation en ligne n'est actuellement proposé et aucun e-mail
+            automatique n'est envoyé par le site. Les informations que vous communiquez par
+            téléphone servent à organiser votre venue.
           </p>
-
-          <h2>Programme de fidélité</h2>
+          <h2>Données des anciennes versions</h2>
           <p>
-            Les points de fidélité de l'aperçu sont stockés dans votre navigateur (localStorage) et
-            ne sont jamais transmis. Vous pouvez les effacer via « Réinitialiser l'aperçu » ou les
-            réglages de votre navigateur.
+            Si vous avez utilisé une ancienne version de l'application, des coordonnées de
+            formulaire ou des points de démonstration peuvent encore être enregistrés sur votre
+            appareil. Ils ne sont pas utilisés par la version actuelle. Vous pouvez les supprimer
+            dans les réglages de stockage de votre navigateur.
           </p>
 
           <h2>Stockage technique</h2>
@@ -65,8 +61,8 @@ export default function ConfidentialitePage() {
 
           <h2>Services tiers</h2>
           <p>
-            La page d'accueil intègre un plan Google Maps (iframe). Son chargement transmet votre
-            adresse IP à Google — voir leur{" "}
+            Si vous choisissez « Afficher le plan Google Maps » ou ouvrez l'itinéraire, votre
+            navigateur contacte Google et lui transmet notamment votre adresse IP — voir leur{" "}
             <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noreferrer">
               politique de confidentialité
             </a>
@@ -76,7 +72,8 @@ export default function ConfidentialitePage() {
 
           <h2>Contact</h2>
           <p>
-            Une question sur vos données ? <a href={`mailto:${site.email}`}>{site.email}</a>
+            Pour toute question sur vos données, ou pour demander leur accès, rectification ou
+            suppression, écrivez à <a href={`mailto:${site.email}`}>{site.email}</a>.
           </p>
         </div>
       </div>

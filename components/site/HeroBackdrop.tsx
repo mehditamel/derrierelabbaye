@@ -22,7 +22,9 @@ export function HeroBackdrop({ src, alt }: Props) {
     const update = () => {
       raf = 0;
       // L'image dérive plus lentement que le contenu → effet de profondeur.
-      const offset = Math.min(window.scrollY * 0.3, 160);
+      const paused = document.documentElement.dataset.motion === "paused";
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const offset = paused || reduced ? 0 : Math.min(window.scrollY * 0.14, 100);
       el.style.transform = `translate3d(0, ${offset}px, 0)`;
     };
     const onScroll = () => {
@@ -31,8 +33,10 @@ export function HeroBackdrop({ src, alt }: Props) {
 
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("dla-motion-change", update);
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("dla-motion-change", update);
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);

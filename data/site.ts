@@ -33,36 +33,41 @@ export const site = {
   telephone: "+33 6 44 76 91 74",
   telephoneAffichage: "06 44 76 91 74",
   email: "info@derrierelabbaye.fr",
+  // Choix de l'établissement confirmé le 12 septembre 2026.
+  reservationEnLigne: false,
 
-  // ⚑ À CONFIRMER — horaires réels.
-  // La maquette mobile évoque « Ouvert · ferme à 01h00 ».
+  // Horaires confirmés par l'établissement le 12 septembre 2026.
   horaires: [
-    { jours: "Mardi – Jeudi", creneau: "17h00 – 01h00" },
-    { jours: "Vendredi – Samedi", creneau: "17h00 – 02h00" },
-    { jours: "Dimanche", creneau: "17h00 – 00h00" },
+    { jours: "Mardi – Dimanche", creneau: "18h00 – 02h00" },
     { jours: "Lundi", creneau: "Fermé" },
   ],
   // Format schema.org (OpeningHoursSpecification simplifié) — aligné sur ci-dessus
   horairesSchema: [
-    { jours: ["Tuesday", "Wednesday", "Thursday"], ouvre: "17:00", ferme: "01:00" },
-    { jours: ["Friday", "Saturday"], ouvre: "17:00", ferme: "02:00" },
-    { jours: ["Sunday"], ouvre: "17:00", ferme: "00:00" },
+    {
+      jours: ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      ouvre: "18:00",
+      ferme: "02:00",
+    },
   ],
-  fermeture: "ferme à 01h00",
+  fermeture: "ferme à 02h00",
 
-  // ⚑ À CONFIRMER — liens réseaux sociaux
-  reseaux: [
-    { nom: "Instagram", url: "https://www.instagram.com/" },
-    { nom: "Facebook", url: "https://www.facebook.com/" },
-  ],
+  // Compte confirmé par l'établissement. Aucun compte Facebook communiqué.
+  reseaux: [{ nom: "Instagram", url: "https://www.instagram.com/derrierelabbaye/" }],
 
-  // ⚑ À CONFIRMER — informations légales de l'établissement.
+  // Société vérifiée sur la fiche Pappers communiquée le 12 septembre 2026.
+  // https://www.pappers.fr/entreprise/derriere-labbaye-105044291
   // L'hébergeur, lui, est une donnée établie : le site est déployé sur Vercel.
   legales: {
-    raisonSociale: "À CONFIRMER",
-    formeJuridique: "À CONFIRMER",
-    siret: "À CONFIRMER",
-    directeurPublication: "À CONFIRMER",
+    raisonSociale: "DERRIERE L'ABBAYE",
+    formeJuridique: "SARL, société à responsabilité limitée",
+    capital: "1 000 €",
+    siege: "97 rue Sauveur Tobelem, 13007 Marseille",
+    siren: "105 044 291",
+    siret: "105 044 291 00026",
+    siretSiege: "105 044 291 00018",
+    rcs: "105 044 291 R.C.S. Marseille",
+    tva: "FR61105044291",
+    directeurPublication: "M. TAMELGHAGHET Mehdi",
     hebergeur: {
       nom: "Vercel Inc.",
       adresse: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
@@ -103,7 +108,7 @@ export const copies = {
   reservationSurtitre: "Réserver",
   reservationTitre: "Réserver une table",
   reservationTexte:
-    "Indiquez la date, le nombre de couverts et l'heure souhaitée : nous vous confirmons votre table.",
+    "Réservez votre table par téléphone : nous vous répondons avec plaisir pour organiser votre venue.",
   nousTrouverSurtitre: "Nous trouver",
   nousTrouverTitre: "Passez nous voir, on vous attend",
   nousTrouverTexte:
@@ -135,7 +140,7 @@ export const acces = [
 export const reperes = [
   { valeur: "Abbaye St-Victor", label: "Juste derrière" },
   { valeur: "Vieux-Port", label: "À deux pas" },
-  { valeur: "Apéro → tard", label: "Tous les soirs" },
+  { valeur: "18h → 02h", label: "Du mardi au dimanche" },
 ] as const;
 
 /** Questions fréquentes — affichées (section FAQ) ET balisées (JSON-LD FAQPage).
@@ -158,12 +163,11 @@ export const faq = [
   },
   {
     question: "Quels sont les horaires ?",
-    reponse:
-      "On vous accueille du mardi au dimanche à partir de 17h00, pour l'apéro et jusque tard dans la soirée. Fermé le lundi.",
+    reponse: "On vous accueille du mardi au dimanche de 18h00 à 02h00. Fermé le lundi soir.",
   },
   {
     question: "Faut-il réserver une table ?",
     reponse:
-      "Ce n'est pas obligatoire — vous pouvez toujours vous installer au comptoir. Mais pour une table, surtout le week-end, mieux vaut réserver en ligne ou nous appeler : on vous confirme avec plaisir.",
+      "Ce n'est pas obligatoire — vous pouvez toujours vous installer au comptoir. Mais pour une table, surtout le week-end, mieux vaut nous appeler au 06 44 76 91 74 : nous vous confirmons la réservation directement par téléphone.",
   },
 ] as const;

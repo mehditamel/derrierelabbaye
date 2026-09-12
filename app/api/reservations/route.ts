@@ -10,7 +10,13 @@
    ===================================================================== */
 
 import { NextResponse } from "next/server";
-import { CRENEAUX_RESERVATION, creneauPasseAParis, isoAParis } from "@/lib/creneaux";
+import {
+  CRENEAUX_RESERVATION,
+  creneauPasseAParis,
+  isoAParis,
+  dateValide,
+  jourReservable,
+} from "@/lib/creneaux";
 import {
   construireEmailBar,
   construireEmailClient,
@@ -80,9 +86,11 @@ function cleClient(req: Request): string {
 function validerDemande(corps: CorpsRequete): { row: ReservationRow } | { message: string } {
   // Toutes les comparaisons de temps se font à l'heure de Marseille : le serveur
   // tourne en UTC, et entre minuit et 2 h la date UTC est encore celle de la veille.
-  const date = texteNettoye(corps.date, 10);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { message: "La date de réservation est invalide." };
+  const date = typeof corps.date === "string" ? corps.date : "";
+  if (!dateValide(date)) return { message: "La date de réservation est invalide." };
   if (date < isoAParis()) return { message: "Cette date est déjà passée." };
+  if (!jourReservable(date))
+    return { message: "Le bar est fermé le lundi soir. Choisissez un autre jour." };
 
   const heure = texteNettoye(corps.heure, 5);
   if (!(CRENEAUX_RESERVATION as readonly string[]).includes(heure)) {
@@ -94,8 +102,13 @@ function validerDemande(corps: CorpsRequete): { row: ReservationRow } | { messag
     return { message: "Ce créneau vient de passer. Choisissez un horaire plus tard." };
   }
 
-  const couverts = Number(corps.couverts);
-  if (!Number.isInteger(couverts) || couverts < 1 || couverts > 20) {
+  const couverts = corps.couverts;
+  if (
+    typeof couverts !== "number" ||
+    !Number.isInteger(couverts) ||
+    couverts < 1 ||
+    couverts > 20
+  ) {
     return { message: "Le nombre de couverts doit être compris entre 1 et 20." };
   }
 
@@ -135,6 +148,7 @@ async function envoyer(
 ): Promise<void> {
   const reponse = await fetch(RESEND_URL, {
     method: "POST",
+    signal: AbortSignal.timeout(10_000),
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       from,
@@ -146,18 +160,26 @@ async function envoyer(
     }),
   });
   if (!reponse.ok) {
-    throw new Error(`Resend ${reponse.status} : ${await reponse.text()}`);
+    throw new Error(`Resend ${reponse.status}`);
   }
 }
 
 export async function POST(req: Request) {
+  if (!site.reservationEnLigne)
+    return erreur(`Les réservations se font par téléphone. ${APPELEZ}`, 503);
   if (!autoriser(cleClient(req))) {
     return erreur(`Trop de demandes envoyées depuis cet appareil. ${APPELEZ}`, 429);
   }
 
   let corps: CorpsRequete;
   try {
-    corps = await req.json();
+    const texte = await req.text();
+    if (texte.length > 8_000) return erreur("Demande trop volumineuse.", 413);
+    const valeur: unknown = JSON.parse(texte);
+    if (!valeur || typeof valeur !== "object" || Array.isArray(valeur)) {
+      return erreur("Demande illisible.", 400);
+    }
+    corps = valeur as CorpsRequete;
   } catch {
     return erreur("Demande illisible.", 400);
   }
@@ -166,10 +188,14 @@ export async function POST(req: Request) {
   // pas apprendre qu'il a été repéré. Aucun humain ne peut atteindre ce cas —
   // le champ est masqué, hors du parcours clavier et des lecteurs d'écran.
   const rendu = Number(corps.rendu);
-  const tropRapide = Number.isFinite(rendu) && rendu > 0 && Date.now() - rendu < DELAI_MINIMUM_MS;
-  if (texteNettoye(corps.societe, 100) !== "" || tropRapide) {
+  const delai = Date.now() - rendu;
+  const tropRapide = Number.isFinite(rendu) && rendu > 0 && delai >= 0 && delai < DELAI_MINIMUM_MS;
+  if (texteNettoye(corps.societe, 100) !== "") {
     return NextResponse.json({ ok: true, reference: genererReference() });
   }
+  // Un formulaire prérempli peut être envoyé rapidement par une vraie personne.
+  // Ne jamais lui faire croire que sa demande a été transmise.
+  if (tropRapide) return erreur("Patientez quelques secondes puis envoyez votre demande.", 400);
 
   const verdict = validerDemande(corps);
   if ("message" in verdict) return erreur(verdict.message, 400);
@@ -178,8 +204,8 @@ export async function POST(req: Request) {
   // Mode démo : opt-in explicite, jamais déduit d'une variable absente, et
   // interdit en production. C'est ce qui garantit qu'une confirmation
   // affichée correspond toujours à un e-mail réellement parti.
-  if (process.env.RESERVATION_MODE === "demo" && process.env.VERCEL_ENV !== "production") {
-    console.info("[réservation · démo] aucun e-mail envoyé :", row);
+  if (modeDemo()) {
+    console.info("[réservation · démo] aucun e-mail envoyé :", row.reference);
     return NextResponse.json({ ok: true, reference: row.reference });
   }
 
@@ -195,20 +221,40 @@ export async function POST(req: Request) {
   // L'e-mail au bar est celui qui compte : c'est lui qui crée la réservation.
   // L'accusé au client est un confort — son échec ne doit pas faire croire au
   // visiteur que sa demande est perdue.
-  const [notification, accuse] = await Promise.allSettled([
-    envoyer(apiKey, from, emailBar, construireEmailBar(row), row.email ?? undefined),
-    row.email
-      ? envoyer(apiKey, from, row.email, construireEmailClient(row))
-      : Promise.resolve(undefined),
-  ]);
-
-  if (notification.status === "rejected") {
-    console.error("Échec de la notification au bar :", notification.reason);
+  try {
+    await envoyer(apiKey, from, emailBar, construireEmailBar(row), row.email ?? undefined);
+  } catch (cause) {
+    console.error("Échec de la notification au bar :", cause);
     return erreur(`Votre demande n'a pas pu être transmise. ${APPELEZ}`, 502);
   }
-  if (accuse.status === "rejected") {
-    console.error("Échec de l'accusé de réception client :", accuse.reason);
+  // Accuser réception seulement après acceptation de la notification au bar.
+  if (row.email) {
+    try {
+      await envoyer(apiKey, from, row.email, construireEmailClient(row));
+    } catch (cause) {
+      console.error("Échec de l'accusé de réception client :", cause);
+    }
   }
 
   return NextResponse.json({ ok: true, reference: row.reference });
+}
+
+function modeDemo(): boolean {
+  return (
+    process.env.RESERVATION_MODE === "demo" &&
+    process.env.VERCEL_ENV !== "production" &&
+    (process.env.NODE_ENV !== "production" || process.env.VERCEL_ENV === "preview")
+  );
+}
+
+/** Contrôle sans envoi d'e-mail, utilisé avant de présenter le formulaire. */
+export function GET() {
+  return NextResponse.json(
+    {
+      disponible:
+        site.reservationEnLigne && (Boolean(process.env.RESEND_API_KEY?.trim()) || modeDemo()),
+      demonstration: modeDemo(),
+    },
+    { headers: { "Cache-Control": "no-store" } }
+  );
 }

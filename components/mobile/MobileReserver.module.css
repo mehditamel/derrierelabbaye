@@ -70,6 +70,10 @@
 .dateChip:hover {
   border-color: var(--gold-light);
 }
+.dateChip:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
 @media (prefers-reduced-motion: no-preference) {
   .dateChip:active {
     transform: scale(var(--press));

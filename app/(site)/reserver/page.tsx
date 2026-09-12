@@ -1,3 +1,4 @@
+import { ReservationAccess } from "@/components/ReservationAccess";
 import type { Metadata } from "next";
 import { SectionLabel } from "@/components/SectionLabel";
 import { GoldRule } from "@/components/GoldRule";
@@ -26,7 +27,9 @@ export default function ReserverPage() {
           </p>
         </div>
         <div className={styles.card}>
-          <ReservationForm />
+          <ReservationAccess>
+            <ReservationForm />
+          </ReservationAccess>
         </div>
       </div>
     </section>

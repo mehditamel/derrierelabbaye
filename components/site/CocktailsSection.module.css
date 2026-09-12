@@ -41,8 +41,13 @@
 }
 
 .title {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  letter-spacing: -0.045em;
   color: var(--cream);
+}
+.title em {
+  color: var(--gold-light);
+  font-weight: 300;
 }
 
 .sub {
@@ -51,6 +56,9 @@
   margin: var(--space-1) auto 0;
   font-size: 1.05rem;
 }
+.motion {
+  margin-top: 12px;
+}
 
 .rule {
   margin: var(--space-5) auto var(--space-7);
@@ -58,31 +66,107 @@
 }
 
 .feature {
-  text-align: center;
-  border: 1px solid var(--hairline-gold);
-  border-radius: var(--r-card);
-  padding: var(--space-6) var(--space-4);
+  text-align: left;
+  border-block: 1px solid var(--hairline-gold);
   margin: 0 auto var(--space-7);
-  max-width: 540px;
-  background: rgba(168, 136, 76, 0.06);
-  box-shadow: var(--shadow-glow);
+  max-width: 920px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 48px;
+  padding: 24px 24px 32px;
+}
+.featureCopy {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  transition: transform var(--dur) var(--ease-soft);
+  align-items: flex-start;
+  gap: 18px;
 }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .feature:hover {
-    transform: translateY(var(--lift));
+.cocktailArt {
+  position: relative;
+  width: 100%;
+  max-width: 370px;
+  margin: auto;
+}
+.cocktailArt svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  z-index: 1;
+}
+.orbit {
+  position: absolute;
+  inset: 16% 0;
+  border: 1px solid var(--hairline-gold);
+  border-radius: 50%;
+  transform: rotate(-24deg);
+}
+.orbit::before {
+  content: "✦";
+  position: absolute;
+  top: 10%;
+  right: 11%;
+  color: var(--gold-light);
+  font-size: 26px;
+}
+.artCaption {
+  display: block;
+  text-align: center;
+  margin-top: -16px;
+  font: 0.58rem var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--cream-70);
+}
+.featureLink {
+  color: var(--cream);
+  font: 0.65rem var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid var(--hairline-gold);
+}
+.featureLink span {
+  font-size: 1.2rem;
+  color: var(--gold-light);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .orbit {
+    animation: orbitTurn 42s linear infinite;
+  }
+  .bubbles {
+    animation: sparkle 4s ease-in-out infinite alternate;
+  }
+  .citrus {
+    transform-origin: 236px 92px;
+    animation: citrusFloat 6s ease-in-out infinite alternate;
+  }
+}
+@keyframes orbitTurn {
+  to {
+    transform: rotate(336deg);
+  }
+}
+@keyframes sparkle {
+  to {
+    opacity: 0.35;
+    transform: translateY(-9px);
+  }
+}
+@keyframes citrusFloat {
+  to {
+    transform: translateY(-5px) rotate(8deg);
   }
 }
 
 .featureName {
   font-family: var(--font-serif);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  letter-spacing: -0.025em;
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
   color: var(--cream);
 }
 
@@ -91,11 +175,12 @@
   color: var(--cream-70);
   margin: 0;
   max-width: 40ch;
+  font-size: 1.2rem;
 }
 
 .featurePrice {
   font-family: var(--font-serif);
-  font-size: 1.5rem;
+  font-size: 2.1rem;
   color: var(--gold-light);
 }
 
@@ -194,6 +279,21 @@
 }
 
 @media (max-width: 640px) {
+  .section {
+    padding-block: 64px;
+  }
+  .feature {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 12px 0 32px;
+  }
+  .cocktailArt {
+    max-width: 270px;
+  }
+  .featureCopy {
+    align-items: center;
+    text-align: center;
+  }
   .grid,
   .softGrid {
     grid-template-columns: 1fr;

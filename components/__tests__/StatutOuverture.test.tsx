@@ -50,13 +50,13 @@ describe("StatutOuverture", () => {
 
   it("se rafraîchit chaque minute", () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-06-09T14:59:30Z")); // mardi 16h59 : fermé
+    vi.setSystemTime(new Date("2026-06-09T15:59:30Z")); // mardi 17h59 : fermé
     const { container } = render(<StatutOuverture {...classes} />);
     expect(container.querySelector(".pastille")?.textContent).toMatch(/fermé/i);
 
     // Une minute plus tard on a passé 17h00 : la pastille doit suivre.
     // `act` laisse React traiter le setState déclenché par l'intervalle.
-    vi.setSystemTime(new Date("2026-06-09T15:00:30Z"));
+    vi.setSystemTime(new Date("2026-06-09T16:00:30Z"));
     act(() => {
       vi.advanceTimersByTime(60_000);
     });

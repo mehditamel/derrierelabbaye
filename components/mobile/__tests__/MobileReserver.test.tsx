@@ -14,7 +14,7 @@ import { MobileReserver } from "@/components/mobile/MobileReserver";
    on fige un après-midi pour des tests stables à toute heure de CI. */
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
-  vi.setSystemTime(new Date("2026-06-09T15:00:00"));
+  vi.setSystemTime(new Date("2026-06-09T15:00:00+02:00"));
 });
 
 afterEach(() => {
@@ -27,6 +27,29 @@ afterEach(() => {
 const user = () => userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
 describe("MobileReserver", () => {
+  it("garde un HTML serveur identique quand la date change après le build", () => {
+    const { renderToString } = require("react-dom/server");
+    const avant = renderToString(<MobileReserver />);
+    vi.setSystemTime(new Date("2026-09-12T15:00:00+02:00"));
+    expect(renderToString(<MobileReserver />)).toBe(avant);
+  });
+
+  it("désactive le lundi dans le calendrier", () => {
+    render(<MobileReserver />);
+    for (const lundi of screen.getAllByRole("button", { name: /lundi.*fermé/i }))
+      expect(lundi).toBeDisabled();
+  });
+
+  it("verrouille les coordonnées et les couverts pendant l'envoi", async () => {
+    vi.mocked(createReservation).mockImplementation(() => new Promise(() => {}));
+    const u = user();
+    render(<MobileReserver />);
+    await u.type(screen.getByLabelText(/nom/i), "Camille");
+    await u.type(screen.getByLabelText(/téléphone/i), "06 12 34 56 78");
+    await u.click(screen.getByRole("button", { name: /demander cette table/i }));
+    expect(screen.getByLabelText(/nom/i)).toBeDisabled();
+    expect(screen.getByRole("button", { name: /ajouter un couvert/i })).toBeDisabled();
+  });
   it("affiche des labels visibles pour les coordonnées", () => {
     render(<MobileReserver />);
 
@@ -84,7 +107,7 @@ describe("MobileReserver", () => {
     await u.click(screen.getByRole("button", { name: /demander cette table/i }));
 
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: /c'est noté/i })).toBeInTheDocument()
+      expect(screen.getByRole("heading", { name: /demande envoyée/i })).toBeInTheDocument()
     );
     expect(screen.getByText(/DLA-9F3K/)).toBeInTheDocument();
     expect(createReservation).toHaveBeenCalledTimes(1);
@@ -98,7 +121,7 @@ describe("MobileReserver", () => {
     await u.type(screen.getByLabelText(/nom/i), "Camille");
     await u.type(screen.getByLabelText(/téléphone/i), "06 12 34 56 78");
     await u.click(screen.getByRole("button", { name: /demander cette table/i }));
-    await screen.findByRole("heading", { name: /c'est noté/i });
+    await screen.findByRole("heading", { name: /demande envoyée/i });
 
     await u.click(screen.getByRole("button", { name: /nouvelle demande/i }));
     expect(screen.getByRole("button", { name: /demander cette table/i })).toBeInTheDocument();

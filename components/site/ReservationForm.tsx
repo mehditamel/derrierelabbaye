@@ -15,17 +15,17 @@ import {
   CRENEAUX_RESERVATION,
   creneauPasse,
   dateLongueFr,
-  isoLocal,
-  premierCreneauDisponible,
+  isoAParis,
+  jourReservable,
 } from "@/lib/creneaux";
+import { useCalendrierReservation } from "@/lib/useCalendrierReservation";
+import { site } from "@/data/site";
 import styles from "./ReservationForm.module.css";
 
 const heures = CRENEAUX_RESERVATION;
 
 export function ReservationForm() {
-  const [date, setDate] = useState("");
-  const [maintenant, setMaintenant] = useState<Date | null>(null);
-  const [heure, setHeure] = useState("20:00");
+  const { date, setDate, maintenant, heure, setHeure, disponible } = useCalendrierReservation();
   const [couverts, setCouverts] = useState(2);
   const [fieldErrors, setFieldErrors] = useState<{
     nom?: string;
@@ -51,33 +51,9 @@ export function ReservationForm() {
   const erreurContact = (tel: string, mail: string) =>
     contactJoignable(tel, mail) ? undefined : MESSAGE_CONTACT_MANQUANT;
 
-  // La date du jour est posée au montage : le HTML pré-rendu ne fige ainsi
-  // ni la date de build, ni le fuseau du serveur (UTC ≠ heure de Marseille).
   useEffect(() => {
-    const d = new Date();
-    // volontaire : ni la date du jour ni le fuseau réel n'existent au rendu serveur.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMaintenant(d);
-    setDate((prev) => prev || isoLocal(d));
-    rendu.current = d.getTime();
+    rendu.current = Date.now();
   }, []);
-
-  // Si l'heure choisie est passée (changement de date, retour sur l'onglet…),
-  // on avance au premier créneau encore ouvert.
-  useEffect(() => {
-    if (!maintenant || !date) return;
-    if (creneauPasse(date, heure, maintenant)) {
-      const libre = premierCreneauDisponible(date, heures, maintenant);
-      // Correction d'un état devenu invalide avec le temps qui passe : elle dépend
-      // de l'horloge, donc impossible à dériver pendant le rendu.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (libre) setHeure(libre);
-    }
-  }, [maintenant, date, heure]);
-
-  const soireePassee = Boolean(
-    maintenant && date && !premierCreneauDisponible(date, heures, maintenant)
-  );
 
   useEffect(() => {
     if (status === "done") successRef.current?.focus();
@@ -85,6 +61,7 @@ export function ReservationForm() {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!disponible || status === "loading") return;
     const form = new FormData(e.currentTarget);
     const nom = String(form.get("nom") || "");
     const telephone = String(form.get("telephone") || "");
@@ -98,6 +75,8 @@ export function ReservationForm() {
     };
     if (erreurs.nom || erreurs.telephone || erreurs.email) {
       setFieldErrors(erreurs);
+      const champ = erreurs.nom ? "nom" : erreurs.telephone ? "telephone" : "email";
+      e.currentTarget.querySelector<HTMLInputElement>(`[name="${champ}"]`)?.focus();
       return;
     }
     setRecap({ date, heure, couverts });
@@ -186,7 +165,7 @@ export function ReservationForm() {
               type="date"
               name="date"
               required
-              min={maintenant ? isoLocal(maintenant) : undefined}
+              min={maintenant ? isoAParis(maintenant) : undefined}
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className={styles.input}
@@ -226,7 +205,10 @@ export function ReservationForm() {
           <legend className={styles.label}>Heure</legend>
           <div className={styles.heures}>
             {heures.map((h) => {
-              const passe = Boolean(maintenant && date && creneauPasse(date, h, maintenant));
+              const passe =
+                !date ||
+                !jourReservable(date) ||
+                Boolean(maintenant && creneauPasse(date, h, maintenant));
               return (
                 <button
                   type="button"
@@ -243,8 +225,12 @@ export function ReservationForm() {
               );
             })}
           </div>
-          {soireePassee && (
-            <p className={styles.aide}>Plus de créneaux ce soir — choisissez un autre jour.</p>
+          {date && !disponible && (
+            <p className={styles.aide} role="status">
+              {!jourReservable(date)
+                ? "Le bar est fermé le lundi soir — choisissez un autre jour."
+                : "Plus de créneaux pour cette date — choisissez un autre jour."}
+            </p>
           )}
         </fieldset>
 
@@ -260,6 +246,7 @@ export function ReservationForm() {
             <input
               type="text"
               name="nom"
+              maxLength={80}
               required
               autoComplete="name"
               placeholder="Votre nom"
@@ -280,6 +267,7 @@ export function ReservationForm() {
             <input
               type="tel"
               name="telephone"
+              maxLength={30}
               autoComplete="tel"
               inputMode="tel"
               placeholder="06 12 34 56 78"
@@ -313,6 +301,7 @@ export function ReservationForm() {
           <input
             type="email"
             name="email"
+            maxLength={120}
             autoComplete="email"
             inputMode="email"
             placeholder="vous@exemple.fr"
@@ -355,6 +344,7 @@ export function ReservationForm() {
           <span className={styles.label}>Message (facultatif)</span>
           <textarea
             name="message"
+            maxLength={1000}
             rows={3}
             placeholder="Allergies, grande tablée, occasion à fêter…"
             className={styles.input}
@@ -365,7 +355,9 @@ export function ReservationForm() {
       {status === "error" && (
         <p className={styles.error} role="alert">
           <AlertCircle size={18} strokeWidth={1.5} aria-hidden="true" />
-          <span>{erreur}</span>
+          <span>
+            {erreur} <a href={`tel:${site.telephone.replace(/\s/g, "")}`}>Appeler le bar</a>
+          </span>
         </p>
       )}
 
@@ -375,11 +367,14 @@ export function ReservationForm() {
       </p>
 
       <div className={styles.actions}>
-        <p className={styles.mention}>* champ requis · demande sous réserve de confirmation</p>
+        <p className={styles.mention}>
+          * champ requis · demande sous réserve de confirmation.{" "}
+          <a href="/confidentialite">Utilisation de vos données</a>
+        </p>
         <Button
           type="submit"
           variant="primary"
-          disabled={status === "loading"}
+          disabled={status === "loading" || !disponible}
           aria-busy={status === "loading"}
         >
           {status === "loading" ? (

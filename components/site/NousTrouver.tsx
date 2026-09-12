@@ -1,3 +1,4 @@
+import { PlanAcces } from "./PlanAcces";
 import { MapPin, Phone, Navigation, Mail, Footprints, Bus, Car, Bike } from "lucide-react";
 import { SectionLabel } from "@/components/SectionLabel";
 import { GoldRule } from "@/components/GoldRule";
@@ -25,18 +26,7 @@ export function NousTrouver() {
         </div>
 
         <Reveal className={styles.grid}>
-          {/* Le plan intègre Google Maps sans clé API (cf. data/site.ts).
-              loading="lazy" : on ne contacte Google qu'au défilement (perf + vie privée). */}
-          <div className={styles.mapWrap}>
-            <iframe
-              className={styles.map}
-              src={site.adresse.embedUrl}
-              title={`Plan — ${site.nom}, ${site.adresse.rue}, ${site.adresse.codePostal} ${site.adresse.ville}`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-            />
-          </div>
+          <PlanAcces />
 
           <div className={styles.info}>
             <StatutOuverture

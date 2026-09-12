@@ -4,7 +4,7 @@
    en arrière-plan). Pré-cacher les chunks /_next/static au runtime rend la
    carte réellement consultable hors-ligne (au lieu de retomber sur offline.html). */
 
-const CACHE = "dla-shell-v5";
+const CACHE = "dla-shell-v6";
 
 /* Cache d'exécution, séparé de la coque : il accumule les chunks /_next/static
    rencontrés au fil de la navigation. Chaque déploiement en apporte un jeu
@@ -70,7 +70,7 @@ self.addEventListener("activate", (event) => {
       .keys()
       .then((keys) =>
         Promise.all(
-          keys.filter((k) => k !== CACHE && k !== RUNTIME).map((k) => caches.delete(k))
+          keys.filter((k) => k.startsWith("dla-") && k !== CACHE && k !== RUNTIME).map((k) => caches.delete(k))
         )
       )
       .then(() => self.clients.claim())
@@ -80,13 +80,22 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  // Les API, les réponses RSC et les services tiers ne sont jamais mis en cache.
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
 
   // Navigation : réseau d'abord, repli sur la page visitée puis la page
   // hors-ligne autoporteuse. Les chunks /_next/static étant mis en cache au
   // fil de l'eau (ci-dessous), une page déjà visitée se rouvre hors-ligne.
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request).catch(() =>
+      fetch(request).then((response) => {
+        if (response.ok && response.headers.get("content-type")?.includes("text/html")) {
+          const copie = response.clone();
+          event.waitUntil(caches.open(CACHE).then((cache) => cache.put(request, copie)).catch(() => {}));
+        }
+        return response;
+      }).catch(() =>
         caches
           .match(request, { ignoreSearch: true })
           .then((r) => r || caches.match("/offline.html"))
@@ -95,19 +104,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (!url.pathname.startsWith("/_next/static/") && !url.pathname.startsWith("/_next/image") && !/\.(png|jpe?g|webp|avif|svg|ico|woff2?|css|js|webmanifest)$/.test(url.pathname)) return;
+
   // Assets : stale-while-revalidate. On sert immédiatement la version en cache
   // et on rafraîchit en arrière-plan ; sinon on va au réseau et on met en cache.
   // Évite de servir indéfiniment de vieux assets (l'ancien cache-first figé).
-  event.respondWith(
-    caches.match(request).then((cached) => {
+  const travail = caches.match(request).then((cached) => {
       const reseau = fetch(request)
         .then((response) => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches
+            return caches
               .open(RUNTIME)
               .then((cache) => cache.put(request, copy).then(limiterRuntime))
-              .catch(() => {});
+              .catch(() => {})
+              .then(() => response);
           }
           return response;
         })
@@ -122,7 +133,9 @@ self.addEventListener("fetch", (event) => {
               statusText: "Gateway Timeout",
             })
         );
-      return cached || reseau;
-    })
-  );
+      return { cached, reseau };
+    });
+  // Le worker reste vivant jusqu'à la fin du rafraîchissement en arrière-plan.
+  event.waitUntil(travail.then(({ reseau }) => reseau).then(() => undefined));
+  event.respondWith(travail.then(({ cached, reseau }) => cached || reseau));
 });
