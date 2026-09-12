@@ -28,8 +28,11 @@
 }
 .photo img {
   object-fit: cover;
-  object-position: 62% center;
+  object-position: 62% 30%;
   transition: transform 1.2s var(--ease-soft);
+}
+.photoCredit {
+  margin: 16px 0 0 28px;
 }
 .photo::after {
   content: "";
