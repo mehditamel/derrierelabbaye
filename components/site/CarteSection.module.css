@@ -1,57 +1,72 @@
 .section {
   background: var(--cream);
-  padding: var(--space-8) 0;
+  padding: 96px 0;
   border-top: 1px solid var(--hairline);
 }
-
 .head {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: end;
+  gap: 80px;
+  margin-bottom: 52px;
 }
-
 .title {
-  font-size: clamp(2rem, 5vw, 3rem);
-  color: var(--ink-900);
+  font-size: clamp(4rem, 6.5vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  margin: 24px 0;
 }
-
 .sub {
-  font-family: var(--font-sans);
+  font: 0.68rem var(--font-sans);
   text-transform: uppercase;
-  letter-spacing: var(--track-label);
-  font-size: 0.74rem;
+  letter-spacing: 0.15em;
   color: var(--gold-deep);
   margin: 0;
 }
-
 .intro {
-  margin: var(--space-3) auto 0;
-  max-width: 56ch;
-  font-size: 1.05rem;
-  line-height: 1.7;
+  font-size: 1.2rem;
+  line-height: 1.6;
   color: var(--ink-700);
+  max-width: 40ch;
+  margin: 0;
 }
-
-.rule {
-  margin: var(--space-4) auto var(--space-5);
-  max-width: 280px;
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: center;
+  padding-block: 20px;
+  border-block: 1px solid var(--hairline-strong);
 }
-
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  justify-content: center;
-  margin-bottom: var(--space-4);
+  gap: 8px;
 }
-
+.filters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+.filterCount {
+  font-size: 0.57rem;
+  opacity: 0.85;
+  letter-spacing: 0;
+}
+.results {
+  font: 0.63rem var(--font-sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+  margin: 18px 0 40px;
+}
 .search {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  max-width: 380px;
-  margin: 0 auto var(--space-7);
+  width: 100%;
+  margin: 0;
   padding-left: 16px;
   border: 1px solid var(--hairline-strong);
   border-radius: var(--r-pill);
@@ -135,62 +150,151 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6) var(--space-7);
+  gap: 48px;
 }
-
 .block {
-  break-inside: avoid;
+  display: grid;
+  grid-template-columns: 215px minmax(0, 1fr);
+  gap: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--hairline-gold);
 }
-
-.blockTitle {
-  font-family: var(--font-sans);
-  text-transform: uppercase;
-  letter-spacing: var(--track-label);
-  font-size: 0.82rem;
+.blockHead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.blockNumber {
+  font: italic 4.5rem/0.9 var(--font-serif);
   color: var(--gold-deep);
-  padding: 9px 18px;
-  border: 1px solid var(--hairline-gold);
-  border-radius: var(--r-pill);
-  display: inline-block;
-  margin: 0 0 var(--space-4);
 }
-
+.blockTitle {
+  font: 400 1.85rem/1.1 var(--font-serif);
+  max-width: 12ch;
+  letter-spacing: -0.02em;
+  color: var(--ink-900);
+  margin: 0;
+}
+.dishes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 40px;
+  align-content: start;
+}
+.dishes > div {
+  border-bottom: 1px solid var(--hairline);
+  padding-block: 20px;
+}
 .note {
   text-align: center;
-  font-family: var(--font-serif);
-  font-style: italic;
-  color: var(--ink-500);
-  margin: var(--space-7) 0 0;
-  font-size: 1.05rem;
+  font: italic 1.4rem var(--font-serif);
+  color: var(--ink-700);
+  margin: 64px 0 0;
 }
-
 .legende {
   text-align: center;
-  font-family: var(--font-sans);
+  font: 0.64rem/1.8 var(--font-sans);
   text-transform: uppercase;
-  letter-spacing: var(--track-label);
-  font-size: 0.68rem;
+  letter-spacing: 0.1em;
   color: var(--ink-500);
-  margin: var(--space-3) 0 0;
+  margin: 16px 0 0;
 }
-.legende span {
-  color: var(--gold);
+.legende span,
+.legendeLeaf {
+  color: var(--gold-deep);
 }
 .legendeLeaf {
-  color: var(--gold);
   vertical-align: -1px;
 }
-
-/* Renvoi vers la page /carte (masqué sur la page elle-même) */
 .lienComplet {
   text-align: center;
-  margin-top: var(--space-5);
+  margin-top: 28px;
 }
-
-@media (max-width: 760px) {
-  .grid {
+@media (max-width: 1050px) {
+  .toolbar {
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: 20px;
+  }
+  .search {
+    max-width: 480px;
+  }
+  .block {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .blockHead {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+  }
+  .blockTitle {
+    max-width: none;
+    font-size: 1.7rem;
+  }
+  .blockNumber {
+    font-size: 3.4rem;
+  }
+}
+@media (max-width: 760px) {
+  .section {
+    padding: 64px 0;
+  }
+  .head {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-bottom: 32px;
+  }
+  .title {
+    font-size: clamp(3.8rem, 12vw, 5.8rem);
+  }
+  .intro {
+    font-size: 1.12rem;
+    max-width: 48ch;
+  }
+  .toolbar {
+    padding-block: 20px;
+  }
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .filters button {
+    justify-content: center;
+    gap: 5px;
+    padding: 10px 6px;
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+  .filterCount {
+    display: none;
+  }
+  .results {
+    margin-bottom: 30px;
+  }
+  .grid {
+    gap: 36px;
+  }
+}
+@media (max-width: 640px) {
+  .dishes {
+    grid-template-columns: 1fr;
+  }
+  .block {
+    gap: 16px;
+  }
+  .dishes > div {
+    padding-block: 18px;
+  }
+  .note {
+    font-size: 1.22rem;
+    margin-top: 48px;
+  }
+}
+@media (max-width: 360px) {
+  .dishes h4 {
+    font-size: 1.05rem;
+    letter-spacing: 0.025em;
   }
 }

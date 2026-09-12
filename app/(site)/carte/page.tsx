@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SectionLabel } from "@/components/SectionLabel";
-import { GoldRule } from "@/components/GoldRule";
-import { Button } from "@/components/Button";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ReservationSection } from "@/components/site/ReservationSection";
 import { Reveal } from "@/components/Reveal";
 import { CarteSection } from "@/components/site/CarteSection";
 import { CocktailsSection } from "@/components/site/CocktailsSection";
@@ -58,21 +58,47 @@ export default function CartePage() {
     <>
       <PageJsonLd />
       <section className={styles.head}>
-        <div className="u-container u-narrow">
-          <Reveal>
-            <div className={styles.headInner}>
-              <SectionLabel>La carte</SectionLabel>
-              <h1 className={styles.title}>Tapas, planches &amp; cocktails</h1>
+        <div className={styles.halo} aria-hidden="true" />
+        <div className="u-container">
+          <div className={styles.headInner}>
+            <Reveal>
+              <SectionLabel onDark>La carte · Tapas, planches &amp; cocktails</SectionLabel>
+              <h1 className={styles.title}>
+                À&nbsp;partager.
+                <br />
+                <em>À&nbsp;savourer.</em>
+              </h1>
+            </Reveal>
+            <Reveal delay={120} className={styles.headSide}>
               <p className={styles.lede}>
-                Une cuisine du sud pensée pour le partage et un bar qui suit le rythme de la soirée
-                : petites assiettes froides et chaudes, planches généreuses, cocktails classiques et
-                créations. À accompagner d&apos;un verre, d&apos;une bouteille… ou des deux.
+                Des petites assiettes qui circulent. Des cocktails que l&apos;on prend le temps de
+                choisir. Composez votre soirée, on s&apos;occupe du reste.
               </p>
-            </div>
-          </Reveal>
-          <Reveal delay={80}>
-            <GoldRule className={styles.rule} draw />
-          </Reveal>
+              <a href={"tel:" + site.telephone.replace(/\s/g, "")} className={styles.call}>
+                <span>Réserver par téléphone</span>
+                <strong>
+                  {site.telephoneAffichage} <ArrowUpRight size={20} aria-hidden="true" />
+                </strong>
+              </a>
+            </Reveal>
+          </div>
+          <nav className={styles.shortcuts} aria-label="Explorer la carte">
+            <a href="#la-carte">
+              <span>01</span>
+              <strong>Les tapas</strong>
+              <ArrowDown size={20} aria-hidden="true" />
+            </a>
+            <a href="#cocktails">
+              <span>02</span>
+              <strong>Les boissons</strong>
+              <ArrowDown size={20} aria-hidden="true" />
+            </a>
+            <a href="#cartes-imprimees">
+              <span>03</span>
+              <strong>La carte imprimée</strong>
+              <ArrowDown size={20} aria-hidden="true" />
+            </a>
+          </nav>
         </div>
       </section>
 
@@ -80,21 +106,7 @@ export default function CartePage() {
       <CocktailsSection />
       <CartesImprimees />
 
-      <section className={styles.reserver}>
-        <div className="u-container u-narrow">
-          <Reveal variant="scale">
-            <div className={styles.reserverInner}>
-              <p className={styles.reserverText}>
-                Une envie parmi tout ça ? La meilleure façon d&apos;y goûter, c&apos;est encore de
-                venir.
-              </p>
-              <Button href="/reserver" variant="primary">
-                Réserver une table
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <ReservationSection />
     </>
   );
 }

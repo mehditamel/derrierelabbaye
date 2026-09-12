@@ -1,57 +1,167 @@
-/* En-tête de la page carte : même registre que la page quartier
-   (fond papier, titre serif, filet doré centré). */
 .head {
-  background: var(--paper);
-  padding: calc(76px + var(--space-7)) 0 var(--space-2);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--noir);
+  color: var(--cream);
+  padding: 160px 0 0;
 }
-
+.halo {
+  position: absolute;
+  z-index: -1;
+  width: 800px;
+  height: 800px;
+  top: -200px;
+  right: -350px;
+  border: 1px solid var(--hairline-gold);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(121, 78, 53, 0.22), transparent 66%);
+  pointer-events: none;
+}
+.halo::after {
+  content: "";
+  position: absolute;
+  inset: 36px;
+  border: 1px solid rgba(208, 180, 120, 0.16);
+  border-radius: 50%;
+}
 .headInner {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 80px;
+  align-items: end;
+  padding-bottom: 64px;
 }
-
 .title {
-  font-family: var(--font-serif);
-  font-size: clamp(2.1rem, 5.4vw, 3.4rem);
-  line-height: 1.1;
-  color: var(--ink-900);
+  font-size: clamp(4.5rem, 8.5vw, 8.5rem);
+  line-height: 0.91;
+  letter-spacing: -0.05em;
+  margin-top: 30px;
 }
-
+.title em {
+  color: var(--gold-light);
+  font-weight: 300;
+}
+.headSide {
+  max-width: 35ch;
+}
 .lede {
-  font-size: 1.18rem;
-  line-height: 1.75;
-  color: var(--ink-700);
-  text-align: center;
-  margin: var(--space-4) auto 0;
-  max-width: 60ch;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: var(--cream-90);
+  margin: 0 0 28px;
 }
-
-.rule {
-  margin: var(--space-5) auto 0;
-  max-width: 240px;
-}
-
-/* CTA final vers la réservation */
-.reserver {
-  background: var(--paper);
-  padding: var(--space-8) 0;
-  border-top: 1px solid var(--hairline);
-}
-
-.reserverInner {
-  text-align: center;
-  display: flex;
+.call {
+  display: inline-flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
+  gap: 8px;
+  color: var(--gold-light);
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline-gold);
 }
-
-.reserverText {
-  font-family: var(--font-serif);
-  font-size: clamp(1.3rem, 3.2vw, 1.7rem);
-  color: var(--ink-900);
-  max-width: 40ch;
-  margin: 0;
+.call > span {
+  font: 0.62rem var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.call strong {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font: 400 1.4rem var(--font-sans);
+}
+.call:hover {
+  color: var(--cream);
+}
+.shortcuts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--hairline-gold);
+}
+.shortcuts a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: var(--cream);
+  padding: 30px 24px;
+  border-right: 1px solid var(--cream-16);
+  transition: background 300ms;
+}
+.shortcuts a:first-child {
+  padding-left: 0;
+}
+.shortcuts a:last-child {
+  border-right: 0;
+}
+.shortcuts a > span {
+  font: 0.6rem var(--font-sans);
+  color: var(--gold-light);
+}
+.shortcuts strong {
+  font: 1.6rem var(--font-serif);
+}
+.shortcuts svg {
+  margin-left: auto;
+  color: var(--gold-light);
+  flex: none;
+}
+.shortcuts a::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: var(--gold-light);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 400ms var(--ease-out);
+}
+.shortcuts a:hover {
+  background: rgba(208, 180, 120, 0.06);
+}
+.shortcuts a:hover::after,
+.shortcuts a:focus-visible::after {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .shortcuts svg {
+    transition: transform 350ms var(--ease-out);
+  }
+  .shortcuts a:hover svg {
+    transform: translateY(4px);
+  }
+}
+@media (max-width: 760px) {
+  .head {
+    padding-top: 128px;
+  }
+  .headInner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding-bottom: 40px;
+  }
+  .title {
+    font-size: clamp(4.3rem, 13vw, 6.5rem);
+    margin-top: 24px;
+  }
+  .lede {
+    font-size: 1.2rem;
+  }
+  .shortcuts {
+    grid-template-columns: 1fr;
+  }
+  .shortcuts a,
+  .shortcuts a:first-child {
+    padding: 20px 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--cream-16);
+  }
+  .shortcuts strong {
+    font-size: 1.4rem;
+  }
+}
+@media (max-width: 360px) {
+  .title {
+    font-size: 3.45rem;
+  }
 }

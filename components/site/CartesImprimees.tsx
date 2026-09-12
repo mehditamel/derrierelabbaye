@@ -1,6 +1,4 @@
-import Image from "next/image";
-import { Download } from "lucide-react";
-import { GoldRule } from "@/components/GoldRule";
+import { GalerieCartes } from "./GalerieCartes";
 import { SectionLabel } from "@/components/SectionLabel";
 import { Reveal } from "@/components/Reveal";
 import carteRecto from "@/public/carte-recto.jpg";
@@ -28,45 +26,24 @@ const cartes = [
 
 export function CartesImprimees() {
   return (
-    <section className={styles.section}>
-      <div className="u-container u-narrow">
+    <section id="cartes-imprimees" className={styles.section} aria-labelledby="cartes-titre">
+      <div className="u-container">
         <Reveal>
           <div className={styles.head}>
-            <SectionLabel>Sur le comptoir</SectionLabel>
-            <h2 className={styles.title}>La carte imprimée</h2>
+            <div>
+              <SectionLabel>Sur le comptoir</SectionLabel>
+              <h2 id="cartes-titre" className={styles.title}>
+                Comme à table.
+              </h2>
+            </div>
             <p className={styles.intro}>
-              Celle que l&apos;on vous tend à table — papier ivoire, filets dorés et branches
-              d&apos;olivier. À feuilleter ici, ou à emporter avec vous.
+              La carte imprimée, à feuilleter du bout des doigts. Ouvrez la cuisine ou les boissons,
+              agrandissez le texte ou téléchargez-les pour les garder sous la main.
             </p>
           </div>
         </Reveal>
 
-        <Reveal delay={80}>
-          <GoldRule className={styles.rule} draw />
-        </Reveal>
-
-        <div className={styles.grid}>
-          {cartes.map((carte, i) => (
-            <Reveal key={carte.href} delay={i * 90}>
-              <figure className={styles.figure}>
-                <Image
-                  src={carte.image}
-                  alt={carte.alt}
-                  placeholder="blur"
-                  sizes="(max-width: 700px) 100vw, 420px"
-                  className={styles.photo}
-                />
-                <figcaption className={styles.caption}>
-                  <span>{carte.titre}</span>
-                  <a href={carte.href} download={carte.fichier} className={styles.download}>
-                    <Download size={14} strokeWidth={1.5} aria-hidden="true" />
-                    Télécharger <span className="u-visually-hidden">{carte.titre} </span>(JPG)
-                  </a>
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
-        </div>
+        <GalerieCartes cartes={cartes} />
       </div>
     </section>
   );

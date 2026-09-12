@@ -41,11 +41,16 @@ export function CarteFiltrable() {
 
   return (
     <>
-      <Reveal delay={120}>
+      <Reveal delay={120} className={styles.toolbar}>
         <div className={styles.filters} role="group" aria-label="Filtrer la carte">
           {filtres.map((f) => (
             <Pill key={f.id} active={actif === f.id} onClick={() => setActif(f.id)}>
               {f.label}
+              <span className={styles.filterCount} aria-hidden="true">
+                {cuisine
+                  .filter((s) => f.id === "tout" || s.id === f.id)
+                  .reduce((n, s) => n + s.items.length, 0)}
+              </span>
             </Pill>
           ))}
         </div>
@@ -70,10 +75,10 @@ export function CarteFiltrable() {
             </button>
           )}
         </div>
-        <p className="u-visually-hidden" role="status" aria-live="polite">
-          {enRecherche ? `${nbResultats} résultat${nbResultats > 1 ? "s" : ""}` : ""}
-        </p>
       </Reveal>
+      <p className={styles.results} role="status" aria-live="polite">
+        {nbResultats} {enRecherche ? `résultat${nbResultats > 1 ? "s" : ""}` : `choix à partager`}
+      </p>
 
       {aucunResultat ? (
         <div className={styles.empty} role="status">
@@ -98,8 +103,13 @@ export function CarteFiltrable() {
           {sections.map((section, i) => (
             <Reveal key={section.id} delay={i * 70}>
               <div className={styles.block}>
-                <h3 className={styles.blockTitle}>{section.titre}</h3>
-                <div>
+                <div className={styles.blockHead}>
+                  <span className={styles.blockNumber} aria-hidden="true">
+                    0{cuisine.findIndex((s) => s.id === section.id) + 1}
+                  </span>
+                  <h3 className={styles.blockTitle}>{section.titre}</h3>
+                </div>
+                <div className={styles.dishes}>
                   {section.items.map((item) => (
                     <MenuRow key={item.nom} item={item} headingLevel={4} />
                   ))}
