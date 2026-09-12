@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { LoyaltyCard } from "@/components/mobile/LoyaltyCard";
+import { Logo } from "@/components/Logo";
+import { reseauxPublies } from "@/data/site";
 import styles from "./fidelite.module.css";
 
 export const metadata: Metadata = {
-  title: { absolute: "Fidélité — Derrière l'Abbaye" },
-  description:
-    "Aperçu du programme de fidélité Derrière l'Abbaye : points, paliers et avantages à venir.",
+  title: { absolute: "La maison — Derrière l'Abbaye" },
+  description: "Retrouvez les nouvelles de Derrière l'Abbaye et les informations de la maison.",
   alternates: { canonical: "/app/fidelite" },
 };
 
@@ -13,15 +13,34 @@ export default function AppFidelitePage() {
   return (
     <div>
       <div className={styles.header}>
-        <h1 className="app-h app-h1">Fidélité</h1>
-        <p className={styles.sub}>Aperçu du programme</p>
+        <h1 className="app-h app-h1">La maison</h1>
+        <p className={styles.sub}>Gardons le contact</p>
       </div>
 
       <div className="app-pad">
-        <LoyaltyCard />
-
+        <div className={styles.card}>
+          <Logo tone="cream" width={210} />
+          <p className={styles.next}>
+            Les nouvelles de la maison se partagent aussi sur Instagram. Retrouvez-nous entre deux
+            apéros.
+          </p>
+          <div className={styles.actions}>
+            {reseauxPublies.map((reseau) => (
+              <a
+                key={reseau.nom}
+                href={reseau.url}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.visite}
+              >
+                Nous suivre sur {reseau.nom}
+              </a>
+            ))}
+          </div>
+        </div>
         <p className={styles.note}>
-          Programme de fidélité en avant-première — bientôt disponible en boutique.
+          <a href="/mentions-legales">Mentions légales</a> ·{" "}
+          <a href="/confidentialite">Confidentialité</a>
         </p>
       </div>
     </div>

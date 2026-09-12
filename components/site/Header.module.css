@@ -28,6 +28,8 @@
 }
 
 .brand {
+  height: 76px;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;

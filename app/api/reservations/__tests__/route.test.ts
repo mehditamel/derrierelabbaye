@@ -1,6 +1,10 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { POST } from "@/app/api/reservations/route";
+vi.mock("@/data/site", async (original) => {
+  const donneesSite = await original<typeof import("@/data/site")>();
+  return { ...donneesSite, site: { ...donneesSite.site, reservationEnLigne: true } };
+});
+import { GET, POST } from "@/app/api/reservations/route";
 import { reinitialiserLimites } from "@/lib/limiteDebit";
 
 /** Demande valide de référence — date volontairement lointaine. */
@@ -106,6 +110,28 @@ describe("POST /api/reservations — cas nominal", () => {
 });
 
 describe("POST /api/reservations — échecs honnêtes", () => {
+  it("n'envoie aucun accusé client si le bar n'a pas reçu la demande", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const fetchMock = vi.fn().mockResolvedValue(envoiKo());
+    vi.stubGlobal("fetch", fetchMock);
+    expect((await POST(requete(valide))).status).toBe(502);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).to).toEqual(["info@derrierelabbaye.fr"]);
+  });
+
+  it.each([null, [], 42, true])(
+    "refuse un corps JSON qui n'est pas un objet : %s",
+    async (corps) => {
+      const fetchMock = vi.fn();
+      vi.stubGlobal("fetch", fetchMock);
+      expect((await POST(requete(corps))).status).toBe(400);
+      expect(fetchMock).not.toHaveBeenCalled();
+    }
+  );
+
+  it("refuse une demande trop volumineuse", async () => {
+    expect((await POST(requete({ ...valide, message: "x".repeat(9000) }))).status).toBe(413);
+  });
   it("refuse sans clé API plutôt que de simuler un succès", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.stubEnv("RESEND_API_KEY", "");
@@ -142,6 +168,10 @@ describe("POST /api/reservations — échecs honnêtes", () => {
 describe("POST /api/reservations — validation serveur", () => {
   const cas: [string, Record<string, unknown>, RegExp][] = [
     ["date malformée", { date: "01/07/2099" }, /date/i],
+    ["date impossible", { date: "2099-02-31" }, /date/i],
+    ["date tronquée", { date: "2099-07-01-extra" }, /date/i],
+    ["lundi fermé", { date: "2099-07-06" }, /fermé/i],
+    ["couverts booléens", { couverts: true }, /couverts/i],
     ["date passée", { date: "2020-01-01" }, /passée/i],
     ["créneau hors liste", { heure: "03:00" }, /créneau/i],
     ["couverts au-delà du maximum", { couverts: 21 }, /couverts/i],
@@ -255,7 +285,8 @@ describe("POST /api/reservations — anti-robots", () => {
 
     const res = await POST(requete({ ...valide, rendu: Date.now() - 100 }));
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(400);
+    expect((await res.json()).ok).toBe(false);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -284,6 +315,15 @@ describe("POST /api/reservations — anti-robots", () => {
 });
 
 describe("POST /api/reservations — mode démo", () => {
+  it("interdit aussi le mode démo en production hors Vercel", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL_ENV", "");
+    vi.stubEnv("RESERVATION_MODE", "demo");
+    const fetchMock = vi.fn().mockResolvedValue(envoiOk());
+    vi.stubGlobal("fetch", fetchMock);
+    await POST(requete({ ...valide, email: "" }));
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
   it("court-circuite l'envoi hors production", async () => {
     vi.spyOn(console, "info").mockImplementation(() => {});
     vi.stubEnv("RESERVATION_MODE", "demo");
@@ -307,5 +347,20 @@ describe("POST /api/reservations — mode démo", () => {
     await POST(requete({ ...valide, email: "" }));
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("GET /api/reservations — disponibilité sans envoi", () => {
+  it("annonce le service non configuré sans divulguer de secret", async () => {
+    vi.stubEnv("RESEND_API_KEY", "");
+    const res = GET();
+    expect(await res.json()).toEqual({ disponible: false, demonstration: false });
+    expect(res.headers.get("cache-control")).toBe("no-store");
+  });
+  it("annonce le service configuré sans contacter Resend", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    expect(await GET().json()).toEqual({ disponible: true, demonstration: false });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

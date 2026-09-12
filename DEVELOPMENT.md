@@ -1,5 +1,33 @@
 # Derrière l'Abbaye — Site & PWA
 
+## Version finalisée le 12 septembre 2026
+
+- **Réservations par téléphone**, au 06 44 76 91 74, à la demande de l'établissement.
+  `site.reservationEnLigne = false` : les pages affichent directement un lien d'appel,
+  même sans JavaScript ; l'API refuse toute demande écrite. Aucun compte Resend n'est
+  nécessaire pour cette version.
+- **Horaires confirmés** : mardi à dimanche, 18h00–02h00 ; fermé le lundi soir.
+- **Mentions légales complètes** : SARL DERRIERE L'ABBAYE, siège au 97 rue Sauveur
+  Tobelem ; établissement au 1 rue de l'Abbaye, SIRET 105 044 291 00026.
+  Source : [fiche Pappers communiquée par l'établissement](https://www.pappers.fr/entreprise/derriere-labbaye-105044291).
+  Responsable de publication : M. TAMELGHAGHET Mehdi, confirmé par l'établissement.
+- **Instagram** : [@derrierelabbaye](https://www.instagram.com/derrierelabbaye/).
+  Aucun compte Facebook n'a été communiqué.
+- **Version mobile** : l'ancienne démonstration de fidélité est remplacée par
+  « La maison ». L'URL `/app/fidelite` est conservée pour les liens et installations
+  existantes. Aucun point ni avantage fictif n'est affiché.
+- **Vie privée** : Google Maps se charge seulement après un clic explicite.
+- **Hors connexion** : cache `dla-shell-v6`, actualisation des pages visitées et
+  exclusion des API, des réponses RSC et des services tiers.
+
+Les composants de réservation en ligne restent disponibles pour une activation
+ultérieure explicite (`site.reservationEnLigne = true` + configuration Resend).
+Ils partagent un calendrier en heure de Marseille, excluent les lundis et dates
+impossibles et se mettent à jour au retour sur l'onglet. L'accusé de réception client
+ne part qu'après acceptation du message au bar. Les formulaires sont vérifiés sans
+envoi réel par les tests ; aucune réservation de test ne doit être envoyée à un client.
+Les sections ci-dessous décrivent notamment cette capacité optionnelle.
+
 Site internet (vitrine + réservation) et web-app mobile (PWA : carte, réservation,
 fidélité) de **Derrière l'Abbaye**, bar à tapas & cocktails — 1 rue de l'Abbaye, 13007
 Marseille (quartier Saint-Victor).
@@ -72,7 +100,7 @@ La PWA (`/app`) va au-delà de la simple coque hors-ligne :
   « Installer l'app » (rejet mémorisé). Le `manifest.webmanifest` déclare des
   **raccourcis** (Carte, Réserver, Fidélité) pour l'appui long sur l'icône.
 - **Hors-ligne** — `OfflineBanner` signale la perte de réseau ; le `sw.js`
-  (cache `dla-shell-v3`) pré-cache la coque et les sous-pages de l'app.
+  (cache `dla-shell-v6`) pré-cache la coque et les sous-pages de l'app.
 - **Mises à jour** — `PwaRegister` détecte un nouveau service worker et affiche
   un `UpdateToast` (« Recharger » → `SKIP_WAITING`).
 - **Finitions** — partage natif (`ShareButton`, Web Share API + repli copie),
@@ -164,24 +192,13 @@ Le projet Vercel `derrierelabbaye` est connecté à ce dépôt GitHub et déploi
 Tout push sur une autre branche génère un **déploiement preview** dédié.
 `vercel.json` épingle le framework (`nextjs`).
 
-## ⚑ À compléter (placeholders)
+## Contenus variables
 
-Ces informations ne figuraient pas dans les sources fournies et sont posées en
-**valeurs provisoires** — à renseigner dans [`data/site.ts`](data/site.ts) et
-[`data/menu.ts`](data/menu.ts) :
-
-- **Horaires** d'ouverture réels (`site.horaires` + `site.horairesSchema`).
-- **Mentions légales** : `site.legales.raisonSociale`, `formeJuridique`, `siret`,
-  `directeurPublication` — affichés tels quels sur `/mentions-legales`, où ils
-  apparaissent encore comme « À CONFIRMER » aux visiteurs. _(L'hébergeur, lui, est
-  renseigné : Vercel.)_
-- **Réseaux sociaux** (`site.reseaux` — liens Instagram / Facebook).
-- **Sélection de vins** (blancs / rouges / rosés) — laissée « à compléter » sur la carte
-  imprimée (`vins` dans `data/menu.ts`).
-- **Cocktails créations** — liste laissée vide sur la carte (`cocktailsCreations`).
-- Éventuellement, les **coordonnées GPS** exactes (`site.adresse.geo`) pour le SEO local.
-- **Créneaux de réservation** (`CRENEAUX_RESERVATION` dans `lib/creneaux.ts`) : 18h–22h30
-  toutes les 30 min, à confirmer par l'établissement.
+La carte et ses prix restent ceux des cartes imprimées fournies. La sélection
+de vins et les créations du moment se découvrent sur place ; aucune référence
+n'est inventée. Les événements ne s'affichent que lorsqu'ils sont renseignés dans
+`data/evenements.ts`. Les créneaux 18h00–22h30 ne concernent que le formulaire
+optionnel désactivé et devront être validés avant sa réactivation.
 
 ## Notes de marque (rappels)
 

@@ -1,0 +1,21 @@
+.control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  background: rgba(20, 17, 13, 0.92);
+  border: 1px solid var(--cream-40);
+  border-radius: var(--r-pill);
+  font: 0.64rem var(--font-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cream-90);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.control:hover {
+  color: var(--gold-light);
+  border-color: var(--gold-light);
+}

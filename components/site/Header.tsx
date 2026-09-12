@@ -104,7 +104,7 @@ export function Header() {
     >
       <div className={`u-container ${styles.bar}`}>
         <Link href="/" className={styles.brand} aria-label="Derrière l'Abbaye — accueil">
-          <Logo tone="cream" width={148} />
+          <Logo tone="cream" width={148} priority />
         </Link>
 
         <nav className={styles.nav} aria-label="Navigation principale">

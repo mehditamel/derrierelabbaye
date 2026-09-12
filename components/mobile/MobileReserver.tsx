@@ -16,9 +16,12 @@ import {
   CRENEAUX_RESERVATION,
   creneauPasse,
   dateLongueFr,
-  isoLocal,
-  premierCreneauDisponible,
+  isoAParis,
+  ajouterJours,
+  jourReservable,
 } from "@/lib/creneaux";
+import { useCalendrierReservation } from "@/lib/useCalendrierReservation";
+import { site } from "@/data/site";
 import styles from "./MobileReserver.module.css";
 
 type Contact = { nom: string; tel: string; email: string };
@@ -35,16 +38,16 @@ function estContact(v: unknown): v is Contact {
 
 const heures = CRENEAUX_RESERVATION;
 
-function prochainsJours(n: number) {
+function prochainsJours(n: number, debut: string) {
   const jours = [];
   const fmtJour = new Intl.DateTimeFormat("fr-FR", { weekday: "short" });
   const fmtNum = new Intl.DateTimeFormat("fr-FR", { day: "2-digit" });
   const fmtMois = new Intl.DateTimeFormat("fr-FR", { month: "short" });
   for (let i = 0; i < n; i++) {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
+    const iso = ajouterJours(debut, i);
+    const d = new Date(`${iso}T12:00:00`);
     jours.push({
-      iso: isoLocal(d),
+      iso,
       jour: fmtJour.format(d).replace(".", ""),
       num: fmtNum.format(d),
       mois: fmtMois.format(d).replace(".", ""),
@@ -54,32 +57,11 @@ function prochainsJours(n: number) {
 }
 
 export function MobileReserver() {
-  const jours = useMemo(() => prochainsJours(14), []);
-  const [date, setDate] = useState(jours[0].iso);
-  const [maintenant, setMaintenant] = useState<Date | null>(null);
-  const [heure, setHeure] = useState("20:00");
+  const { date, setDate, maintenant, heure, setHeure, disponible } = useCalendrierReservation();
+  const debut = maintenant ? isoAParis(maintenant) : "";
+  const jours = useMemo(() => (debut ? prochainsJours(14, debut) : []), [debut]);
   const [couverts, setCouverts] = useState(2);
 
-  // Posé au montage pour que le HTML pré-rendu reste neutre (pas de créneau
-  // grisé selon l'horloge du serveur) — l'état réel arrive côté client.
-  useEffect(() => {
-    // volontaire : l'heure courante n'existe pas au rendu serveur (cf. commentaire
-    // ci-dessus).
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMaintenant(new Date());
-  }, []);
-
-  // Avance au premier créneau ouvert si l'heure choisie est passée.
-  useEffect(() => {
-    if (!maintenant) return;
-    if (creneauPasse(date, heure, maintenant)) {
-      const libre = premierCreneauDisponible(date, heures, maintenant);
-      // Correction d'un état devenu invalide avec le temps qui passe : elle dépend
-      // de l'horloge, donc impossible à dériver pendant le rendu.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (libre) setHeure(libre);
-    }
-  }, [maintenant, date, heure]);
   const { value: contact, set: setContact } = useLocalStorage<Contact>(
     "dla-reservation-contact",
     { nom: "", tel: "", email: "" },
@@ -104,7 +86,6 @@ export function MobileReserver() {
     reference
   );
 
-  const soireePassee = Boolean(maintenant && !premierCreneauDisponible(date, heures, maintenant));
   /* Sans téléphone ni e-mail, la demande arriverait au bar sans personne à
      joindre : le bouton attend l'un des deux, comme il attend déjà le nom. */
   const joignable = contactJoignable(contact.tel, contact.email);
@@ -117,6 +98,7 @@ export function MobileReserver() {
   }, [status]);
 
   function valider() {
+    if (!disponible || status === "loading") return;
     if (!telephoneValide(contact.tel)) {
       setTelErreur("Ce numéro semble incomplet — format 06 12 34 56 78.");
       return;
@@ -144,14 +126,15 @@ export function MobileReserver() {
           <Check size={28} strokeWidth={1.5} />
         </span>
         <h1 ref={successRef} tabIndex={-1} className="app-h" style={{ fontSize: "2rem" }}>
-          C'est noté !
+          Demande envoyée
         </h1>
         <p className={styles.successText}>
           Votre demande pour <strong>{couverts}</strong> couvert
           {couverts > 1 ? "s" : ""} le <strong>{dateLongueFr(date)}</strong> à{" "}
           <strong>{heure}</strong> est enregistrée.
           <br />
-          Référence <strong>{reference}</strong>.
+          Référence <strong>{reference}</strong>. Votre table sera réservée après confirmation du
+          bar.
         </p>
         <div className={styles.successActions}>
           <button
@@ -202,13 +185,15 @@ export function MobileReserver() {
         <p className={styles.sub}>Choisissez votre créneau</p>
       </div>
 
-      <div className="app-pad">
+      <fieldset className={`app-pad ${styles.groupe}`} disabled={status === "loading"}>
         <fieldset className={styles.groupe}>
           <legend className="app-section-label">Date</legend>
           <div className={styles.dates}>
             {jours.map((j) => (
               <button
                 key={j.iso}
+                disabled={!jourReservable(j.iso)}
+                aria-label={`${dateLongueFr(j.iso)}${!jourReservable(j.iso) ? " — fermé" : ""}`}
                 className={`${styles.dateChip} ${date === j.iso ? styles.dateActive : ""}`}
                 onClick={() => setDate(j.iso)}
                 aria-pressed={date === j.iso}
@@ -255,7 +240,10 @@ export function MobileReserver() {
           <legend className="app-section-label">Heure</legend>
           <div className={styles.heures}>
             {heures.map((h) => {
-              const passe = Boolean(maintenant && creneauPasse(date, h, maintenant));
+              const passe =
+                !date ||
+                !jourReservable(date) ||
+                Boolean(maintenant && creneauPasse(date, h, maintenant));
               return (
                 <button
                   key={h}
@@ -271,7 +259,7 @@ export function MobileReserver() {
               );
             })}
           </div>
-          {soireePassee && (
+          {date && !disponible && (
             <p className={styles.aide}>Plus de créneaux ce soir — choisissez un autre jour.</p>
           )}
         </fieldset>
@@ -294,6 +282,7 @@ export function MobileReserver() {
             }
             aria-invalid={nomErreur ? true : undefined}
             aria-describedby={nomErreur ? "m-nom-err" : undefined}
+            maxLength={80}
             autoComplete="name"
           />
         </label>
@@ -323,6 +312,7 @@ export function MobileReserver() {
             aria-describedby={telErreur ? "m-tel-err" : undefined}
             type="tel"
             inputMode="tel"
+            maxLength={30}
             autoComplete="tel"
           />
         </label>
@@ -342,6 +332,7 @@ export function MobileReserver() {
               setEmailErreur("");
             }}
             type="email"
+            maxLength={120}
             autoComplete="email"
             inputMode="email"
             aria-invalid={emailErreur ? true : undefined}
@@ -375,7 +366,9 @@ export function MobileReserver() {
         {status === "error" && (
           <p className={styles.error} role="alert">
             <AlertCircle size={18} strokeWidth={1.5} aria-hidden="true" />
-            <span>{erreur}</span>
+            <span>
+              {erreur} <a href={`tel:${site.telephone.replace(/\s/g, "")}`}>Appeler le bar</a>
+            </span>
           </p>
         )}
 
@@ -383,14 +376,17 @@ export function MobileReserver() {
         <p className="u-visually-hidden" role="status" aria-live="polite">
           {statusLabel}
         </p>
-      </div>
+      </fieldset>
 
       <div className={styles.sticky}>
+        <p className={styles.ctaHint}>
+          Demande sous réserve de confirmation. <a href="/confidentialite">Vos données</a>
+        </p>
         <button
           className={styles.cta}
           onClick={valider}
           disabled={
-            status === "loading" || !contact.nom.trim() || !joignable || !online || soireePassee
+            status === "loading" || !contact.nom.trim() || !joignable || !online || !disponible
           }
           aria-busy={status === "loading"}
         >

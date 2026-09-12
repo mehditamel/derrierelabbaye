@@ -1,158 +1,321 @@
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: max(780px, 100svh);
   display: flex;
   align-items: center;
-  justify-content: center;
   overflow: hidden;
   background: var(--noir);
+  color: var(--cream);
 }
-
 .photoWrap {
   position: absolute;
-  top: -10%;
-  left: 0;
-  right: 0;
-  height: 120%;
-  z-index: 0;
-  will-change: transform;
+  inset: -6% -3% -6% 22%;
 }
-
 .photo {
   object-fit: cover;
-  object-position: center;
-  transform: scale(1.02);
+  object-position: 56% center;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .photo {
-    /* Jouée une seule fois : en `infinite alternate`, la couche GPU plein
-       écran de l'image LCP se re-rastérisait sans fin, y compris longtemps
-       après que le visiteur a fini de lire. */
-    animation: kenburns 24s var(--ease-soft) both;
-  }
-}
-
 .scrim {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(20, 17, 13, 0.62) 0%,
-    rgba(20, 17, 13, 0.4) 38%,
-    rgba(20, 17, 13, 0.72) 100%
-  );
+  background:
+    linear-gradient(
+      90deg,
+      #14110d 3%,
+      rgba(20, 17, 13, 0.9) 22%,
+      rgba(20, 17, 13, 0.42) 65%,
+      rgba(20, 17, 13, 0.2)
+    ),
+    linear-gradient(0deg, #14110d 0%, transparent 24%, transparent 77%, rgba(20, 17, 13, 0.5));
 }
-
-.frame {
+.halo {
   position: absolute;
-  inset: var(--frame-inset);
-  z-index: 2;
-  border: 1px solid var(--cream-40);
+  width: 58vw;
+  height: 58vw;
+  left: -32%;
+  top: 5%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(151, 72, 32, 0.3), transparent 68%);
   pointer-events: none;
 }
-
+.frame {
+  position: absolute;
+  inset: 96px 24px 92px;
+  border: 1px solid rgba(208, 180, 120, 0.16);
+  pointer-events: none;
+}
 .inner {
   position: relative;
-  z-index: 3;
-  text-align: center;
-  padding: var(--space-7) var(--space-4);
+  z-index: 2;
+  padding-top: 128px;
+  padding-bottom: 176px;
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 26px;
+}
+.eyebrow span {
+  width: 26px;
+  height: 1px;
+  background: currentColor;
+}
+.title {
+  font-size: clamp(5.2rem, 9.6vw, 9rem);
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+  font-weight: 400;
+  max-width: 850px;
+}
+.title em {
+  color: var(--gold-light);
+  font-weight: 300;
+}
+.description {
+  font-size: clamp(1.2rem, 1.7vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--cream-90);
+  margin: 32px 0 28px;
+  max-width: 38ch;
+}
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.hours {
+  position: absolute;
+  z-index: 2;
+  right: max(56px, calc((100vw - 1132px) / 2));
+  bottom: 155px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
+  text-align: right;
 }
-
-/* Entrée échelonnée des éléments du hero */
+.hours span {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--cream-90);
+}
+.hours strong {
+  font-family: var(--font-serif);
+  font-size: clamp(2.7rem, 4.5vw, 4.6rem);
+  font-weight: 300;
+  line-height: 1.25;
+}
+.hours i {
+  font-size: 0.7em;
+  font-style: normal;
+  color: var(--gold-light);
+}
+.bottom {
+  position: absolute;
+  z-index: 3;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.discover,
+.address {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--cream-90);
+  min-height: 44px;
+}
+.discover svg {
+  color: var(--gold-light);
+}
+.ribbon {
+  overflow: hidden;
+  background: var(--gold-light);
+  color: var(--noir);
+  border-block: 1px solid var(--gold);
+  padding: 18px 0;
+}
+.track {
+  display: flex;
+  width: max-content;
+}
+.track > span {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  letter-spacing: 0.19em;
+  gap: 36px;
+  padding-right: 36px;
+}
+.track i {
+  font-style: normal;
+  font-size: 1.1rem;
+}
 @media (prefers-reduced-motion: no-preference) {
+  .photo {
+    animation: nightPhoto 22s var(--ease-soft) both;
+  }
+  .halo {
+    animation: ambient 9s ease-in-out infinite alternate;
+  }
   .inner > * {
-    animation: heroItem 1000ms var(--ease-out) both;
+    animation: arrival 1s var(--ease-out) both;
   }
-  .logo {
-    animation-delay: 80ms;
+  .title {
+    animation-delay: 100ms;
   }
-  .accroche {
-    animation-delay: 260ms;
-  }
-  .address {
-    animation-delay: 440ms;
+  .description {
+    animation-delay: 240ms;
   }
   .cta {
-    animation-delay: 600ms;
+    animation-delay: 360ms;
+  }
+  .hours {
+    animation: arrival 1.2s 500ms var(--ease-out) both;
+  }
+  .track {
+    animation: ribbon 35s linear infinite;
+  }
+  .ribbon:hover .track {
+    animation-play-state: paused;
+  }
+  .discover svg {
+    animation: bobDown 2s ease-in-out infinite;
   }
 }
-
-@keyframes heroItem {
+@keyframes arrival {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(28px);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
-
-/* Indicateur de défilement */
-.scrollHint {
-  position: absolute;
-  bottom: var(--space-5);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  width: 26px;
-  height: 42px;
-  border: 1px solid var(--cream-40);
-  border-radius: var(--r-pill);
-  display: flex;
-  justify-content: center;
-  padding-top: 8px;
-}
-
-.scrollHint span {
-  width: 3px;
-  height: 8px;
-  border-radius: var(--r-pill);
-  background: var(--cream-70);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .scrollHint span {
-    animation: bobDown 1.8s var(--ease-soft) infinite;
+@keyframes nightPhoto {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
   }
 }
-
-.logo {
-  width: min(360px, 78vw);
-  height: auto;
-  filter: drop-shadow(0 2px 24px rgba(0, 0, 0, 0.4));
+@keyframes ambient {
+  to {
+    opacity: 0.4;
+    transform: translate3d(12%, 12%, 0);
+  }
 }
-
-.accroche {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: var(--w-thin);
-  font-size: clamp(1.15rem, 2.6vw, 1.6rem);
-  color: var(--cream-90);
-  max-width: 44ch;
-  margin: 0;
-  line-height: 1.4;
+@keyframes ribbon {
+  to {
+    transform: translateX(-50%);
+  }
 }
-
-.address {
-  font-family: var(--font-sans);
-  text-transform: uppercase;
-  letter-spacing: var(--track-label);
-  font-size: 0.72rem;
-  color: var(--cream-70);
-  margin: 0;
+@media (max-width: 1000px) {
+  .hours {
+    bottom: 116px;
+    right: 36px;
+  }
+  .hours strong {
+    font-size: 3rem;
+  }
+  .hours span:last-child {
+    display: none;
+  }
 }
-
-.cta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  justify-content: center;
-  margin-top: var(--space-2);
+@media (max-width: 700px) {
+  .hero {
+    min-height: max(820px, 100svh);
+    align-items: flex-start;
+  }
+  .photoWrap {
+    inset: 0 -25% 0 -25%;
+  }
+  .photo {
+    object-position: 61% center;
+  }
+  .scrim {
+    background:
+      linear-gradient(90deg, rgba(20, 17, 13, 0.8), rgba(20, 17, 13, 0.36)),
+      linear-gradient(0deg, #14110d 5%, transparent 54%, rgba(20, 17, 13, 0.3));
+  }
+  .frame {
+    inset: 92px 12px 100px;
+  }
+  .inner {
+    padding-top: 154px;
+    padding-bottom: 210px;
+  }
+  .eyebrow {
+    font-size: 0.63rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 30px;
+  }
+  .title {
+    font-size: clamp(4.4rem, 14vw, 6.7rem);
+    line-height: 0.94;
+  }
+  .description {
+    font-size: 1.24rem;
+    margin-top: 28px;
+    max-width: 29ch;
+  }
+  .description br {
+    display: none;
+  }
+  .cta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hours {
+    left: 24px;
+    right: auto;
+    bottom: 117px;
+    text-align: left;
+  }
+  .hours strong {
+    font-size: 2.8rem;
+  }
+  .hours span {
+    font-size: 0.6rem;
+  }
+  .bottom {
+    bottom: 18px;
+    gap: 12px;
+  }
+  .address {
+    display: none;
+  }
+  .discover {
+    font-size: 0.59rem;
+    letter-spacing: 0.08em;
+  }
+  .ribbon {
+    padding-block: 14px;
+  }
+  .track > span {
+    font-size: 0.72rem;
+    gap: 24px;
+    padding-right: 24px;
+  }
 }

@@ -17,10 +17,10 @@ export default function HomePage() {
     <>
       <Hero />
       <Intro />
-      <LeQuartier />
       <EnCeMoment />
-      <CarteSection />
       <CocktailsSection />
+      <CarteSection />
+      <LeQuartier />
       <ReservationSection />
       <Faq />
       <NousTrouver />

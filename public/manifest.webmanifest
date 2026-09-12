@@ -1,7 +1,7 @@
 {
   "name": "Derrière l'Abbaye",
   "short_name": "Derrière l'Abbaye",
-  "description": "Apéro marseillais — bar à tapas & cocktails, derrière l'Abbaye Saint-Victor à Marseille. La carte, la réservation et la fidélité.",
+  "description": "Apéro marseillais — bar à tapas & cocktails, derrière l'Abbaye Saint-Victor à Marseille. La carte, la réservation par téléphone et les nouvelles de la maison.",
   "lang": "fr",
   "dir": "ltr",
   "id": "/app",
@@ -22,13 +22,13 @@
     {
       "name": "Réserver une table",
       "short_name": "Réserver",
-      "description": "Choisir un créneau",
+      "description": "Appeler pour réserver une table",
       "url": "/app/reserver"
     },
     {
-      "name": "Fidélité",
-      "short_name": "Fidélité",
-      "description": "Votre carte de membre",
+      "name": "La maison",
+      "short_name": "La maison",
+      "description": "Suivre les nouvelles du bar",
       "url": "/app/fidelite"
     }
   ],

@@ -54,17 +54,9 @@ describe("évenements", () => {
   });
 });
 
-/* Mentions légales — obligation LCEN art. 6-III.
-   Ces valeurs ne peuvent venir que de l'établissement. Tant qu'elles manquent,
-   /mentions-legales affiche littéralement « À CONFIRMER » aux visiteurs.
-
-   Volontairement un AVERTISSEMENT et non un échec : rendre la CI rouge en
-   permanence la rendrait illisible, ce que ce lot cherche justement à corriger.
-   ⚑ Le jour où les valeurs sont renseignées, remplacer le console.warn par :
-       expect(manquants).toEqual([]);
-   pour que toute régression future casse le build. */
+/* Les mentions confirmées par l’établissement ne doivent plus régresser. */
 describe("site — mentions légales", () => {
-  it("signale les mentions légales encore manquantes", () => {
+  it("ne laisse aucune mention légale provisoire", () => {
     const aVerifier = {
       raisonSociale: site.legales.raisonSociale,
       formeJuridique: site.legales.formeJuridique,
@@ -77,14 +69,6 @@ describe("site — mentions légales", () => {
       .filter(([, valeur]) => /À CONFIRMER/i.test(valeur))
       .map(([champ]) => champ);
 
-    if (manquants.length > 0) {
-      console.warn(
-        `⚑ Mentions légales incomplètes (LCEN art. 6-III) — publiées telles quelles sur ` +
-          `/mentions-legales : ${manquants.join(", ")}. À renseigner dans data/site.ts.`
-      );
-    }
-    // L'hébergeur, lui, est une donnée établie : sa régression doit casser.
-    expect(manquants).not.toContain("hebergeur.nom");
-    expect(manquants).not.toContain("hebergeur.adresse");
+    expect(manquants).toEqual([]);
   });
 });

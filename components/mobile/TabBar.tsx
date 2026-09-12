@@ -10,7 +10,7 @@ const tabs = [
   { href: "/app", label: "Accueil", icon: Home },
   { href: "/app/carte", label: "Carte", icon: UtensilsCrossed },
   { href: "/app/reserver", label: "Réserver", icon: CalendarHeart },
-  { href: "/app/fidelite", label: "Fidélité", icon: Star },
+  { href: "/app/fidelite", label: "La maison", icon: Star },
 ];
 
 export function TabBar() {

@@ -413,3 +413,23 @@ p {
   transform: translateY(0);
   color: var(--cream);
 }
+
+/* Le visiteur peut arrêter les mouvements décoratifs de toute la page. */
+html[data-motion="paused"] *,
+html[data-motion="paused"] *::before,
+html[data-motion="paused"] *::after {
+  animation: none !important;
+  transition-duration: 0s !important;
+}
+html[data-motion="paused"] .u-reveal {
+  opacity: 1;
+  transform: none;
+}
+html[data-motion="paused"] {
+  scroll-behavior: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

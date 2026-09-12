@@ -49,6 +49,7 @@ export async function createReservation(payload: ReservationPayload): Promise<Re
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(25_000),
     });
   } catch {
     // Réseau coupé, requête bloquée : rien n'est parti.
@@ -57,7 +58,12 @@ export async function createReservation(payload: ReservationPayload): Promise<Re
 
   const donnees = await reponse.json().catch(() => null);
 
-  if (!reponse.ok || !donnees?.ok) {
+  if (
+    !reponse.ok ||
+    donnees?.ok !== true ||
+    typeof donnees.reference !== "string" ||
+    !/^DLA-[A-Z0-9]{4}$/.test(donnees.reference)
+  ) {
     throw new Error(donnees?.erreur || ERREUR_GENERIQUE);
   }
   return { ok: true, reference: String(donnees.reference) };
