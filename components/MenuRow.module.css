@@ -27,6 +27,9 @@
     background: var(--wash-gold);
   }
   .row:hover .prix {
+    color: var(--gold-deep);
+  }
+  .onDark.row:hover .prix {
     color: var(--gold-light);
   }
   .row:hover::before {

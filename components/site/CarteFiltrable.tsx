@@ -82,8 +82,14 @@ export function CarteFiltrable() {
             Essayez « burrata », « poulpe » ou « planche » — ou demandez à l'équipe, on a toujours
             une idée.
           </p>
-          <Button variant="ghost" onClick={() => setRequete("")}>
-            Effacer la recherche
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setRequete("");
+              setActif("tout");
+            }}
+          >
+            Voir toute la carte
           </Button>
         </div>
       ) : (
@@ -95,7 +101,7 @@ export function CarteFiltrable() {
                 <h3 className={styles.blockTitle}>{section.titre}</h3>
                 <div>
                   {section.items.map((item) => (
-                    <MenuRow key={item.nom} item={item} />
+                    <MenuRow key={item.nom} item={item} headingLevel={4} />
                   ))}
                 </div>
               </div>

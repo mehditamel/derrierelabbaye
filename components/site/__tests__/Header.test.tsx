@@ -1,10 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 /* En test on n'a pas de routeur App Router monté : on neutralise
    usePathname et next/link (rendu en simple ancre). */
-vi.mock("next/navigation", () => ({ usePathname: () => "/" }));
+const route = vi.hoisted(() => ({ pathname: "/" }));
+vi.mock("next/navigation", () => ({ usePathname: () => route.pathname }));
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }: any) => (
     <a href={href} {...props}>
@@ -16,6 +17,40 @@ vi.mock("next/link", () => ({
 import { Header } from "@/components/site/Header";
 
 describe("Header — menu mobile", () => {
+  it("propose le téléphone en accès rapide, puis dans le menu ouvert", async () => {
+    const user = userEvent.setup();
+    render(<Header />);
+    const contact = screen.getByRole("navigation", { name: "Contact rapide" });
+    expect(within(contact).getByRole("link", { name: /06 44 76 91 74/ })).toHaveAttribute(
+      "href",
+      "tel:+33644769174"
+    );
+    await user.click(screen.getByRole("button", { name: /ouvrir le menu/i }));
+    expect(contact).toHaveAttribute("hidden");
+    expect(
+      within(screen.getByRole("dialog")).getByRole("link", { name: "06 44 76 91 74" })
+    ).toHaveAttribute("href", "tel:+33644769174");
+    await user.keyboard("{Escape}");
+    expect(contact).not.toHaveAttribute("hidden");
+  });
+
+  it("garde les raccourcis de carte dans la page courante", () => {
+    route.pathname = "/carte";
+    try {
+      render(<Header />);
+      const nav = screen.getByRole("navigation", { name: "Navigation principale" });
+      expect(within(nav).getByRole("link", { name: "La carte" })).toHaveAttribute(
+        "href",
+        "#la-carte"
+      );
+      expect(within(nav).getByRole("link", { name: "Cocktails" })).toHaveAttribute(
+        "href",
+        "#cocktails"
+      );
+    } finally {
+      route.pathname = "/";
+    }
+  });
   it("ouvre et ferme le drawer via le bouton burger", async () => {
     const user = userEvent.setup();
     render(<Header />);

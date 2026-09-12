@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone, Navigation } from "lucide-react";
+import { site } from "@/data/site";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/Button";
 import styles from "./Header.module.css";
@@ -17,6 +18,7 @@ const liens = [
 ];
 
 export function Header() {
+  const telephone = `tel:${site.telephone.replace(/\s/g, "")}`;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
@@ -25,6 +27,12 @@ export function Header() {
   // Le header transparent n'est lisible que sur le hero de l'accueil.
   // Ailleurs (fond ivoire), on le force en version pleine.
   const isHome = pathname === "/";
+  // Sur la carte, ces liens restent dans la page consultée.
+  const navigation = liens.map((l) =>
+    pathname === "/carte" && ["La carte", "Cocktails"].includes(l.label)
+      ? { ...l, href: l.href.slice(1) }
+      : l
+  );
 
   useEffect(() => {
     if (!isHome) return;
@@ -99,68 +107,98 @@ export function Header() {
   }, [pathname]);
 
   return (
-    <header
-      className={`${styles.header} ${solid ? styles.solid : ""} ${open ? styles.menuOpen : ""}`}
-    >
-      <div className={`u-container ${styles.bar}`}>
-        <Link href="/" className={styles.brand} aria-label="Derrière l'Abbaye — accueil">
-          <Logo tone="cream" width={148} priority />
-        </Link>
+    <>
+      <header
+        className={`${styles.header} ${solid ? styles.solid : ""} ${open ? styles.menuOpen : ""}`}
+      >
+        <div className={`u-container ${styles.bar}`}>
+          <Link href="/" className={styles.brand} aria-label="Derrière l'Abbaye — accueil">
+            <Logo tone="cream" width={148} priority />
+          </Link>
 
-        <nav className={styles.nav} aria-label="Navigation principale">
-          {liens.map((l) => (
-            <Link key={l.href} href={l.href} className={styles.link}>
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className={styles.actions}>
-          <Button href="/reserver" variant="primary">
-            Réserver
-          </Button>
-        </div>
-
-        <button
-          type="button"
-          ref={burgerRef}
-          className={styles.burger}
-          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
-          aria-expanded={open}
-          aria-controls="menu-mobile"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
-        </button>
-      </div>
-
-      {open && (
-        <div
-          id="menu-mobile"
-          ref={drawerRef}
-          className={styles.drawer}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu"
-        >
-          <nav className={styles.drawerNav} aria-label="Navigation mobile">
-            {liens.map((l, i) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={styles.drawerLink}
-                style={{ animationDelay: `${i * 70}ms` }}
-                onClick={() => setOpen(false)}
-              >
+          <nav className={styles.nav} aria-label="Navigation principale">
+            {navigation.map((l) => (
+              <Link key={l.href} href={l.href} className={styles.link}>
                 {l.label}
               </Link>
             ))}
           </nav>
-          <Button href="/reserver" variant="primary">
-            Réserver une table
-          </Button>
+
+          <div className={styles.actions}>
+            <a href={telephone} className={styles.phone}>
+              <Phone size={18} aria-hidden="true" />
+              <span>
+                Réserver par téléphone<strong>{site.telephoneAffichage}</strong>
+              </span>
+            </a>
+          </div>
+
+          <button
+            type="button"
+            ref={burgerRef}
+            className={styles.burger}
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={open}
+            aria-controls="menu-mobile"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
+          </button>
         </div>
-      )}
-    </header>
+
+        {open && (
+          <div
+            id="menu-mobile"
+            ref={drawerRef}
+            className={styles.drawer}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+          >
+            <nav className={styles.drawerNav} aria-label="Navigation mobile">
+              {navigation.map((l, i) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={styles.drawerLink}
+                  style={{ animationDelay: `${i * 70}ms` }}
+                  onClick={() => setOpen(false)}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+            <Button href="/reserver" variant="primary">
+              Réserver une table
+            </Button>
+            <a href={telephone} className={styles.drawerPhone}>
+              <Phone size={20} aria-hidden="true" />
+              {site.telephoneAffichage}
+            </a>
+            <p className={styles.drawerHours}>
+              Du mardi au dimanche · 18h–02h
+              <br />1 rue de l&apos;Abbaye · Marseille 7e
+            </p>
+          </div>
+        )}
+      </header>
+      <nav className={styles.contactDock} aria-label="Contact rapide" hidden={open}>
+        <a href={telephone} className={styles.dockCall}>
+          <Phone size={20} aria-hidden="true" />
+          <span>
+            Appeler pour réserver<strong>{site.telephoneAffichage}</strong>
+          </span>
+        </a>
+        <a
+          href={site.adresse.directionsUrl}
+          className={styles.dockDirections}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Navigation size={20} aria-hidden="true" />
+          <span>Venir</span>
+        </a>
+      </nav>
+    </>
   );
 }

@@ -67,7 +67,7 @@ export const site = {
     siretSiege: "105 044 291 00018",
     rcs: "105 044 291 R.C.S. Marseille",
     tva: "FR61105044291",
-    directeurPublication: "M. TAMELGHAGHET Mehdi",
+    directeurPublication: "Yasmine EL MOUSSAIDI",
     hebergeur: {
       nom: "Vercel Inc.",
       adresse: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",

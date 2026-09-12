@@ -7,6 +7,17 @@ import { CarteSection } from "@/components/site/CarteSection";
    recherche sur l'UI (les fonctions pures sont couvertes par recherche.test). */
 
 describe("CarteSection", () => {
+  it("réinitialise aussi la catégorie après une recherche sans résultat", async () => {
+    const user = userEvent.setup();
+    render(<CarteSection />);
+    await user.click(screen.getByRole("button", { name: "Chaud" }));
+    await user.type(screen.getByRole("searchbox"), "houmous");
+    expect(screen.queryByRole("heading", { name: /houmous maison/i })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Voir toute la carte" }));
+    expect(screen.getByRole("searchbox")).toHaveValue("");
+    expect(screen.getByRole("heading", { name: /houmous maison/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /croque-monsieur/i })).toBeInTheDocument();
+  });
   it("affiche le titre de la carte", () => {
     render(<CarteSection />);
     expect(screen.getByRole("heading", { level: 2, name: /à partager/i })).toBeInTheDocument();

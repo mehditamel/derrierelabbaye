@@ -47,7 +47,7 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: var(--space-5);
+  gap: 22px;
   margin-left: auto;
 }
 
@@ -82,6 +82,73 @@
 .actions {
   flex-shrink: 0;
 }
+.phone {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: var(--noir);
+  background: var(--gold-light);
+  border: 1px solid var(--gold-light);
+  border-radius: var(--r-pill);
+  transition:
+    background var(--dur),
+    box-shadow var(--dur);
+}
+.phone span {
+  font: 0.56rem var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  line-height: 1.4;
+}
+.phone strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.035em;
+  white-space: nowrap;
+}
+.phone:hover {
+  background: var(--cream);
+  color: var(--noir);
+  box-shadow: var(--shadow-glow-soft);
+}
+.contactDock {
+  display: none;
+}
+.drawerPhone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--gold-light);
+  font: 1.65rem var(--font-sans);
+  letter-spacing: 0.035em;
+  padding: 12px 0;
+}
+.drawerHours {
+  margin: 0;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--cream-70);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .phone:hover svg,
+  .dockCall:hover svg {
+    animation: callRing 650ms ease-in-out;
+  }
+}
+@keyframes callRing {
+  20%,
+  60% {
+    transform: rotate(-12deg);
+  }
+  40%,
+  80% {
+    transform: rotate(12deg);
+  }
+}
 
 .burger {
   display: none;
@@ -98,7 +165,7 @@
   display: none;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 1080px) {
   .nav,
   .actions {
     display: none;
@@ -116,7 +183,8 @@
     gap: var(--space-4);
     padding: var(--space-5) var(--space-4) var(--space-7);
     background: var(--noir);
-    min-height: calc(100dvh - 76px);
+    height: calc(100dvh - 76px);
+    overflow-y: auto;
   }
   .drawerNav {
     display: flex;
@@ -134,10 +202,69 @@
   .drawerLink:active {
     color: var(--gold-light);
   }
+  .contactDock:not([hidden]) {
+    position: fixed;
+    z-index: 45;
+    inset: auto 0 0;
+    display: grid;
+    grid-template-columns: 1fr 68px;
+    gap: 12px;
+    padding: 10px max(16px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom))
+      max(16px, env(safe-area-inset-left));
+    border-top: 1px solid var(--hairline-gold);
+    background: rgba(20, 17, 13, 0.96);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.16);
+  }
+  .dockCall {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 52px;
+    padding: 6px 14px;
+    border-radius: var(--r-pill);
+    color: var(--noir);
+    background: var(--gold-light);
+  }
+  .dockCall:hover {
+    color: var(--noir);
+    background: var(--cream);
+  }
+  .dockCall span {
+    font: 0.55rem var(--font-sans);
+    line-height: 1.45;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .dockCall strong {
+    display: block;
+    font-size: 1.08rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+  }
+  .dockDirections {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--cream);
+    font: 0.6rem var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--cream-40);
+    border-radius: var(--r-pill);
+  }
+  .dockDirections:hover {
+    color: var(--gold-light);
+    border-color: var(--gold-light);
+  }
 }
 
 /* Entrée en cascade des liens du drawer mobile */
-@media (max-width: 860px) and (prefers-reduced-motion: no-preference) {
+@media (max-width: 1080px) and (prefers-reduced-motion: no-preference) {
   .drawerLink {
     animation: drawerIn 480ms var(--ease-out) both;
   }

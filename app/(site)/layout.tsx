@@ -7,14 +7,16 @@ import { MotionProvider } from "@/components/site/MotionControl";
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <MotionProvider>
-      <a href="#contenu" className="u-skip-link">
-        Aller au contenu
-      </a>
-      <JsonLd />
-      <ScrollProgress />
-      <Header />
-      <main id="contenu">{children}</main>
-      <Footer />
+      <div className="site-shell">
+        <a href="#contenu" className="u-skip-link">
+          Aller au contenu
+        </a>
+        <JsonLd />
+        <ScrollProgress />
+        <Header />
+        <main id="contenu">{children}</main>
+        <Footer />
+      </div>
     </MotionProvider>
   );
 }
