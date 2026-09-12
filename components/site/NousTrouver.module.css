@@ -31,13 +31,14 @@
 /* Grille carte + infos */
 .grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   gap: var(--space-6);
   align-items: stretch;
 }
 
 /* Carte — coins arrondis, cadre laiton, ratio responsive */
 .mapWrap {
+  min-width: 0;
   border: 1px solid var(--hairline-gold);
   border-radius: var(--r-card);
   overflow: hidden;
@@ -69,6 +70,15 @@
 .mapPlaceholder h3 {
   font-size: 1.8rem;
 }
+.mapPlaceholder button,
+.ctaRow a {
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.4;
+}
+.ctaRow svg {
+  flex-shrink: 0;
+}
 .mapNotice {
   max-width: 34ch;
   font-size: 0.85rem;
@@ -77,6 +87,7 @@
 
 /* Colonne infos + actions */
 .info {
+  min-width: 0;
   background: var(--cream);
   border: 1px solid var(--hairline-gold);
   border-radius: var(--r-card);
@@ -220,7 +231,7 @@
 
 @media (max-width: 860px) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
   }
   .map {
