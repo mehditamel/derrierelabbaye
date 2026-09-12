@@ -63,7 +63,7 @@ export function Footer() {
                 <h3 className={styles.colTitle}>
                   <Phone size={15} strokeWidth={1.5} /> Contact
                 </h3>
-                <a className={styles.line} href={`tel:${site.telephone.replace(/\s/g, "")}`}>
+                <a className={styles.phone} href={`tel:${site.telephone.replace(/\s/g, "")}`}>
                   {site.telephoneAffichage}
                 </a>
                 <a className={styles.line} href={`mailto:${site.email}`}>

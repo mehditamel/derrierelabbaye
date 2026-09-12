@@ -136,6 +136,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Réserve la place de la barre de contact fixe sur le site mobile. */
+@media (max-width: 1080px) {
+  .site-shell {
+    padding-bottom: calc(74px + env(safe-area-inset-bottom));
+  }
+  html:has(.site-shell) {
+    scroll-padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  }
+}
+
 ::selection {
   background: var(--ambre);
   color: var(--noir);

@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Phone } from "lucide-react";
 import { Button } from "@/components/Button";
 import { HeroBackdrop } from "./HeroBackdrop";
 import { MotionControl } from "./MotionControl";
@@ -28,13 +28,16 @@ export function Hero() {
           </h1>
           <p className={styles.description}>
             Des cocktails, des tapas, et la soirée devant vous.
-            <br />
-            Juste derrière l&apos;Abbaye. Au cœur de Marseille.
+            <br /> Juste derrière l&apos;Abbaye. Au cœur de Marseille.
           </p>
           <div className={styles.cta}>
-            <Button href="/reserver">
-              Réserver une table <ArrowUpRight size={17} aria-hidden="true" />
-            </Button>
+            <a href={`tel:${site.telephone.replace(/\s/g, "")}`} className={styles.heroCall}>
+              <Phone size={21} aria-hidden="true" />
+              <span>
+                Réserver une table<strong>{site.telephoneAffichage}</strong>
+              </span>
+              <ArrowUpRight size={18} aria-hidden="true" />
+            </a>
             <Button href="/#la-carte" variant="ghost-dark">
               Explorer la carte
             </Button>
