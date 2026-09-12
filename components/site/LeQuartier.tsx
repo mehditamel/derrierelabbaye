@@ -3,7 +3,8 @@ import { ArrowUpRight } from "lucide-react";
 import { SectionLabel } from "@/components/SectionLabel";
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/Button";
-import enseigne from "@/public/enseigne.jpeg";
+import { photosAbbaye } from "@/data/photosAbbaye";
+import { CreditPhotoAbbaye } from "./AbbayePhoto";
 import styles from "./LeQuartier.module.css";
 
 export function LeQuartier() {
@@ -14,8 +15,8 @@ export function LeQuartier() {
           <div className={styles.visual}>
             <div className={styles.photo}>
               <Image
-                src={enseigne}
-                alt="L'enseigne en acier corten de Derrière l'Abbaye, au 1 rue de l'Abbaye"
+                src={photosAbbaye.nuit.image}
+                alt={photosAbbaye.nuit.alt}
                 fill
                 sizes="(max-width: 760px) 100vw, 50vw"
                 placeholder="blur"
@@ -25,10 +26,13 @@ export function LeQuartier() {
               07
             </span>
             <div className={styles.caption}>
-              <span>Une adresse à garder</span>
-              <strong>1, rue de l&apos;Abbaye</strong>
+              <span>Notre voisine</span>
+              <strong>L&apos;Abbaye Saint-Victor</strong>
             </div>
           </div>
+          <p className={styles.photoCredit}>
+            <CreditPhotoAbbaye photo="nuit" onDark />
+          </p>
         </Reveal>
         <Reveal delay={100}>
           <div className={styles.copy}>

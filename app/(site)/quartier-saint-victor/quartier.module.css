@@ -8,7 +8,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 800px;
+  margin-inline: auto;
 }
 
 .title {
