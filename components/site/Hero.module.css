@@ -84,6 +84,61 @@
   margin: 32px 0 28px;
   max-width: 38ch;
 }
+.titleLine {
+  display: block;
+  overflow: hidden;
+  padding: 0.08em 0.05em 0.12em;
+  margin: -0.08em -0.05em -0.12em;
+}
+.titleLine > * {
+  display: block;
+}
+.lightBeam {
+  position: absolute;
+  inset: -35% -20% -20% 30%;
+  pointer-events: none;
+  background: conic-gradient(
+    from 178deg at 65% 0%,
+    transparent 0deg,
+    rgba(233, 200, 146, 0.1) 12deg,
+    transparent 30deg
+  );
+  transform-origin: 65% 0%;
+}
+.seal {
+  position: absolute;
+  top: 140px;
+  right: max(64px, calc((100vw - 1132px) / 2));
+  width: 148px;
+  height: 148px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-light);
+  z-index: 2;
+}
+.seal::before,
+.seal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px dashed rgba(208, 180, 120, 0.65);
+  border-radius: 50%;
+}
+.seal::after {
+  inset: 8px;
+  border-style: solid;
+  border-color: rgba(208, 180, 120, 0.25);
+}
+.seal span {
+  font: 0.53rem var(--font-sans);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.seal strong {
+  font: italic 3.5rem/1.15 var(--font-serif);
+}
 .cta {
   display: flex;
   flex-wrap: wrap;
@@ -224,6 +279,18 @@
   .title {
     animation-delay: 100ms;
   }
+  .titleLine > * {
+    animation: titleUnfold 1.3s 100ms var(--ease-out) both;
+  }
+  .titleLine:last-child > * {
+    animation-delay: 240ms;
+  }
+  .seal::before {
+    animation: sealTurn 70s linear infinite;
+  }
+  .lightBeam {
+    animation: lightDrift 12s ease-in-out infinite alternate;
+  }
   .description {
     animation-delay: 240ms;
   }
@@ -253,6 +320,25 @@
     transform: none;
   }
 }
+@keyframes titleUnfold {
+  from {
+    transform: translateY(110%) rotate(3deg);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes sealTurn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes lightDrift {
+  to {
+    transform: rotate(-14deg);
+    opacity: 0.45;
+  }
+}
 @keyframes nightPhoto {
   from {
     transform: scale(1.08);
@@ -273,6 +359,9 @@
   }
 }
 @media (max-width: 1000px) {
+  .seal {
+    display: none;
+  }
   .hours {
     bottom: 116px;
     right: 36px;

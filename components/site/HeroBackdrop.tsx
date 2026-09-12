@@ -47,7 +47,7 @@ export function HeroBackdrop({ src, alt }: Props) {
         src={src}
         alt={alt}
         placeholder="blur"
-        priority
+        preload
         fill
         sizes="100vw"
         className={styles.photo}

@@ -1,139 +1,183 @@
 .section {
-  padding: 104px 0;
   background: var(--noir);
   color: var(--cream);
-  overflow: hidden;
 }
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 88px;
-  align-items: center;
-}
-.visual {
+.scene {
   position: relative;
-  padding: 28px 0 0 28px;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 780px;
+  display: flex;
 }
-.visual::before {
-  content: "";
+.photo,
+.scrim {
   position: absolute;
-  inset: 0 28px 28px 0;
-  border: 1px solid var(--hairline-gold);
-}
-.photo {
-  aspect-ratio: 4/5;
-  position: relative;
-  overflow: hidden;
-  background: #32221a;
+  inset: 0;
+  z-index: -2;
 }
 .photo img {
   object-fit: cover;
-  object-position: 62% 30%;
-  transition: transform 1.2s var(--ease-soft);
+  object-position: 60% 10%;
 }
-.photoCredit {
-  margin: 16px 0 0 28px;
+.scrim {
+  z-index: -1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(20, 17, 13, 0.86),
+      rgba(20, 17, 13, 0.56) 40%,
+      rgba(20, 17, 13, 0.12) 56%,
+      rgba(20, 17, 13, 0.94)
+    ),
+    linear-gradient(90deg, rgba(20, 17, 13, 0.35), transparent 80%);
 }
-.photo::after {
-  content: "";
+.frame {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(20, 17, 13, 0.85), transparent 65%);
+  inset: 28px;
+  border: 1px solid rgba(208, 180, 120, 0.3);
+  pointer-events: none;
 }
-.arrondissement {
-  position: absolute;
-  right: -32px;
-  top: -20px;
-  font: 7rem var(--font-serif);
-  line-height: 1;
-  color: var(--gold-light);
-  font-style: italic;
-}
-.caption {
-  position: absolute;
-  left: 56px;
-  right: 20px;
-  bottom: 28px;
+.layout {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 200px;
+  padding-block: 86px 66px;
 }
-.caption span {
-  font: 0.6rem var(--font-sans);
-  letter-spacing: 0.19em;
-  text-transform: uppercase;
-  color: var(--gold-light);
-}
-.caption strong {
-  font: 2rem var(--font-serif);
-}
-.copy {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
+.head {
+  max-width: 920px;
 }
 .title {
-  font-size: clamp(2.8rem, 4.4vw, 4.4rem);
-  line-height: 1;
-  letter-spacing: -0.045em;
-  margin: 8px 0 12px;
+  font-size: clamp(3.6rem, 6.7vw, 6.7rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  margin-top: 28px;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.25);
 }
 .title em {
-  font-weight: 300;
   color: var(--gold-light);
+  font-weight: 300;
+}
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 80px;
+}
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.arrondissement {
+  font: italic 7rem/1 var(--font-serif);
+  color: var(--gold-light);
+}
+.caption p {
+  margin: 0;
+  font: 0.65rem/1.6 var(--font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-90);
+}
+.caption strong {
+  display: block;
+  margin-top: 10px;
+  font: 1.8rem/1.2 var(--font-serif);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--cream);
 }
 .copy p {
-  margin: 0;
-  color: var(--cream-70);
-  font-size: 1.2rem;
-  line-height: 1.65;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  max-width: 40ch;
+  margin-bottom: 24px;
+  color: var(--cream-90);
 }
-.landmarks {
+.footnote {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 24px;
-  padding: 20px 0;
-  margin-bottom: 6px;
-  border-block: 1px solid var(--cream-16);
-  width: 100%;
-  font: 0.65rem var(--font-sans);
-  letter-spacing: 0.13em;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: 24px;
+}
+.landmarks {
+  font: 0.6rem var(--font-sans);
   text-transform: uppercase;
+  letter-spacing: 0.14em;
   color: var(--gold-light);
 }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .visual:hover .photo img {
-    transform: scale(1.045);
+.landmarks i {
+  font-style: normal;
+  margin-inline: 12px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .scene {
+      view-timeline-name: --quartier-scene;
+    }
+    .photo {
+      animation: quartierDepth linear both;
+      animation-timeline: --quartier-scene;
+      animation-range: entry 0% exit 100%;
+    }
+  }
+}
+@keyframes quartierDepth {
+  from {
+    transform: scale(1.12) translateY(-3%);
+  }
+  to {
+    transform: scale(1.12) translateY(3%);
   }
 }
 @media (max-width: 760px) {
-  .section {
-    padding: 64px 0;
+  .scene {
+    min-height: 830px;
+  }
+  .frame {
+    inset: 16px 12px;
+  }
+  .photo img {
+    object-position: 63% center;
+  }
+  .scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(20, 17, 13, 0.88),
+      rgba(20, 17, 13, 0.1) 42%,
+      rgba(20, 17, 13, 0.96) 85%
+    );
   }
   .layout {
-    grid-template-columns: 1fr;
-    gap: 48px;
-  }
-  .visual {
-    padding: 16px 0 0 16px;
-    margin-right: 12px;
-  }
-  .photo {
-    aspect-ratio: 5/4;
-  }
-  .arrondissement {
-    right: -12px;
-    font-size: 5rem;
-  }
-  .caption {
-    left: 36px;
-    bottom: 22px;
-  }
-  .caption strong {
-    font-size: 1.65rem;
+    padding-block: 56px 48px;
+    gap: 220px;
   }
   .title {
-    font-size: clamp(2.8rem, 9vw, 4rem);
+    font-size: clamp(3rem, 9.5vw, 4.8rem);
+    margin-top: 22px;
+  }
+  .bottom {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .caption {
+    gap: 20px;
+  }
+  .arrondissement {
+    font-size: 4.6rem;
+  }
+  .caption strong {
+    font-size: 1.6rem;
+    margin-top: 4px;
+  }
+  .copy p {
+    font-size: 1.18rem;
+  }
+  .footnote {
+    gap: 14px;
+    padding-block: 22px;
   }
 }
