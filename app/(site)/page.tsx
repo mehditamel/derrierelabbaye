@@ -7,6 +7,7 @@ import { CocktailsSection } from "@/components/site/CocktailsSection";
 import { ReservationSection } from "@/components/site/ReservationSection";
 import { Faq } from "@/components/site/Faq";
 import { NousTrouver } from "@/components/site/NousTrouver";
+import { TicketTeaser } from "@/components/ticket-or/TicketTeaser";
 
 /* Revalidation quotidienne : le filtre des événements « à venir » est figé
    à la génération de la page — voir lib/evenements.ts. */
@@ -18,6 +19,7 @@ export default function HomePage() {
       <Hero />
       <Intro />
       <EnCeMoment />
+      <TicketTeaser />
       <CocktailsSection />
       <CarteSection />
       <LeQuartier />
