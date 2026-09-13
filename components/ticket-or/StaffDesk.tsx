@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Check,
@@ -39,6 +39,13 @@ export function StaffDesk({ preview }: { preview: boolean }) {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [adultChecked, setAdultChecked] = useState(false);
+  const statusRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ticket) return;
+    statusRef.current?.focus({ preventScroll: true });
+    statusRef.current?.scrollIntoView({ block: "center", behavior: "instant" });
+  }, [ticket]);
 
   useEffect(() => {
     if (preview) return;
@@ -236,7 +243,13 @@ export function StaffDesk({ preview }: { preview: boolean }) {
             )}
             {ticket && (
               <div className={styles.staffCard}>
-                <div className={styles.status} data-status={ticket.status} role="status">
+                <div
+                  ref={statusRef}
+                  tabIndex={-1}
+                  className={styles.status}
+                  data-status={ticket.status}
+                  role="status"
+                >
                   {ticket.status === "valid" ? (
                     <CheckCircle2 size={25} aria-hidden="true" />
                   ) : (

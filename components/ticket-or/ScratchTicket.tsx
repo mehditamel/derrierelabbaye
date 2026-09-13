@@ -47,11 +47,11 @@ export function ScratchTicket({ onReveal }: { onReveal: () => void }) {
       ctx.strokeRect(13, 13, width - 26, height - 26);
       ctx.textAlign = "center";
       ctx.fillStyle = "#392911";
-      ctx.font = "12px Georgia";
+      ctx.font = `${Math.min(12, width / 28)}px Georgia`;
       ctx.fillText("D E R R I È R E   L ’ A B B A Y E", width / 2, height / 2 - 30);
-      ctx.font = "italic 44px Georgia";
+      ctx.font = `italic ${Math.min(44, width / 8.5)}px Georgia`;
       ctx.fillText("À vous de jouer.", width / 2, height / 2 + 22);
-      ctx.font = "11px Arial";
+      ctx.font = `${Math.min(11, width / 27)}px Arial`;
       ctx.fillText("G R A T T E Z   L A   S U R F A C E", width / 2, height / 2 + 55);
       visited.current.clear();
     };

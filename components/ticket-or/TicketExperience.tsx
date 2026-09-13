@@ -119,7 +119,7 @@ export function TicketExperience() {
     setError("");
     setPhase(next);
     panel.current?.scrollIntoView({
-      block: "center",
+      block: "start",
       behavior: document.documentElement.dataset.motion === "paused" ? "instant" : "smooth",
     });
   }

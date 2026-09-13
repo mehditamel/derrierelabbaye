@@ -1217,9 +1217,17 @@
     display: none;
   }
   .introPanel {
-    padding: 30px 22px 20px;
+    padding: 24px 22px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .introPanel > .primary {
+    order: -1;
+    margin-bottom: 28px;
   }
   .paperTicket {
+    width: 100%;
+    box-sizing: border-box;
     max-width: 290px;
     margin-bottom: 38px;
   }
