@@ -4,7 +4,7 @@
    en arrière-plan). Pré-cacher les chunks /_next/static au runtime rend la
    carte réellement consultable hors-ligne (au lieu de retomber sur offline.html). */
 
-const CACHE = "dla-shell-v6";
+const CACHE = "dla-shell-v7";
 
 /* Cache d'exécution, séparé de la coque : il accumule les chunks /_next/static
    rencontrés au fil de la navigation. Chaque déploiement en apporte un jeu
@@ -82,7 +82,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   // Les API, les réponses RSC et les services tiers ne sont jamais mis en cache.
-  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/ticket-or")) return;
 
   // Navigation : réseau d'abord, repli sur la page visitée puis la page
   // hors-ligne autoporteuse. Les chunks /_next/static étant mis en cache au
