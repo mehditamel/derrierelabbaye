@@ -1441,3 +1441,319 @@
     padding-inline: 10px;
   }
 }
+
+/* L’atelier du cocktail et le bon à présenter au comptoir. */
+.cocktailPreview {
+  margin: -8px 0 30px;
+  padding: 0 0 26px;
+  border-bottom: 1px solid rgba(208, 180, 120, 0.19);
+}
+.cocktailStage {
+  max-width: 260px;
+  margin: auto;
+}
+.cocktailStage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.creationLabel {
+  font: 0.62rem var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #cbb99a;
+}
+.cocktailPreview h3 {
+  font: 400 2.35rem/0.98 var(--font-serif);
+  letter-spacing: -0.035em;
+  color: #f2dec0;
+  margin: 12px 0;
+}
+.cocktailPreview figcaption > p {
+  font: 1.1rem/1.5 var(--font-serif);
+  color: #ccbea6;
+  margin: 0 0 15px;
+}
+.creationVersion {
+  display: inline-block;
+  font: 0.68rem var(--font-sans);
+  color: #ead5ad;
+  border: 1px solid #736040;
+  border-radius: 99px;
+  padding: 7px 12px;
+}
+.choiceSuccess,
+.choiceError,
+.pendingChoice {
+  font: 0.77rem/1.65 var(--font-sans);
+  margin: 16px 0;
+  padding: 13px 15px;
+}
+.choiceSuccess {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  text-align: left;
+  color: #e4ebcf;
+  background: #2d3826;
+  border: 1px solid #7e9467;
+}
+.choiceSuccess > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.choiceError {
+  color: #ffe3df;
+  background: #462720;
+  border: 1px solid #be7b6a;
+}
+.pendingChoice {
+  color: #e6cc9d;
+  padding-block: 0;
+}
+.flavours b {
+  font-size: 0.71rem;
+}
+.flavours span {
+  font-size: 0.66rem;
+  line-height: 1.45;
+}
+.customize legend {
+  font-size: 0.7rem;
+}
+.alcoholChoice button {
+  font-size: 0.76rem;
+}
+.flavours button:disabled,
+.alcoholChoice button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.couponChoice {
+  padding: 22px 0 6px;
+  text-align: center;
+}
+.couponChoice > span {
+  font: 0.65rem/1.6 var(--font-sans);
+  color: #685633;
+}
+.couponChoice h3 {
+  font: 400 2rem/1.1 var(--font-serif);
+  letter-spacing: -0.025em;
+  margin: 8px 0;
+  color: #322a1c;
+}
+.couponChoice p {
+  font: 0.78rem/1.5 var(--font-sans);
+  color: #493e2b;
+  margin: 0;
+}
+.coupon .couponValidity,
+.couponValidity {
+  font: 0.74rem/1.7 var(--font-sans);
+  color: #594b34;
+  margin: 16px 0 0;
+  text-align: center;
+}
+.presentCoupon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid #695638;
+  background: #252016;
+  color: #f2e6cc;
+  border-radius: 4px;
+  padding: 12px;
+  font: 0.75rem/1.45 var(--font-sans);
+  cursor: pointer;
+  margin-top: 20px;
+}
+.presentCoupon svg {
+  flex-shrink: 0;
+}
+.couponDialog {
+  padding: 0;
+  border: 1px solid #af9361;
+  color: #322a1c;
+  background: #f8f3e9;
+  width: min(480px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  margin: auto;
+  box-shadow: 0 25px 100px #0008;
+  overscroll-behavior: contain;
+}
+.couponDialog::backdrop {
+  background: rgba(12, 10, 7, 0.88);
+  backdrop-filter: blur(8px);
+}
+.couponViewer {
+  padding: 24px 30px;
+  text-align: center;
+}
+.couponViewerHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.couponViewerHead img {
+  width: 90px;
+}
+.couponViewerHead button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #b5a486;
+  background: transparent;
+  color: #473923;
+  cursor: pointer;
+}
+.couponViewer h2 {
+  font: 400 2.45rem/1 var(--font-serif);
+  letter-spacing: -0.04em;
+  margin: 12px 0;
+}
+.viewerIntro {
+  font: 0.78rem/1.6 var(--font-sans);
+  color: #66573d;
+  max-width: 32ch;
+  margin: 0 auto;
+}
+.couponViewer .couponChoice {
+  border-top: 1px dashed #b2a080;
+  margin-top: 20px;
+  padding-top: 15px;
+}
+.couponViewer .couponChoice h3 {
+  font-size: 1.8rem;
+}
+.couponViewer .qr {
+  width: 260px;
+  margin-top: 18px;
+}
+.couponViewer .couponCode {
+  font-size: 0.7rem;
+}
+.couponViewer .qrBlock .textButton {
+  font-size: 0.74rem;
+}
+.viewerFoot {
+  border-top: 1px dashed #b2a080;
+  padding-top: 16px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: 0.68rem/1.5 var(--font-sans);
+  color: #695738;
+}
+.viewerFoot svg {
+  flex-shrink: 0;
+}
+.presentCoupon:focus-visible,
+.couponViewer button:focus-visible,
+.couponViewer a:focus-visible {
+  outline: 2px solid #8a692e;
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .drinkReveal {
+    transform-origin: 130px 150px;
+    animation: drinkAppear 650ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
+  }
+  .cocktailStage stop {
+    transition: stop-color 550ms ease;
+  }
+  .flavours button,
+  .presentCoupon {
+    transition:
+      background 200ms ease,
+      border-color 200ms ease,
+      transform 200ms ease;
+  }
+  .couponDialog[open] {
+    animation: couponAppear 250ms ease-out both;
+  }
+  .choiceSuccess {
+    animation: couponAppear 250ms ease-out both;
+  }
+  @keyframes drinkAppear {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes couponAppear {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .flavours button:hover:not(:disabled) {
+    border-color: #efd49c;
+    transform: translateY(-2px);
+  }
+  .presentCoupon:hover {
+    background: #493b25;
+  }
+}
+@media (max-width: 600px) {
+  .cocktailStage {
+    max-width: 210px;
+  }
+  .cocktailPreview {
+    margin-bottom: 24px;
+    padding-bottom: 22px;
+  }
+  .cocktailPreview h3 {
+    font-size: 2.15rem;
+  }
+  .flavours b {
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+  }
+  .flavours span {
+    font-size: 0.6rem;
+  }
+  .alcoholChoice button {
+    font-size: 0.71rem;
+    padding-inline: 12px;
+  }
+  .couponViewer {
+    padding: 18px 22px 22px;
+  }
+  .couponViewer h2 {
+    font-size: 2.2rem;
+  }
+}
+@media (max-width: 360px) {
+  .couponViewer {
+    padding-inline: 16px;
+  }
+  .couponViewer h2 {
+    font-size: 1.85rem;
+  }
+  .couponChoice h3 {
+    font-size: 1.8rem;
+  }
+  .couponViewer .couponCode {
+    font-size: 0.61rem;
+  }
+}

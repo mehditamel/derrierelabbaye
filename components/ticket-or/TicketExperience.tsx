@@ -26,7 +26,8 @@ import {
   ticketDate,
 } from "@/lib/ticket-or/types";
 import { ScratchTicket } from "./ScratchTicket";
-import { TicketQr } from "./TicketQr";
+import { CocktailPreview } from "./CocktailPreview";
+import { TicketCoupon } from "./TicketCoupon";
 import styles from "./TicketOr.module.css";
 
 type Phase = "intro" | "register" | "code" | "scratch" | "result";
@@ -110,6 +111,8 @@ export function TicketExperience() {
     }
   }
   function openTicket(value: PrizeTicket) {
+    setMessage("");
+    setError("");
     setTicket(value);
     setFlavour(value.flavour);
     setAlcohol(value.alcohol);
@@ -117,6 +120,7 @@ export function TicketExperience() {
   }
   function moveTo(next: Phase) {
     setError("");
+    setMessage("");
     setPhase(next);
     panel.current?.scrollIntoView({
       block: "start",
@@ -218,7 +222,7 @@ export function TicketExperience() {
                   </span>
                 </div>
               )}
-              {error && (
+              {error && phase !== "result" && (
                 <div role="alert" className={styles.error}>
                   {error}
                   {!state && (
@@ -236,7 +240,7 @@ export function TicketExperience() {
                   )}
                 </div>
               )}
-              {message && (
+              {message && phase !== "result" && (
                 <p className={styles.notice} role="status">
                   {message}
                 </p>
@@ -342,7 +346,12 @@ export function TicketExperience() {
                     });
                   }}
                 >
-                  <button type="button" className={styles.back} onClick={() => moveTo("intro")}>
+                  <button
+                    type="button"
+                    className={styles.back}
+                    disabled={busy}
+                    onClick={() => moveTo("intro")}
+                  >
                     <ChevronLeft size={16} aria-hidden="true" /> Retour
                   </button>
                   <p className={styles.eyebrow}>01 / Votre entrée dans le jeu</p>
@@ -531,6 +540,7 @@ export function TicketExperience() {
                       </p>
                       {(validTicket || preview) && (
                         <div className={styles.customize}>
+                          <CocktailPreview flavour={flavour} alcohol={alcohol} />
                           <fieldset>
                             <legend>Votre inspiration</legend>
                             <div className={styles.flavours}>
@@ -539,7 +549,12 @@ export function TicketExperience() {
                                   key={id}
                                   type="button"
                                   aria-pressed={flavour === id}
-                                  onClick={() => setFlavour(id)}
+                                  disabled={busy}
+                                  onClick={() => {
+                                    setFlavour(id);
+                                    setMessage("");
+                                    setError("");
+                                  }}
                                 >
                                   <Icon size={22} strokeWidth={1} aria-hidden="true" />
                                   <b>{name}</b>
@@ -553,7 +568,12 @@ export function TicketExperience() {
                             <button
                               type="button"
                               aria-pressed={!alcohol}
-                              onClick={() => setAlcohol(false)}
+                              disabled={busy}
+                              onClick={() => {
+                                setAlcohol(false);
+                                setMessage("");
+                                setError("");
+                              }}
                             >
                               Sans alcool
                             </button>
@@ -561,7 +581,12 @@ export function TicketExperience() {
                               <button
                                 type="button"
                                 aria-pressed={alcohol}
-                                onClick={() => setAlcohol(true)}
+                                disabled={busy}
+                                onClick={() => {
+                                  setAlcohol(true);
+                                  setMessage("");
+                                  setError("");
+                                }}
                               >
                                 Avec alcool · 18+
                               </button>
@@ -577,7 +602,13 @@ export function TicketExperience() {
                                   await api({ action: "choice", id: ticket.id, flavour, alcohol });
                                   const fresh = await refresh();
                                   const saved = fresh.tickets.find((t) => t.id === ticket.id);
-                                  if (saved) setTicket(saved);
+                                  if (!saved)
+                                    throw new Error(
+                                      "Votre bon n’a pas pu être rechargé. Réessayez."
+                                    );
+                                  setTicket(saved);
+                                } else {
+                                  setTicket({ ...ticket, flavour, alcohol });
                                 }
                                 setMessage(
                                   preview
@@ -590,28 +621,30 @@ export function TicketExperience() {
                             {busy ? "Enregistrement…" : "Choisir cette création"}
                             <Check size={18} aria-hidden="true" />
                           </button>
+                          {error && (
+                            <p role="alert" className={styles.choiceError}>
+                              {error}
+                            </p>
+                          )}
+                          {message && (
+                            <p role="status" className={styles.choiceSuccess}>
+                              <Check size={17} aria-hidden="true" />
+                              {message}
+                            </p>
+                          )}
+                          {!message &&
+                            (flavour !== ticket.flavour || alcohol !== ticket.alcohol) && (
+                              <p className={styles.pendingChoice}>
+                                Validez ce choix pour l’ajouter à votre bon.
+                              </p>
+                            )}
                           <p className={styles.hint}>
                             La création est adaptée par le barman aux ingrédients disponibles.
                             Signalez vos allergies directement à l’équipe.
                           </p>
                         </div>
                       )}
-                      <div className={`${styles.coupon} ${preview ? styles.specimen : ""}`}>
-                        <div className={styles.couponHead}>
-                          <span>
-                            {preview ? "BON DE DÉMONSTRATION" : "UN COCKTAIL SIGNATURE OFFERT"}
-                          </span>
-                          <Wine size={22} strokeWidth={1} aria-hidden="true" />
-                        </div>
-                        <TicketQr code={ticket.code!} preview={preview} />
-                        <p>
-                          {preview
-                            ? "Cet exemple ne peut pas être échangé au bar."
-                            : ticket.redeemed_at
-                              ? `Utilisé le ${ticketDate(ticket.redeemed_at)}`
-                              : `À utiliser avant le ${ticketDate(ticket.expires_at!)} · une seule fois`}
-                        </p>
-                      </div>
+                      <TicketCoupon ticket={ticket} preview={preview} />
                       {!preview && (
                         <a
                           className={styles.textButton}
@@ -627,6 +660,7 @@ export function TicketExperience() {
                   <button
                     type="button"
                     className={styles.textButton}
+                    disabled={busy}
                     onClick={() => moveTo("intro")}
                   >
                     {preview ? "Rejouer l’aperçu" : "Retour à mes tickets"}
