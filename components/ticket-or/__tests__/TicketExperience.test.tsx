@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { TicketExperience } from "../TicketExperience";
 import { StaffDesk } from "../StaffDesk";
@@ -48,6 +48,13 @@ beforeEach(() => {
         state = { ...state, played: true, tickets: [prize] };
         return { ok: true, json: async () => ({ ticket: prize }) };
       }
+      if (data.action === "choice")
+        state = {
+          ...state,
+          tickets: state.tickets.map((t) =>
+            t.id === data.id ? { ...t, flavour: data.flavour, alcohol: data.alcohol } : t
+          ),
+        };
       return { ok: true, json: async () => ({ ok: true }) };
     }
     return { ok: true, json: async () => state };
@@ -73,6 +80,11 @@ it("propose une démonstration sans coordonnées, sans requête de jeu et sans l
   fireEvent.click(screen.getByRole("button", { name: "Avec alcool · 18+" }));
   fireEvent.click(screen.getByRole("button", { name: "Choisir cette création" }));
   expect(await screen.findByRole("status")).toHaveTextContent(/aperçu/i);
+  expect(
+    within(screen.getByRole("region", { name: "Votre bon" })).getByRole("heading", {
+      name: "Jardin de nuit",
+    })
+  ).toBeInTheDocument();
   expect(posts).toHaveLength(0);
   expect(screen.queryByRole("link", { name: "Enregistrer le QR code" })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: "Rejouer l’aperçu" }));
@@ -331,4 +343,47 @@ it("efface les informations affichées après déconnexion même si le rechargem
   expect(
     screen.queryByRole("button", { name: /Votre cocktail signature/ })
   ).not.toBeInTheDocument();
+});
+
+it("distingue l’inspiration en cours du bon confirmé et conserve le bon après un échec", async () => {
+  state = {
+    ...preview,
+    mode: "live",
+    player: {
+      first_name: "Camille",
+      last_name: "",
+      phone: "+33600000000",
+      email: "",
+      email_opt_in: false,
+      sms_opt_in: false,
+    },
+    tickets: [prize],
+  };
+  render(<TicketExperience />);
+  fireEvent.click(await screen.findByRole("button", { name: /Votre cocktail signature/ }));
+  const coupon = within(screen.getByRole("region", { name: "Votre bon" }));
+  fireEvent.click(screen.getByRole("button", { name: /Herbes/ }));
+  expect(screen.getByText("Validez ce choix pour l’ajouter à votre bon.")).toBeInTheDocument();
+  expect(coupon.getByRole("heading", { name: "Éclat d’agrumes" })).toBeInTheDocument();
+  fetchMock.mockResolvedValueOnce({
+    ok: false,
+    json: async () => ({ error: "Connexion interrompue" }),
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Choisir cette création" }));
+  const error = await screen.findByRole("alert");
+  expect(error).toHaveTextContent("Connexion interrompue");
+  expect(error.parentElement).toContainElement(
+    screen.getByRole("button", { name: "Choisir cette création" })
+  );
+  expect(coupon.getByRole("heading", { name: "Éclat d’agrumes" })).toBeInTheDocument();
+  expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Choisir cette création" }));
+  await screen.findByRole("status");
+  expect(coupon.getByRole("heading", { name: "Jardin de nuit" })).toBeInTheDocument();
+  expect(
+    screen.queryByText("Validez ce choix pour l’ajouter à votre bon.")
+  ).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: /Fruits/ }));
+  expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  expect(coupon.getByRole("heading", { name: "Jardin de nuit" })).toBeInTheDocument();
 });
