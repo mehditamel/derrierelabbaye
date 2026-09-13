@@ -48,12 +48,16 @@ function worker() {
 }
 
 describe("service worker", () => {
-  it.each(["/api/reservations", "/app/carte?_rsc=123", "https://www.google.com/maps"])(
-    "laisse passer sans cache : %s",
-    (url) => {
-      expect(worker().request(url).respondWith).not.toHaveBeenCalled();
-    }
-  );
+  it.each([
+    "/api/reservations",
+    "/ticket-or",
+    "/ticket-or/equipe",
+    "/api/ticket-or",
+    "/app/carte?_rsc=123",
+    "https://www.google.com/maps",
+  ])("laisse passer sans cache : %s", (url) => {
+    expect(worker().request(url).respondWith).not.toHaveBeenCalled();
+  });
   it("actualise la copie HTML après une navigation réussie", async () => {
     const w = worker();
     const event = w.request("/app/carte", "navigate");
@@ -75,6 +79,6 @@ describe("service worker", () => {
     const event = { waitUntil: vi.fn() };
     w.listeners.activate(event);
     await event.waitUntil.mock.calls[0][0];
-    expect(w.caches.delete.mock.calls).toEqual([["dla-shell-v5"]]);
+    expect(w.caches.delete.mock.calls).toEqual([["dla-shell-v5"], ["dla-shell-v6"]]);
   });
 });

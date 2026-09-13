@@ -19,16 +19,16 @@ export default function ConfidentialitePage() {
           <SectionLabel>Informations</SectionLabel>
           <h1 className={styles.title}>Confidentialité</h1>
           <GoldRule className={styles.rule} />
-          <p className={styles.updated}>Dernière mise à jour : 12 septembre 2026</p>
+          <p className={styles.updated}>Dernière mise à jour : 13 septembre 2026</p>
         </div>
 
         <div className={styles.prose}>
           <h2>En bref</h2>
           <p>
-            Ce site ne demande pas de compte et ne pose aucun traceur publicitaire. Les réservations
-            se font par téléphone. Le site est hébergé par Vercel, qui reçoit les informations
-            techniques nécessaires à la connexion, notamment votre adresse IP. Le plan Google Maps
-            ne se charge qu'après votre choix de l'afficher.
+            La consultation du site ne demande pas de compte et ne pose aucun traceur publicitaire.
+            Les réservations se font par téléphone. Le site est hébergé par Vercel, qui reçoit les
+            informations techniques nécessaires à la connexion, notamment votre adresse IP. Le plan
+            Google Maps ne se charge qu'après votre choix de l'afficher.
           </p>
 
           <h2>Réservation par téléphone</h2>
@@ -37,6 +37,20 @@ export default function ConfidentialitePage() {
             formulaire de réservation en ligne n'est actuellement proposé et aucun e-mail
             automatique n'est envoyé par le site. Les informations que vous communiquez par
             téléphone servent à organiser votre venue.
+          </p>
+          <h2>Le Ticket d’Or</h2>
+          <p>
+            L’avant-première du jeu fonctionne sans inscription, sans SMS et sans lot réel. À
+            l’ouverture du jeu, la participation utilisera un prénom et un mobile vérifié. Le nom et
+            l’e-mail resteront facultatifs. Les accords pour recevoir les nouvelles du bar par
+            e-mail ou SMS seront séparés, facultatifs et sans effet sur les gains. Les modalités,
+            durées de conservation et droits figurent dans le{" "}
+            <a href="/ticket-or/reglement#vos-donnees">règlement et la notice du jeu</a>.
+          </p>
+          <p>
+            Le jeu actif utilisera uniquement des cookies nécessaires : vérification SMS pendant dix
+            minutes, connexion joueur pendant sept jours et connexion équipe pendant huit heures.
+            Les pages et les bons du jeu ne sont pas disponibles dans le cache hors ligne.
           </p>
           <h2>Données des anciennes versions</h2>
           <p>
