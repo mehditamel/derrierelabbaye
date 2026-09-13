@@ -304,3 +304,31 @@ it("produit un QR local téléchargeable uniquement pour un vrai bon", () => {
   ).toBeInTheDocument();
   expect(fetchMock).not.toHaveBeenCalled();
 });
+
+it("efface les informations affichées après déconnexion même si le rechargement échoue", async () => {
+  state = {
+    ...preview,
+    mode: "live",
+    player: {
+      first_name: "Camille",
+      last_name: "",
+      phone: "+33600000000",
+      email: "",
+      email_opt_in: false,
+      sms_opt_in: false,
+    },
+    tickets: [prize],
+  };
+  render(<TicketExperience />);
+  await screen.findByRole("heading", { name: "Vos tickets" });
+  fireEvent.click(screen.getByText("Mes préférences et ma connexion"));
+  fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ ok: true }) });
+  fetchMock.mockRejectedValueOnce(new Error("Connexion interrompue"));
+  fireEvent.click(screen.getByRole("button", { name: "Me déconnecter" }));
+  await screen.findByRole("alert");
+  expect(screen.queryByRole("heading", { name: "Vos tickets" })).not.toBeInTheDocument();
+  expect(screen.queryByText("À vous de jouer, Camille.")).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: /Votre cocktail signature/ })
+  ).not.toBeInTheDocument();
+});

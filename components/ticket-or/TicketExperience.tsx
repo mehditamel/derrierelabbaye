@@ -704,8 +704,11 @@ export function TicketExperience() {
                     onClick={() =>
                       perform(async () => {
                         await api({ action: "logout" });
-                        await refresh();
                         setTicket(null);
+                        setState((current) =>
+                          current ? { ...current, player: null, tickets: [], played: false } : null
+                        );
+                        await refresh();
                       })
                     }
                   >
