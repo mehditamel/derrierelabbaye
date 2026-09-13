@@ -40,6 +40,11 @@ jobs:
       - name: Tests (avec couverture)
         run: npm run test:coverage
 
+      # Le générateur de factures (tools/facture) est en Python. Ces tests-là
+      # sont volontairement sans dépendance : pas de pip install en CI.
+      - name: Tests des outils Python
+        run: python3 tools/facture/test_facture.py
+
       - name: Build
         run: npm run build
 
